@@ -1,0 +1,25 @@
+<?php
+/*
+ * Use this array as reference to initialize the database adapter/driver
+ * In this example the 'db' array is not used, so it could be removed.
+ * To use the 'db' array, you should set one of the prefixes under
+ * Module::CONFIG_KEY_DB_REQ to point to Module::PDO_FROM_MODULE_DB,
+ * This would create a new PDO object with the credentials under 'db'
+ * 
+ */
+return array( 
+	'zfminer' => array(
+        'db' => array (                  //create from array, reuse global usename and password (otherwise add keys to local like gbili_db_req => array('username=>>'', 'password =>''))
+            'driver'         => 'Pdo',
+            'dsn'            => 'mysql:dbname=miner;host=localhost',
+            'driver_options' => array(
+                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''
+            ),
+        ),
+        Module::CONFIG_KEY_DB_REQ => array(
+            //'Gbili\Miner' => Module::PDO_FROM_GENERAL_DB, //use the config db key and create a new pdo instance
+            'ZfMiner'                            => Module::PDO_FROM_DOCTRINE_ORM, //get from Zend\Db\Adapter\Adapter
+            AbstractReq::FALLBACK_ADAPTER_PREFIX => Module::PDO_FROM_DOCTRINE_ORM,
+        ),
+    ),
+);

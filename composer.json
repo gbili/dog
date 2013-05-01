@@ -1,0 +1,30 @@
+{
+    "name": "zendframework/skeleton-application",
+    "description": "Skeleton Application for ZF2",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "framework",
+        "zf2"
+    ],
+    "repositories": [
+        {
+            "type":"vcs",
+            "url":"https://github.com/gbili/gfw"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zendframework": ">2.1.3",
+        "gbili/gfw": "dev-master",
+        "zf-commons/zfc-user": "0.1.1",
+        "zf-commons/zfc-user-doctrine-orm":"dev-master",
+        "doctrine/doctrine-orm-module": "dev-master",
+        "zendframework/zend-developer-tools": "dev-master",
+        "bjyoungblood/bjy-authorize": "1.2.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Api\\": "module/Api/src"
+        }
+    }
+}

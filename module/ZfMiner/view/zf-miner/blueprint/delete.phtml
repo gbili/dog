@@ -1,0 +1,14 @@
+<h2>List of available BluePrints:</h2>
+<?php if (!empty($this->blueprints)) :?>
+    <ul>
+    <?php foreach ($this->blueprints as $bp): ?>
+        <li><?php echo $bp->name ?></li>
+    <?php endforeach ?>
+    </ul>
+<?php else : ?>
+    <p>There are currently no BluePrints. Possible actions</p>
+    <ol>
+        <li><a href="http://c.onfigs.com/tag/g_miner">Learn how to create BluePrints</a>
+        <li><a href="/add">Add a BluePrint</a></li>
+    </ol>
+<?php endif ?>

@@ -1,0 +1,44 @@
+<ul class="breadcrumb">
+
+<?php /*
+function getActive(array $level) {
+    $activeInLevel = array_filter($level, function ($page) {
+        return $page['active'];
+    });
+    return $activeInLevel;
+}*/?>
+
+<?php 
+    foreach ($this->container as $page) {
+        if (!$page->isActive()) continue;
+        if ($page->hasPages()) : ?>
+    <li>
+        <a href="<?= $page->getHref() ?>"><?= $page->getLabel() ?></a>
+        <span class="divider">/</span>
+    <li>
+    <?php 
+        foreach ($page->getPages() as $child) {
+            if (!$child->isActive()) continue;
+            if ($child->hasPages()) : ?>
+                <li>
+                    <a href="<?= $child->getHref() ?>"><?= $child->getLabel() ?></a>
+                    <span class="divider">/</span>
+                <li>
+          <?php 
+            else : ?>
+            <li>
+                <?= $child->getLabel() ?>
+            </li>
+      <?php endif;
+            break;       
+        }
+        
+        else : ?>
+        <li>
+            <?= $page->getLabel() ?>
+        </li>
+        <?php endif ?>
+        <?php break;
+    }?>
+
+</ul>
