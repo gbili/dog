@@ -1,6 +1,11 @@
 # BjyAuthorize - Acl security for ZF2
 
-[![Travis-CI Build Status](https://api.travis-ci.org/bjyoungblood/BjyAuthorize.png?branch=master)](https://travis-ci.org/bjyoungblood/BjyAuthorize)
+[![Build Status](https://travis-ci.org/bjyoungblood/BjyAuthorize.png?branch=master)](https://travis-ci.org/bjyoungblood/BjyAuthorize)
+[![Coverage Status](https://coveralls.io/repos/bjyoungblood/BjyAuthorize/badge.png?branch=master)](https://coveralls.io/r/bjyoungblood/BjyAuthorize)
+[![Total Downloads](https://poser.pugx.org/bjyoungblood/bjy-authorize/downloads.png)](https://packagist.org/packages/bjyoungblood/bjy-authorize)
+[![Latest Stable Version](https://poser.pugx.org/bjyoungblood/bjy-authorize/v/stable.png)](https://packagist.org/packages/bjyoungblood/bjy-authorize)
+[![Latest Unstable Version](https://poser.pugx.org/bjyoungblood/bjy-authorize/v/unstable.png)](https://packagist.org/packages/bjyoungblood/bjy-authorize)
+[![Dependency Status](https://www.versioneye.com/package/php--bjyoungblood--bjy-authorize/badge.png)](https://www.versioneye.com/package/php--bjyoungblood--bjy-authorize)
 
 This module is designed provide a facade for `Zend\Permissions\Acl` that will
 ease its usage with modules and applications. By default, it provides simple
@@ -32,7 +37,7 @@ And here's how it would look like with BjyAuthorize enabled:
 The suggested installation method is via [composer](http://getcomposer.org/):
 
 ```sh
-php composer.phar require bjyoungblood/bjy-authorize:1.2.*
+php composer.phar require bjyoungblood/bjy-authorize:1.4.*
 php composer.phar require zf-commons/zfc-user:0.1.*
 ```
 
@@ -56,9 +61,8 @@ also check the [doctrine documentation](https://github.com/bjyoungblood/BjyAutho
      * `ZfcUser`
      * `BjyAuthorize`
  3. Import the SQL schema located in `./vendor/BjyAuthorize/data/schema.sql`.
- 4. Copy `./vendor/BjyAuthorize/config/module.config.php` to
-    `./config/autoload/module.bjyauthorize.global.php`.
- 5. Fill in the required configuration variable values in  `./config/autoload/module.bjyauthorize.global.php`
+ 4. Create a `./config/autoload/bjyauthorize.global.php` file and fill it with
+    configuration variable values as described in the following annotated example.
 
 Here is an annotated sample configuration file:
 
@@ -108,14 +112,20 @@ return array(
             // this will load roles from the user_role table in a database
             // format: user_role(role_id(varchar), parent(varchar))
             'BjyAuthorize\Provider\Role\ZendDb' => array(
-                'table'             => 'user_role',
-                'role_id_field'     => 'role_id',
-                'parent_role_field' => 'parent',
+                'table'                 => 'user_role',
+                'identifier_field_name' => 'id',
+                'role_id_field'         => 'role_id',
+                'parent_role_field'     => 'parent_id',
             ),
 
-            // this will load roles from the 'BjyAuthorize\Provider\Role\Doctrine'
-            // service
-            'BjyAuthorize\Provider\Role\Doctrine' => array(),
+            // this will load roles from
+            // the 'BjyAuthorize\Provider\Role\ObjectRepositoryProvider' service
+            'BjyAuthorize\Provider\Role\ObjectRepositoryProvider' => array(
+                // class name of the entity representing the role
+                'role_entity_class' => 'My\Role\Entity',
+                // service name of the object manager
+                'object_manager'    => 'My\Doctrine\Common\Persistence\ObjectManager',
+            ),
         ),
 
         // resource providers provide a list of resources that will be tracked
@@ -149,6 +159,8 @@ return array(
         ),
 
         /* Currently, only controller and route guards exist
+         *
+         * Consider enabling either the controller or the route guard depending on your needs.
          */
         'guards' => array(
             /* If this guard is specified here (i.e. it is enabled), it will block
@@ -158,8 +170,20 @@ return array(
             'BjyAuthorize\Guard\Controller' => array(
                 array('controller' => 'index', 'action' => 'index', 'roles' => array('guest','user')),
                 array('controller' => 'index', 'action' => 'stuff', 'roles' => array('user')),
+                // You can also specify an array of actions or an array of controllers (or both)
+                // allow "guest" and "admin" to access actions "list" and "manage" on these "index",
+                // "static" and "console" controllers
+                array(
+                    'controller' => array('index', 'static', 'console'),
+                    'action' => array('list', 'manage'),
+                    'roles' => array('guest', 'admin')
+                ),
+                array(
+                    'controller' => array('search', 'administration'),
+                    'roles' => array('staffer', 'admin')
+                ),
                 array('controller' => 'zfcuser', 'roles' => array()),
-                // Below is the default index action used by the [ZendSkeletonApplication](https://github.com/zendframework/ZendSkeletonApplication)
+                // Below is the default index action used by the ZendSkeletonApplication
                 // array('controller' => 'Application\Controller\Index', 'roles' => array('guest', 'user')),
             ),
 
@@ -171,7 +195,7 @@ return array(
                 array('route' => 'zfcuser/logout', 'roles' => array('user')),
                 array('route' => 'zfcuser/login', 'roles' => array('guest')),
                 array('route' => 'zfcuser/register', 'roles' => array('guest')),
-                // Below is the default index action used by the [ZendSkeletonApplication](https://github.com/zendframework/ZendSkeletonApplication)
+                // Below is the default index action used by the ZendSkeletonApplication
                 array('route' => 'home', 'roles' => array('guest', 'user')),
             ),
         ),

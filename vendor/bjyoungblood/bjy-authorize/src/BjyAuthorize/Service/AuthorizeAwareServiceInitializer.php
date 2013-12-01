@@ -10,7 +10,6 @@
 
 namespace BjyAuthorize\Service;
 
-use BjyAuthorize\Service\AuthorizeAwareInterface;
 use Zend\ServiceManager\InitializerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -27,7 +26,7 @@ class AuthorizeAwareServiceInitializer implements InitializerInterface
      */
     public function initialize($instance, ServiceLocatorInterface $serviceLocator)
     {
-        if ( ! $instance instanceof AuthorizeAwareInterface) {
+        if (! $instance instanceof AuthorizeAwareInterface) {
             return;
         }
 

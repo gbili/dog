@@ -10,14 +10,13 @@ namespace BjyAuthorize\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
 use BjyAuthorize\Service\Authorize;
-use BjyAuthorize\Service\AuthorizeAwareInterface;
 
 /**
  * IsAllowed View helper. Allows checking access to a resource/privilege in views.
  *
  * @author Ben Youngblood <bx.youngblood@gmail.com>
  */
-class IsAllowed extends AbstractHelper implements AuthorizeAwareInterface
+class IsAllowed extends AbstractHelper
 {
     /**
      * @var Authorize
@@ -41,23 +40,5 @@ class IsAllowed extends AbstractHelper implements AuthorizeAwareInterface
     public function __invoke($resource, $privilege = null)
     {
         return $this->authorizeService->isAllowed($resource, $privilege);
-    }
-
-    /**
-     * @return Authorize
-     */
-    public function getAuthorizeService()
-    {
-        return $this->authorizeService;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setAuthorizeService(Authorize $authorize)
-    {
-        $this->authorizeService = $authorize;
-
-        return $this;
     }
 }

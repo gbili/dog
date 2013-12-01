@@ -10,14 +10,13 @@ namespace BjyAuthorize\Controller\Plugin;
 
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use BjyAuthorize\Service\Authorize;
-use BjyAuthorize\Service\AuthorizeAwareInterface;
 
 /**
  * IsAllowed Controller plugin. Allows checking access to a resource/privilege in controllers.
  *
  * @author Ben Youngblood <bx.youngblood@gmail.com>
  */
-class IsAllowed extends AbstractPlugin implements AuthorizeAwareInterface
+class IsAllowed extends AbstractPlugin
 {
     /**
      * @var Authorize
@@ -41,23 +40,5 @@ class IsAllowed extends AbstractPlugin implements AuthorizeAwareInterface
     public function __invoke($resource, $privilege = null)
     {
         return $this->authorizeService->isAllowed($resource, $privilege);
-    }
-
-    /**
-     * @return Authorize
-     */
-    public function getAuthorizeService()
-    {
-        return $this->authorizeService;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setAuthorizeService(Authorize $authorize)
-    {
-        $this->authorizeService = $authorize;
-
-        return $this;
     }
 }

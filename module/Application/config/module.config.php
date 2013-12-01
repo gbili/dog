@@ -90,12 +90,4 @@ return array(
             __DIR__ . '/../view',
         ),
     ),
-    'navigation' => array(
-        'default' => array(
-            'home' => array(
-                'label' => 'Home',
-                'route' => 'home',
-            ),
-        ),
-    ),
 );

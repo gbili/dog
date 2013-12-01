@@ -1,4 +1,4 @@
-<ul class="nav">
+<ul class="nav navbar-nav">
     <?php foreach ($this->container as $page): ?>
         <?php /* @var $page Zend\Navigation\Page\Mvc */ ?>
         <?php // when using partials we need to manually check for ACL conditions ?>
@@ -20,10 +20,10 @@
                     <?php // when using partials we need to manually check for ACL conditions ?>
                     <?php if( ! $child->isVisible() || !$this->navigation()->accept($child)) continue; ?>
                     <?php if (isset($child->divider) && 'above' === $child->divider): ?>
-                        <li class="divider"></li>
+                        <li role="presentation" class="divider"></li>
                     <?php endif;?>
                     <?php if (isset($child->header)): ?>
-                        <li class="nav-header"><?= $child->header?></li>
+                        <li role="presentation" class="dropdown-header"><?= $child->header?></li>
                     <?php endif;?>
                     <li>
                         <a href="<?= $child->getHref() ?>">

@@ -5,14 +5,14 @@ return array(
         'ZendDeveloperTools',
         'DoctrineModule',
         'DoctrineORMModule',
-        'ZfcBase',
-        'ZfcUser',
-        'ZfcUserDoctrineORM',
-        'BjyAuthorize',
         'Application',
-        //'Api',//added by g, now Zf will look into module/Api/Module.php for funcs getAutoloaderConfig and getConfig
-        'ZfMiner',
-        'GbiliUser',
+        'Dogtore',
+        'ZfcBase',
+        'Blog',
+        //'ZfcUser', //Triggering error : An alias "zfcuser_zend_db_adapter" was requested but no service could be found.
+        //'ZfcUserDoctrineORM',
+        //'BjyAuthorize',
+        //'GbiliUser', // Depends on ZfcUser 
     ),
 
     // These are various options for the listeners attached to the ModuleManager
