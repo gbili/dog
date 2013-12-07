@@ -1,13 +1,13 @@
 <div class="row">
-<form action="search" method="post">
+<form action="search" method="get">
   <div class="col-xs-1 col-md-1 col-lg-1"></div>
   <div class="col-xs-10 col-md-10 col-lg-10">
     <div class="input-group">
       <input type="text" class="form-control" name="term">
       <span class="input-group-btn">
-        <button class="btn btn-primary" type="submit" name="category" value="symptoms">Symptoms</button>
-        <button class="btn btn-warning" type="submit" name="category" value="causes">Causes</button>
-        <button class="btn btn-success" type="submit" name="category" value="solutions">Solutions</button>
+        <button class="btn btn-primary" type="submit" name="category" value="symptom">Symptoms</button>
+        <button class="btn btn-warning" type="submit" name="category" value="cause">Causes</button>
+        <button class="btn btn-success" type="submit" name="category" value="solution">Solutions</button>
       </span>
     </div><!-- /input-group -->
   </div><!-- /.col-lg-6 -->
@@ -32,3 +32,12 @@
   <div class="col-xs-1 col-md-1 col-lg-1"></div>
 </div>
 <?php endforeach ?>
+<?php if (empty($this->doggies)) :?>
+<div class="row">
+  <div class="col-xs-1 col-md-1 col-lg-1"></div>
+  <div class="col-xs-10 col-md-10 col-lg-10">
+    <div class="alert alert-warning">No dogtores matched your search, try with another term</div>
+  </div><!-- /.col-lg-6 -->
+  <div class="col-xs-1 col-md-1 col-lg-1"></div>
+</div>
+<?php endif ?>

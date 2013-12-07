@@ -9,6 +9,8 @@ return array(
         'Dogtore',
         'ZfcBase',
         'Blog',
+        //'TwitterBootstrap',
+        //'AsseticBundle',
         //'ZfcUser', //Triggering error : An alias "zfcuser_zend_db_adapter" was requested but no service could be found.
         //'ZfcUserDoctrineORM',
         //'BjyAuthorize',

@@ -26,7 +26,7 @@ return array(
                 'options' => array(
                     'route'    => '/[:action]',
                     'constraints' => array(
-                        'action' => '(?:symptoms)|(?:causes)|(?:solutions)',
+                        'action' => 'search',
                     ),
                     'defaults' => array(
                         'controller'    => 'list',
@@ -34,21 +34,6 @@ return array(
                     ),
                 ),
                 'may_terminate' => true,
-            ),
-            'editor' => array( // name of the route
-                'type'    => 'Segment',
-                'options' => array(
-                    'route'    => '/editor[/:action[/:id]]',
-                    'constraints' => array(
-                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id'     => '[0-9]+',
-                    ),
-                    'defaults' => array(
-                        'controller' => 'editor',
-                        'action'     => 'index',
-                        'id'         => '0',
-                    ),
-                ),
             ),
         ),
     ),
@@ -71,38 +56,6 @@ return array(
                 'label' => 'Solutions',
                 'route' => 'list',
                 'action' => 'solutions',
-            ),
-            'editor' => array(
-                'label' => 'Editor',
-                'route' => 'editor',
-                'pages' => array(
-                    'editor' => array(
-                        'label' => 'Editor',
-                        //contorller
-                        'route' => 'editor',
-                        'action' => 'index',
-                    ),
-                    'create' => array(
-                        'divider' => 'above',
-                        'header' => 'Doggies',
-                        'label' => 'Create',
-                        //contorller
-                        'route' => 'editor',
-                        'action' => 'create',
-                    ),
-                    'edit' => array(
-                        'label' => 'Edit',
-                        //contorller
-                        'route' => 'editor',
-                        'action' => 'edit',
-                    ),
-                    'delete' => array(
-                        'label' => 'Delete',
-                        //contorller
-                        'route' => 'editor',
-                        'action' => 'delete',
-                    ),
-                ),
             ),
         ),
     ),

@@ -39,28 +39,79 @@ class ListController extends \Zend\Mvc\Controller\AbstractActionController
     public function indexAction()
     {
         return new \Zend\View\Model\ViewModel(array(
-            'posts' => $this->getEntityManager()->getRepository('Dogtore\Entity\Post')->findAll()
+            'doggies' => $this->getEntityManager()->getRepository('Blog\Entity\Post')->findAll()
         ));
     }
 
-    public function symptomsAction()
+    /**
+     *
+     * Ajax search
+     */
+    protected function ajaxsearchAction()
     {
-        return new \Zend\View\Model\ViewModel(array(
-            'posts' => $this->getEntityManager()->getRepository('Dogtore\Entity\Post')->findAll()
-        ));
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+
+        if (!$request->isPost()) {
+            return $response;
+        }
+
+        $postData = $request->getPost();
+        $searchTerm = $postData['search_term'];
+        
+        //Category not used currently
+        $category = $postData['category'];
+
+        $doggies = $this->getEntityManager()->getRepository('Blog\Entity\Post')->findByTitle($searchTerm);
+
+        $responseContent = ((empty($doggies))? array('response' => false) : array('response' => true, 'doggies' => $doggies));
+        $response->setContent(\Zend\Json\Json::encode($responseContent));
+        
+        return $response;
     }
-    
-    public function causesAction()
-    {
+    /**
+     *
+     * normal search
+     */
+    protected function searchAction()
+    { 
+        $query = $this->request->getQuery()->toArray();
+        $isGet = !empty($query);
+        if (!$isGet) {
+            return new \Zend\View\Model\ViewModel(array(
+                'doggies' => $this->getEntityManager()->getRepository('Blog\Entity\Post')->findAll(),
+            ));
+        }
+
+        $form = new \Dogtore\Form\Search($this->getEntityManager());
+        $form->setData($query);
+        /*TODO : does not work, says category is empty
+         * if (!$form->isValid()) {
+            throw new \Exception('Data is not valid ' . print_r($form->getMessages(), true));
+        }*/
+        $validData = $query;//$form->getData();
+        $category = $validData['category'];
+        $term = $validData['term'];
+        $doggies = $this->getDoggies($category, (('' !== $term)? $term : null)); 
+        
         return new \Zend\View\Model\ViewModel(array(
-            'posts' => $this->getEntityManager()->getRepository('Dogtore\Entity\Post')->findAll()
+            'doggies' => $doggies,
         ));
     }
 
-    public function solutionsAction()
+    protected function getDoggies($categorySlug, $term = null)
     {
-        return new \Zend\View\Model\ViewModel(array(
-            'posts' => $this->getEntityManager()->getRepository('Dogtore\Entity\Post')->findAll()
-        ));
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        // SELECT p FROM Blog\Entity\Post p INNER JOIN p.category c WHERE p.title LIKE ?1 AND c.slug = ?2
+        $queryBuilder->select('p')
+            ->from('Blog\Entity\Post', 'p')
+            ->innerJoin('p.category', 'c')
+            ->where('c.slug = ?1')
+            ->setParameter(1, $categorySlug); 
+        if (null !== $term) {
+            $queryBuilder->andWhere('p.title LIKE ?2')
+                ->setParameter(2, $term); 
+        }
+        return $queryBuilder->getQuery()->getResult();
     }
 }
