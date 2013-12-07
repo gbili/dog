@@ -4,6 +4,7 @@ namespace Blog\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Entity
  * @ORM\Table(name="medias")
  */
 class Media 
@@ -39,7 +40,7 @@ class Media
 
     /**
      * The media is linked to this post
-     * @ORM\OneToMany(targetEntity="Post", mappedBy="medias", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Post", mappedBy="media", cascade={"persist"})
      */
     private $posts;
 
