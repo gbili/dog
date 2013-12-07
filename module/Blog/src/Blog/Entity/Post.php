@@ -25,6 +25,12 @@ class Post
     private $title;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Media", inversedBy="posts")
+     * @ORM\JoinColumn(name="media_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    private $media;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="posts")
      * @ORM\JoinColumn(name="category_id", referencedColumnName="id", onDelete="CASCADE")
      */
@@ -72,7 +78,7 @@ class Post
      */
     private $children;
 
-     /**
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="date", type="datetime", nullable=false)
@@ -117,6 +123,16 @@ class Post
     public function getCategory()
     {
         return $this->category;
+    }
+
+    public function setMedia(Media $media)
+    {
+        $this->media = $media;
+    }
+
+    public function getMedia()
+    {
+        return $this->media;
     }
 
     public function setParent(Post $parent = null)

@@ -39,7 +39,7 @@ class Media
 
     /**
      * The media is linked to this post
-     * @ORM\OneToMany(targetEntity="Post", mappedBy="media", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Post", mappedBy="medias", cascade={"persist"})
      */
     private $posts;
 
@@ -78,16 +78,6 @@ class Media
         return $this->slug;
     }
 
-    public function setAlt($alt)
-    {
-        $this->alt = $name;
-    }
-
-    public function getAlt()
-    {
-        return $this->alt;
-    }
-
     public function setUri($uri)
     {
         $this->uri = $uri;
@@ -96,6 +86,16 @@ class Media
     public function getUri()
     {
         return $this->uri;
+    }
+
+    public function setAlt($alt)
+    {
+        $this->alt = $alt;
+    }
+
+    public function getAlt()
+    {
+        return $this->alt;
     }
 
     public function setDescription($description)
@@ -146,7 +146,7 @@ class Media
     public function addPosts(\Doctrine\Common\Collections\Collection $posts)
     {
         foreach ($posts as $post) {
-            $post->setCategory($this);
+            $post->setMedia($this);
             $this->posts->add($post);
         }
     }
@@ -154,7 +154,7 @@ class Media
     public function removePosts(\Doctrine\Common\Collections\Collection $posts)
     {
         foreach ($posts as $post) {
-            $post->setCategory(null);
+            $post->setMedia(null);
             $this->posts->removeElement($post);
         }
     }

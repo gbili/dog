@@ -1,5 +1,4 @@
 <?php
-
 namespace Blog;
 
 return array(
@@ -99,7 +98,7 @@ return array(
         ),
     ),
 
-    /*'doctrine' => array(
+   'doctrine' => array(
         'driver' => array(
             __NAMESPACE__ . '_driver' => array(
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
@@ -112,5 +111,5 @@ return array(
                 )
             )
         )
-    ),*/
+    ),
 );
