@@ -78,7 +78,7 @@ class Category
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\OneToMany(targetEntity="Dogtore\Entity\Post", mappedBy="category")
+     * @ORM\OneToMany(targetEntity="Post", mappedBy="category")
      */
     private $posts;
 
@@ -282,10 +282,10 @@ class Category
     /**
      * Add posts
      *
-     * @param \Dogtore\Entity\Post $posts
+     * @param \Blog\Entity\Post $posts
      * @return Category
      */
-    public function addPost(\Dogtore\Entity\Post $posts)
+    public function addPost(\Blog\Entity\Post $posts)
     {
         $this->posts[] = $posts;
 
@@ -295,9 +295,9 @@ class Category
     /**
      * Remove posts
      *
-     * @param \Dogtore\Entity\Post $posts
+     * @param \Blog\Entity\Post $posts
      */
-    public function removePost(\Dogtore\Entity\Post $posts)
+    public function removePost(\Blog\Entity\Post $posts)
     {
         $this->posts->removeElement($posts);
     }
@@ -315,10 +315,10 @@ class Category
     /**
      * Set parent
      *
-     * @param \Dogtore\Entity\Category $parent
+     * @param \Blog\Entity\Category $parent
      * @return Category
      */
-    public function setParent(\Dogtore\Entity\Category $parent = null)
+    public function setParent(\Blog\Entity\Category $parent = null)
     {
         $this->parent = $parent;
 
@@ -328,7 +328,7 @@ class Category
     /**
      * Get parent
      *
-     * @return \Dogtore\Entity\Category 
+     * @return \Blog\Entity\Category 
      */
     public function getParent()
     {
@@ -338,10 +338,10 @@ class Category
     /**
      * Add children
      *
-     * @param \Dogtore\Entity\Category $children
+     * @param \Blog\Entity\Category $children
      * @return Category
      */
-    public function addChild(\Dogtore\Entity\Category $children)
+    public function addChild(\Blog\Entity\Category $children)
     {
         $this->children[] = $children;
 
@@ -351,9 +351,9 @@ class Category
     /**
      * Remove children
      *
-     * @param \Dogtore\Entity\Category $children
+     * @param \Blog\Entity\Category $children
      */
-    public function removeChild(\Dogtore\Entity\Category $children)
+    public function removeChild(\Blog\Entity\Category $children)
     {
         $this->children->removeElement($children);
     }

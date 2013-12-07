@@ -76,7 +76,30 @@ return array(
             'blog' => __DIR__ . '/../view',
         ),
     ),
+
     'doctrine' => array(
+        'eventmanager' => array(
+            'orm_default' => array(
+                'subscribers' => array(
+                    'Gedmo\Tree\TreeListener',
+                ),
+            ),
+        ),
+        'driver' => array(
+            // overriding zfc-user-doctrine-orm's config
+            '_entity' => array(
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'paths' => __DIR__ . '/../src/' . __NAMESPACE__ . '/Entity',
+            ),
+            'orm_default' => array(
+                'drivers' => array(
+                    __NAMESPACE__ . '\Entity' => '_entity',
+                ),
+            ),
+        ),
+    ),
+
+    /*'doctrine' => array(
         'driver' => array(
             __NAMESPACE__ . '_driver' => array(
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
@@ -89,5 +112,5 @@ return array(
                 )
             )
         )
-    ),
+    ),*/
 );

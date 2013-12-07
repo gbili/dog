@@ -345,7 +345,7 @@ class Category extends \Blog\Entity\Category implements \Doctrine\ORM\Proxy\Prox
     /**
      * {@inheritDoc}
      */
-    public function addPost(\Dogtore\Entity\Post $posts)
+    public function addPost(\Blog\Entity\Post $posts)
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'addPost', array($posts));
@@ -356,7 +356,7 @@ class Category extends \Blog\Entity\Category implements \Doctrine\ORM\Proxy\Prox
     /**
      * {@inheritDoc}
      */
-    public function removePost(\Dogtore\Entity\Post $posts)
+    public function removePost(\Blog\Entity\Post $posts)
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'removePost', array($posts));
@@ -378,7 +378,7 @@ class Category extends \Blog\Entity\Category implements \Doctrine\ORM\Proxy\Prox
     /**
      * {@inheritDoc}
      */
-    public function setParent(\Dogtore\Entity\Category $parent = NULL)
+    public function setParent(\Blog\Entity\Category $parent = NULL)
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setParent', array($parent));
@@ -400,7 +400,7 @@ class Category extends \Blog\Entity\Category implements \Doctrine\ORM\Proxy\Prox
     /**
      * {@inheritDoc}
      */
-    public function addChild(\Dogtore\Entity\Category $children)
+    public function addChild(\Blog\Entity\Category $children)
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'addChild', array($children));
@@ -411,7 +411,7 @@ class Category extends \Blog\Entity\Category implements \Doctrine\ORM\Proxy\Prox
     /**
      * {@inheritDoc}
      */
-    public function removeChild(\Dogtore\Entity\Category $children)
+    public function removeChild(\Blog\Entity\Category $children)
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeChild', array($children));
