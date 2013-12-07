@@ -64,10 +64,10 @@ class Category extends \Blog\Entity\Category implements \Doctrine\ORM\Proxy\Prox
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'id', 'name', 'slug', 'posts', 'description', 'lft', 'lvl', 'rgt', 'root', 'parent', 'children');
+            return array('__isInitialized__', 'id', 'name', 'slug', 'description', 'lft', 'lvl', 'rgt', 'root', 'posts', 'parent', 'children');
         }
 
-        return array('__isInitialized__', 'id', 'name', 'slug', 'posts', 'description', 'lft', 'lvl', 'rgt', 'root', 'parent', 'children');
+        return array('__isInitialized__', 'id', 'name', 'slug', 'description', 'lft', 'lvl', 'rgt', 'root', 'posts', 'parent', 'children');
     }
 
     /**
@@ -257,29 +257,73 @@ class Category extends \Blog\Entity\Category implements \Doctrine\ORM\Proxy\Prox
     /**
      * {@inheritDoc}
      */
-    public function setParent(\Blog\Entity\Category $parent = NULL)
+    public function setLft($lft)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setParent', array($parent));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setLft', array($lft));
 
-        return parent::setParent($parent);
+        return parent::setLft($lft);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getParent()
+    public function getLft()
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getParent', array());
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getLft', array());
 
-        return parent::getParent();
+        return parent::getLft();
     }
 
     /**
      * {@inheritDoc}
      */
-    public function setRoot(\Blog\Entity\Category $root)
+    public function setLvl($lvl)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setLvl', array($lvl));
+
+        return parent::setLvl($lvl);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getLvl()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getLvl', array());
+
+        return parent::getLvl();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setRgt($rgt)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setRgt', array($rgt));
+
+        return parent::setRgt($rgt);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRgt()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getRgt', array());
+
+        return parent::getRgt();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setRoot($root)
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setRoot', array($root));
@@ -301,34 +345,23 @@ class Category extends \Blog\Entity\Category implements \Doctrine\ORM\Proxy\Prox
     /**
      * {@inheritDoc}
      */
-    public function getChildren()
+    public function addPost(\Dogtore\Entity\Post $posts)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getChildren', array());
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addPost', array($posts));
 
-        return parent::getChildren();
+        return parent::addPost($posts);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function addChildren(\Doctrine\Common\Collections\Collection $children)
+    public function removePost(\Dogtore\Entity\Post $posts)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addChildren', array($children));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removePost', array($posts));
 
-        return parent::addChildren($children);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function removeChildren(\Doctrine\Common\Collections\Collection $children)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeChildren', array($children));
-
-        return parent::removeChildren($children);
+        return parent::removePost($posts);
     }
 
     /**
@@ -345,23 +378,56 @@ class Category extends \Blog\Entity\Category implements \Doctrine\ORM\Proxy\Prox
     /**
      * {@inheritDoc}
      */
-    public function addPosts(\Doctrine\Common\Collections\Collection $posts)
+    public function setParent(\Dogtore\Entity\Category $parent = NULL)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addPosts', array($posts));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setParent', array($parent));
 
-        return parent::addPosts($posts);
+        return parent::setParent($parent);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function removePosts(\Doctrine\Common\Collections\Collection $posts)
+    public function getParent()
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removePosts', array($posts));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getParent', array());
 
-        return parent::removePosts($posts);
+        return parent::getParent();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addChild(\Dogtore\Entity\Category $children)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addChild', array($children));
+
+        return parent::addChild($children);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeChild(\Dogtore\Entity\Category $children)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeChild', array($children));
+
+        return parent::removeChild($children);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getChildren()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getChildren', array());
+
+        return parent::getChildren();
     }
 
 }
