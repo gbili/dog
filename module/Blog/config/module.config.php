@@ -6,6 +6,7 @@ return array(
         'invokables' => array(
             'post' => 'Blog\Controller\PostController',
             'category' => 'Blog\Controller\CategoryController',
+            'media' => 'Blog\Controller\MediaController',
         ),
     ),
     'router' => array(
@@ -15,7 +16,7 @@ return array(
                 'options' => array(
                     'route' => '/:controller[/:action][/:id]',
                     'constraints' => array(
-                        'controller' => '(post)|(category)',
+                        'controller' => '(?:post)|(?:category)|(?:media)',
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id' => '[0-9]+',
                     ),
@@ -76,7 +77,7 @@ return array(
         ),
     ),
 
-    'doctrine' => array(
+    /*'doctrine' => array(
         'eventmanager' => array(
             'orm_default' => array(
                 'subscribers' => array(
@@ -96,9 +97,16 @@ return array(
                 ),
             ),
         ),
-    ),
+    ),*/
 
    'doctrine' => array(
+        'eventmanager' => array(
+            'orm_default' => array(
+                'subscribers' => array(
+                    'Gedmo\Tree\TreeListener',
+                ),
+            ),
+        ),
         'driver' => array(
             __NAMESPACE__ . '_driver' => array(
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',

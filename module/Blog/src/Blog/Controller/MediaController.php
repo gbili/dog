@@ -7,7 +7,7 @@ use Zend\View\Model\ViewModel;
 use Blog\Form\PostForm;
 use Blog\Entity\Post;
 
-class MediaController extends EntityUsingController
+class FileController extends EntityUsingController
 {
     /**
     * Index action
@@ -16,10 +16,10 @@ class MediaController extends EntityUsingController
     public function indexAction()
     {
         $em = $this->getEntityManager();
-        $posts = $em->getRepository('Blog\Entity\Post')->findBy(array(), array('title' => 'ASC'));
+        $files = $em->getRepository('Blog\Entity\File')->findBy(array(), array('date' => 'ASC'));
 
         return new ViewModel(array(
-            'posts' => $posts,
+            'files' => $files,
         ));
     }
 
@@ -58,33 +58,61 @@ class MediaController extends EntityUsingController
      * Create a blog post
      *
      */
-    public function createAction()
+    public function uploadAction()
     {
-        $objectManager = $this->getEntityManager();
-
         // Create the form and inject the object manager
-        $form = new \Blog\Form\PostCreate($objectManager);
+        $fieldsetName = 'multiple-file-upload';
+        $form = new \Blog\Form\FileUpload('multiple-file-upload');
 
-        //Create a new, empty entity and bind it to the form
-        $blogPost = new \Blog\Entity\Post();
-        $form->bind($blogPost);
+        if (!$this->request->isPost()) {
+            return new ViewModel(array('form' => $form));
+        }
 
-        if ($this->request->isPost()) {
-            $form->setData($this->request->getPost());
+        $filesData = $form->getRemappedFilesDataIfMultiple($this->request->getFiles()->toArray());
 
-            if ($form->isValid()) {
-                $blogPost->setCreatedDate(new \DateTime());
-                $objectManager->persist($blogPost);
-                $objectManager->flush();
+        if (!$form->getFileFieldset()->isMultiple()) {
+            $filesData = array($filesData);
+        }
+
+        $errorMessages = array();
+        foreach ($filesData as $fileData) {
+            $form->setData($fileData);
+            if (!$this->isValidAndPersisted($form)) {
+                $nameOfFileTriggeringError = $fileData[$form->getFileFieldset()->getName()][$form->getFileFieldset()->getFileInputName()];
+                $errorMessages[$nameOfFileTriggeringError] = $form->getMessages();
             }
         }
 
         return new ViewModel(array(
-            'form' => $form)
-        );
+            'form' => $form,
+            'errorMessages' => $errorMessages,
+        ));
     }
 
-    /**
+    public function isValidAndPersisted($form)
+    {
+        if (!$form->isValid()) {
+            return false;
+        }
+        $file = $this->getHydratedFile($form->getData());
+        $this->persistFile($file);
+        return true;
+    }
+
+    public function getHydratedFile(array $formData)
+    {
+        $file = new \Blog\Entity\File();
+        $file->setDate(new \DateTime());
+        return $file;
+    }
+
+    public function persistFile(\Blog\Entity\File $file)
+    {
+        $this->getEntityManager()->persist($file);
+        $this->getEntityManager()->flush();
+    }
+
+   /**
     * Delete action
     *
     */

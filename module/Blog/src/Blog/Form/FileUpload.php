@@ -3,17 +3,47 @@ namespace Blog\Form;
 
 class FileUpload extends \Zend\Form\Form 
 {
+    protected $fileFieldset;
+
     public function __construct($name = null, $options = array())
     {
         parent::__construct($name, $options);
-        $this->addElements();
+        
+        //Add the user fieldset, and set it as the base fieldset
+        $this->fileFieldset = new Fieldset\FileUpload(((null === $name)? 'multiple-file-fieldset' : $name));
+        $this->fileFieldset->setUseAsBaseFieldset(true);
+        $this->add($this->fileFieldset);
+
+        // Submit
+        $this->add(array(
+            'name' => 'submit',
+            'attributes' => array(
+                'type'  => 'submit',
+                'value' => 'Upload',
+                'id' => 'submitbutton',
+                'class' => 'btn btn-default', 
+            ),
+        ));
     }
 
-    public function addElements()
+    public function getFileFieldset()
     {
-        $file = new \Zend\Form\Element\File('image-file');
-        $file->setLabel('Thumbnail')
-            ->setAttribute('id', 'image-file');
-        $this->add($file);
+        return $this->fileFieldset;
+    }
+
+    public function getRemappedFilesDataIfMultiple(array $filesData)
+    {
+        if (!$this->getFileFieldset()->isMultiple()) {
+            return $filesData;
+        }
+
+        $fileInputName = $this->getFileFieldset()->getFileInputName();
+        $fieldsetName = $this->getFileFieldset()->getName();
+        $rawFilesData = $filesData[$fieldsetName][$fileInputName];
+        $remappedFilesData = array();
+        foreach ($rawFilesData as $fileData) {
+            $remappedFilesData[] = array($fieldsetName => array($fileInputName => $fileData));
+        }
+        return $remappedFilesData;
     }
 }

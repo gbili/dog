@@ -175,6 +175,7 @@ class Post
             $this->children->removeElement($child);
         }
     }
+
     /**
     * @ORM\PrePersist
     */

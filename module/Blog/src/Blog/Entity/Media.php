@@ -34,6 +34,12 @@ class Media
     private $alt;
 
     /**
+     * Title
+     * @ORM\Column(name="type", type="string", length=64)
+     */
+    private $type;
+
+    /**
      * @ORM\Column(name="description", type="string", length=255)
      */
     private $description;
@@ -43,6 +49,12 @@ class Media
      * @ORM\OneToMany(targetEntity="Post", mappedBy="media", cascade={"persist"})
      */
     private $posts;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="File", inversedBy="medias")
+     * @ORM\JoinColumn(name="file_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    private $file;
 
     /**
      * @ORM\Column(name="width", type="integer")
@@ -55,9 +67,16 @@ class Media
     private $height;
 
     /**
-     * @ORM\Column(name="weight", type="integer")
+     * @ORM\Column(name="size", type="integer")
      */
-    private $weight;
+    private $size;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date", type="datetime", nullable=false)
+     */
+    private $date;
 
     public function __construct()
     {
@@ -97,6 +116,16 @@ class Media
     public function getAlt()
     {
         return $this->alt;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    public function getType()
+    {
+        return $this->type;
     }
 
     public function setDescription($description)
@@ -158,5 +187,33 @@ class Media
             $post->setMedia(null);
             $this->posts->removeElement($post);
         }
+    }
+
+   /**
+    * @ORM\PrePersist
+    */
+    public function setDate(\DateTime $time)
+    {
+        $this->date = $time;
+    }
+
+    /**
+    * Get Created Date
+    *
+    * @return \DateTime
+    */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    public function setFile(File $file)
+    {
+        $this->file = $file;
+    }
+
+    public function getFile()
+    {
+        return $this->file;
     }
 }
