@@ -49,6 +49,33 @@ INSERT INTO `categories` VALUES (9,NULL,'Uncategorized','uncategorized','Adam',1
 UNLOCK TABLES;
 
 --
+-- Table structure for table `files`
+--
+
+DROP TABLE IF EXISTS `files`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `files` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `slug` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `tmp_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `type` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `size` int(11) NOT NULL,
+  `date` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `files`
+--
+
+LOCK TABLES `files` WRITE;
+/*!40000 ALTER TABLE `files` DISABLE KEYS */;
+/*!40000 ALTER TABLE `files` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `medias`
 --
 
@@ -63,10 +90,13 @@ CREATE TABLE `medias` (
   `description` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `width` int(11) NOT NULL,
   `height` int(11) NOT NULL,
-  `weight` int(11) NOT NULL,
+  `size` int(11) NOT NULL,
   `date` datetime NOT NULL,
   `type` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
+  `file_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `IDX_12D2AF8193CB796C` (`file_id`),
+  CONSTRAINT `FK_12D2AF8193CB796C` FOREIGN KEY (`file_id`) REFERENCES `files` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -209,4 +239,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-12-08 14:59:55
+-- Dump completed on 2013-12-08 15:03:24

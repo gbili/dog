@@ -7,6 +7,7 @@ return array(
             'post' => 'Blog\Controller\PostController',
             'category' => 'Blog\Controller\CategoryController',
             'media' => 'Blog\Controller\MediaController',
+            'file' => 'Blog\Controller\FileController',
         ),
     ),
     'router' => array(
@@ -16,7 +17,7 @@ return array(
                 'options' => array(
                     'route' => '/:controller[/:action][/:id]',
                     'constraints' => array(
-                        'controller' => '(?:post)|(?:category)|(?:media)',
+                        'controller' => '(?:file)|(?:post)|(?:category)|(?:media)',
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id' => '[0-9]+',
                     ),

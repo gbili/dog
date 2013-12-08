@@ -9,10 +9,12 @@ class FileUpload extends \Zend\Form\Fieldset
     protected $fileInputName = 'file';
     protected $name;
 
-    public function __construct($name = null)
+    public function __construct(\Doctrine\Common\Persistence\ObjectManager $objectManager, $name)
     {
-        $this->name = $name;
         parent::__construct($name);
+        $this->name = $name;
+        $this->setHydrator(new \DoctrineModule\Stdlib\Hydrator\DoctrineObject($objectManager))
+             ->setObject(new \Blog\Entity\File());
 
         $this->isMultiple = (0 < preg_match('/multiple/', $name));
         

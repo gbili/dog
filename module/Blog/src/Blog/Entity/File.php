@@ -18,7 +18,7 @@ class File
     private $id;
 
     /**
-     * @ORM\Column(name="slug", type="string", length=64)
+     * @ORM\Column(name="name", type="string", length=64)
      */
     private $name;
 
