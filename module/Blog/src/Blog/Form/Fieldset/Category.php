@@ -21,6 +21,9 @@ class Category extends \Zend\Form\Fieldset
                 'target_class' => 'Blog\Entity\Category',
                 'object_manager' => $objectManager,
             ),
+            'attributes' => array(
+                'class' => 'form-control'
+            )
         ));
 
         $this->add(array(
@@ -34,6 +37,9 @@ class Category extends \Zend\Form\Fieldset
             'options' => array(
                 'label' => 'Name'
             ),
+            'attributes' => array(
+                'class' => 'form-control'
+            )
         ));
 
         $this->add(array(
@@ -42,6 +48,9 @@ class Category extends \Zend\Form\Fieldset
             'options' => array(
                 'label' => 'Slug'
             ),
+            'attributes' => array(
+                'class' => 'form-control'
+            )
         ));
 
         $this->add(array(
@@ -50,6 +59,9 @@ class Category extends \Zend\Form\Fieldset
             'options' => array(
                 'label' => 'Description',
             ),
+            'attributes' => array(
+                'class' => 'form-control'
+            )
         ));
     }
 

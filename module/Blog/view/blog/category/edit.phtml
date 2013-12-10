@@ -1,12 +1,2 @@
-<?php
-$title = 'Edit Category';
-$this->headTitle($title);
-?>
-<h1><?php echo $this->escapeHtml($title); ?></h1>
-
-<?php
-	$form->setAttribute('action', $this->url('blog', array('controller' => 'categroy', 'action' => 'edit', 'id' => $category->getId())));
-	$form->setAttribute('class', 'form-horizontal');
-	
-	echo $this->form($form);
-?>
+<?php $__VIEWFILE__ = __FILE__ ?>
+<?php require_once __DIR__ . '/../../partial/entity_form.phtml'; ?> 

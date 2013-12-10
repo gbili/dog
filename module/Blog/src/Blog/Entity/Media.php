@@ -23,24 +23,13 @@ class Media
     private $slug;
 
     /**
-     * @ORM\Column(name="uri", type="string", length=255)
-     */
-    private $uri;
-
-    /**
      * Title
      * @ORM\Column(name="alt", type="string", length=64)
      */
     private $alt;
 
     /**
-     * Title
-     * @ORM\Column(name="type", type="string", length=64)
-     */
-    private $type;
-
-    /**
-     * @ORM\Column(name="description", type="string", length=255)
+     * @ORM\Column(name="description", type="string", length=255, nullable=true)
      */
     private $description;
 
@@ -57,19 +46,20 @@ class Media
     private $file;
 
     /**
-     * @ORM\Column(name="width", type="integer")
+     * @ORM\Column(name="width", type="integer", nullable=true)
      */
     private $width;
 
     /**
-     * @ORM\Column(name="height", type="integer")
+     * @ORM\Column(name="height", type="integer", nullable=true)
      */
     private $height;
 
     /**
-     * @ORM\Column(name="size", type="integer")
+     * css percent
+     * @ORM\Column(name="csspercent", type="integer", nullable=true)
      */
-    private $size;
+    private $csspercent;
 
     /**
      * @var \DateTime
@@ -98,14 +88,9 @@ class Media
         return $this->slug;
     }
 
-    public function setUri($uri)
-    {
-        $this->uri = $uri;
-    }
-
     public function getUri()
     {
-        return $this->uri;
+        return $this->getFile()->getUri();
     }
 
     public function setAlt($alt)
@@ -118,17 +103,12 @@ class Media
         return $this->alt;
     }
 
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
     public function getType()
     {
-        return $this->type;
+        return $this->getFile()->getType();
     }
 
-    public function setDescription($description)
+    public function setDescription($description = null)
     {
         $this->description = $description;
     }
@@ -138,7 +118,7 @@ class Media
         return $this->description;
     }
 
-    public function setWidth($width)
+    public function setWidth($width = null)
     {
         $this->width = $width;
     }
@@ -148,7 +128,7 @@ class Media
         return $this->width;
     }
 
-    public function setHeight($height)
+    public function setHeight($height = null)
     {
         $this->height = $height;
     }
@@ -158,14 +138,19 @@ class Media
         return $this->height;
     }
 
-    public function setWeight($weight)
+    public function setCsspercent($csspercent = null)
     {
-        $this->weight = $weight;
+        $this->csspercent = $csspercent;
     }
 
-    public function getWeight()
+    public function getCsspercent()
     {
-        return $this->weight;
+        return $this->csspercent;
+    }
+
+    public function getSize()
+    {
+        return $this->getFile()->getSize();
     }
 
     public function getPosts()
@@ -173,19 +158,29 @@ class Media
         return $this->posts;
     }
 
+    public function addPost(Post $post)
+    {
+        $post->setMedia($this);
+        $this->posts->add($post);
+    }
+
     public function addPosts(\Doctrine\Common\Collections\Collection $posts)
     {
         foreach ($posts as $post) {
-            $post->setMedia($this);
-            $this->posts->add($post);
+            $this->addPost($post);
         }
+    }
+
+    public function removePost(Post $post)
+    {
+        $this->posts->removeElement($post);
+        $post->setMedia(null);
     }
 
     public function removePosts(\Doctrine\Common\Collections\Collection $posts)
     {
         foreach ($posts as $post) {
-            $post->setMedia(null);
-            $this->posts->removeElement($post);
+            $this->removePost($post);
         }
     }
 

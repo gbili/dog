@@ -23,34 +23,28 @@ class CategoryController extends EntityUsingController
 
     public function editAction()
     {
-        $category = new Category;
+        $objectManager = $this->getEntityManager();
 
-        if ($this->params('id') > 0) {
-            $category = $this->getEntityManager()->getRepository('Blog\Entity\Category')->find($this->params('id'));
-        }
-
-        $form = new CategoryForm();
+        // Create the form and inject the object manager
+        $form = new \Blog\Form\CategoryEdit($objectManager);
+        
+        //Get a new entity with the id 
+        $category = $objectManager->find('Blog\Entity\Category', (integer) $this->params('id'));
+        
         $form->bind($category);
 
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $form->setInputFilter($category->getInputFilter());
-            $form->setData($request->getPost());
+        if ($this->request->isPost()) {
+            $form->setData($this->request->getPost());
 
             if ($form->isValid()) {
-                $em = $this->getEntityManager();
-                $em->persist($category);
-                $em->flush();
-
-                $this->flashMessenger()->addSuccessMessage('Category Saved');
-
-                return $this->redirect()->toRoute('category');
+                //Save changes
+                $objectManager->flush();
             }
         }
 
         return new ViewModel(array(
-            'category' => $category,
-            'form' => $form
+            'form' => $form,
+            'entity' => $category,
         ));
     }
 

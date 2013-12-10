@@ -15,11 +15,12 @@ return array(
             'blog' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/:controller[/:action][/:id]',
+                    'route' => '/:controller[/:action][/:id][/:fourthparam]',
                     'constraints' => array(
                         'controller' => '(?:file)|(?:post)|(?:category)|(?:media)',
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id' => '[0-9]+',
+                        'fourthparam' => '[a-zA-Z0-9_-]+',
                     ),
                     'defaults' => array(
                         'controller' => 'post',
@@ -44,8 +45,7 @@ return array(
                         'action' => 'index',
                     ),
                     'post_create' => array(
-                        'header' => 'Editor',
-                        'label' => 'Create',
+                        'label' => 'New Post',
                         //contorller
                         'route' => 'blog',
                         'controller' => 'post',
@@ -60,12 +60,49 @@ return array(
                         'action' => 'index',
                     ),
                     'category_create' => array(
-                        'header' => 'Editor',
-                        'label' => 'Create',
+                        'label' => 'New Category',
                         //contorller
                         'route' => 'blog',
                         'controller' => 'category',
                         'action' => 'create',
+                    ),
+                    'file' => array(
+                        'divider' => 'above',
+                        'header' => 'File Manager',
+                        'label' => 'Files',
+                        //contorller
+                        'route' => 'blog',
+                        'controller' => 'file',
+                        'action' => 'index',
+                    ),
+                    'file_upload' => array(
+                        'label' => 'Upload Files',
+                        //contorller
+                        'route' => 'blog',
+                        'controller' => 'file',
+                        'action' => 'upload',
+                    ),
+                    'media' => array(
+                        'divider' => 'above',
+                        'label' => 'Media Library',
+                        //contorller
+                        'route' => 'blog',
+                        'controller' => 'media',
+                        'action' => 'index',
+                    ),
+                    'media_create' => array(
+                        'label' => 'New Media',
+                        //contorller
+                        'route' => 'blog',
+                        'controller' => 'media',
+                        'action' => 'create',
+                    ),
+                    'media_edit' => array(
+                        'label' => 'Edit',
+                        //contorller
+                        'route' => 'blog',
+                        'controller' => 'media',
+                        'action' => 'edit',
                     ),
                 ),
             ),

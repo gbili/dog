@@ -1,11 +1,2 @@
-<?php
-$title = 'Add Category';
-$this->headTitle($title);
-?>
-<h1><?php echo $this->escapeHtml($title); ?></h1>
-
-<?php
-	$form->setAttribute('action', $this->url('blog',array('controller' => 'category', 'action' => 'create')));
-	$form->setAttribute('class', 'form-horizontal');
-	
-	echo $this->form($this->form);
+<?php $__VIEWFILE__ = __FILE__ ?>
+<?php require_once __DIR__ . '/../../partial/entity_form.phtml'; ?> 

@@ -5,16 +5,13 @@ class FileUpload extends \Zend\Form\Form
 {
     protected $fileFieldset;
 
-    public function __construct(\Doctrine\Common\Persistence\ObjectManager $objectManager, $name = null, $options = array())
+    public function __construct($name = null, $options = array())
     {
         $name = ((null === $name)? 'multiple-files' : $name);
         parent::__construct($name, $options);
         
-        // The form will hydrate an object of type Post
-        $this->setHydrator(new \DoctrineModule\Stdlib\Hydrator\DoctrineObject($objectManager));
-        
         //Add the user fieldset, and set it as the base fieldset
-        $this->fileFieldset = new Fieldset\FileUpload($objectManager, $name);
+        $this->fileFieldset = new Fieldset\FileUpload($name);
         $this->fileFieldset->setUseAsBaseFieldset(true);
         $this->add($this->fileFieldset);
 

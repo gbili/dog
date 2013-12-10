@@ -23,9 +23,9 @@ class File
     private $name;
 
     /**
-     * @ORM\Column(name="tmp_name", type="string", length=255)
+     * @ORM\Column(name="uri", type="string", length=255)
      */
-    private $tmpName;
+    private $uri;
 
     /**
      * Title
@@ -72,14 +72,14 @@ class File
         return $this->name;
     }
 
-    public function setTmpName($tmpName)
+    public function setUri($uri)
     {
-        $this->tmpName = $tmpName;
+        $this->uri = $uri;
     }
 
-    public function getTmpName()
+    public function getUri()
     {
-        return $this->tmpName;
+        return $this->uri;
     }
 
     public function setSize($size)
@@ -107,6 +107,12 @@ class File
         return $this->medias;
     }
 
+    public function addMedia(Media $media)
+    {
+        $media->setFile($this);
+        $this->medias->add($media);
+    }
+
     public function addMedias(\Doctrine\Common\Collections\Collection $medias)
     {
         foreach ($medias as $media) {
@@ -114,18 +120,17 @@ class File
         }
     }
 
-    public function addMedia(Media $media)
-    {
-        $media->setFile($this);
-        $this->medias->add($media);
-    }
-
     public function removeMedias(\Doctrine\Common\Collections\Collection $medias)
     {
         foreach ($medias as $media) {
-            $media->setFile(null);
-            $this->medias->removeElement($media);
+            $this->removeMedia($media);
         }
+    }
+
+    public function removeMedia(Media $media)
+    {
+        $this->medias->removeElement($media);
+        $media->setFile(null);
     }
 
    /**
@@ -144,5 +149,22 @@ class File
     public function getDate()
     {
         return $this->date;
+    }
+
+    public function hydrate(array $data)
+    {
+        foreach ($data as $key => $value) {
+            if ($key === 'tmp_name') {
+                $key = 'uri';
+            }
+            $method = 'set' . ucfirst($key);
+            $this->$method($value);
+        }
+    }
+
+    public function delete()
+    {
+        exec('rm ' . $this->getUri());
+        return !file_exists($this->getUri());
     }
 }

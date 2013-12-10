@@ -279,17 +279,27 @@ class Category
         return $this->root;
     }
 
+    public function getPosts()
+    {
+        return $this->posts;
+    }
+
     /**
-     * Add posts
+     * Add post
      *
      * @param \Blog\Entity\Post $posts
-     * @return Category
      */
-    public function addPost(\Blog\Entity\Post $posts)
+    public function addPost(Post $post)
     {
-        $this->posts[] = $posts;
+        $post->setCategory($this);
+        $this->posts->add($post);
+    }
 
-        return $this;
+    public function addPosts(\Doctrine\Common\Collections\Collection $posts)
+    {
+        foreach ($posts as $post) {
+            $this->addPost($post);
+        }
     }
 
     /**
@@ -297,19 +307,22 @@ class Category
      *
      * @param \Blog\Entity\Post $posts
      */
-    public function removePost(\Blog\Entity\Post $posts)
+    public function removePost(\Blog\Entity\Post $post)
     {
-        $this->posts->removeElement($posts);
+        $this->posts->removeElement($post);
+        $post->setCategory(null);
     }
 
     /**
-     * Get posts
+     * Remove posts
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @param \Blog\Entity\Post $posts
      */
-    public function getPosts()
+    public function removePosts(\Doctrine\Common\Collections\Collection $posts)
     {
-        return $this->posts;
+        foreach ($posts as $post) {
+            $this->removePost($post);
+        }
     }
 
     /**
@@ -335,36 +348,34 @@ class Category
         return $this->parent;
     }
 
-    /**
-     * Add children
-     *
-     * @param \Blog\Entity\Category $children
-     * @return Category
-     */
-    public function addChild(\Blog\Entity\Category $children)
-    {
-        $this->children[] = $children;
-
-        return $this;
-    }
-
-    /**
-     * Remove children
-     *
-     * @param \Blog\Entity\Category $children
-     */
-    public function removeChild(\Blog\Entity\Category $children)
-    {
-        $this->children->removeElement($children);
-    }
-
-    /**
-     * Get children
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
     public function getChildren()
     {
         return $this->children;
+    }
+
+    public function addChild(Category $child)
+    {
+        $child->setParent($this);
+        $this->children->add($child);
+    }
+
+    public function addChildren(\Doctrine\Common\Collections\Collection $children)
+    {
+        foreach ($children as $child) {
+            $this->addChild($child);
+        }
+    }
+
+    public function removeChild(Category $child)
+    {
+        $child->setParent(null);
+        $this->children->removeElement($child);
+    }
+
+    public function removeChildren(\Doctrine\Common\Collections\Collection $children)
+    {
+        foreach ($children as $child) {
+            $this->removeChild($child);
+        }
     }
 }

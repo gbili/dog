@@ -35,7 +35,7 @@ class FileController extends EntityUsingController
         $form = new \Blog\Form\FileEdit($objectManager);
         
         //Get a new entity with the id 
-        $blogPost = $objectManager->find('Blog\Entity\File', (integer) $this->params('id'));
+        $file = $objectManager->find('Blog\Entity\File', (integer) $this->params('id'));
         
         $form->bind($file);
 
@@ -50,7 +50,7 @@ class FileController extends EntityUsingController
 
         return new ViewModel(array(
             'form' => $form,
-            'post' => $blogPost,
+            'entity' => $file,
         ));
     }
 
@@ -62,12 +62,15 @@ class FileController extends EntityUsingController
     {
         // Create the form and inject the object manager
         $form = new \Blog\Form\FileUpload(
-            $this->getEntityManager(),
             'multiple-file-upload'
         );
 
+        $errorMessages = array();
         if (!$this->request->isPost()) {
-            return new ViewModel(array('form' => $form));
+            return new ViewModel(array(
+                'form' => $form,
+                'errorMessages' => $errorMessages,
+            ));
         }
 
         $filesData = $form->getRemappedFilesDataIfMultiple($this->request->getFiles()->toArray());
@@ -77,22 +80,26 @@ class FileController extends EntityUsingController
         }
 
         $errorMessages = $this->processFilesData($filesData, $form);
-
-        return new ViewModel(array(
-            'form' => $form,
-            'errorMessages' => $errorMessages,
-        ));
+        if (!empty($errorMessages)) {
+            return new ViewModel(array(
+                'form' => $form,
+                'errorMessages' => $errorMessages,
+            ));
+        }
+        return $this->redirect()->toRoute('blog', array('controller' => 'file', 'action' => 'index'));
     }
 
     public function processFilesData($filesData, $form)
     {
         $errorMessages = array();
         foreach ($filesData as $fileData) {
-            //$form = new \Blog\Form\FileUpload($objectManager, 'multiple-file-upload');
+            $form = new \Blog\Form\FileUpload('multiple-file-upload');
             $form->setData($fileData);
             if (!$this->isValidAndPersisted($form)) {
-                $nameOfFileTriggeringError = $fileData[$form->getFileFieldset()->getName()][$form->getFileFieldset()->getFileInputName()];
-                $errorMessages[$nameOfFileTriggeringError] = $form->getMessages();
+                $fileName = $fileData[$form->getFileFieldset()->getName()][$form->getFileFieldset()->getFileInputName()]['name'];
+                $errors = $form->getMessages();
+                $unwrappedErrors = $errors[$form->getFileFieldset()->getName()][$form->getFileFieldset()->getFileInputName()];
+                $errorMessages[$fileName] = $unwrappedErrors;
             }
         }
         return $errorMessages;
@@ -110,9 +117,13 @@ class FileController extends EntityUsingController
 
     public function getHydratedFile($form)
     {
+        $formData = $form->getData();
+        $formData = $formData[$form->getFileFieldset()->getName()][$form->getFileFieldset()->getFileInputName()];
+        $persistableData = array_intersect_key($formData, array_flip(array('name', 'type', 'date', 'tmp_name', 'size')));
+        $persistableData['date'] = new \DateTime();
+
         $file = new \Blog\Entity\File();
-        $form->bind($file);
-        $file->setDate(new \DateTime());
+        $file->hydrate($persistableData);
         return $file;
     }
 
@@ -128,16 +139,14 @@ class FileController extends EntityUsingController
     */
     public function deleteAction()
     {
-        $post = $this->getEntityManager()->getRepository('Blog\Entity\Post')->find($this->params('id'));
-
-        if ($post) {
+        $file = $this->getEntityManager()->getRepository('Blog\Entity\File')->find($this->params('id'));
+        if ($file && $file->delete()) {
             $em = $this->getEntityManager();
-            $em->remove($post);
+            $em->remove($file);
             $em->flush();
-
-            $this->flashMessenger()->addSuccessMessage('Post Deleted');
+            $this->flashMessenger()->addSuccessMessage('File Deleted');
         }
 
-        return $this->redirect()->toRoute('post');
+        return $this->redirect()->toRoute('blog', array('controller' => 'file', 'action' => 'index'));
     }
 }

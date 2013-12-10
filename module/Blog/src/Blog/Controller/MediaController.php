@@ -4,10 +4,7 @@ namespace Blog\Controller;
 use DoctrineORMModule\Stdlib\Hydrator\DoctrineEntity;
 use Zend\View\Model\ViewModel;
 
-use Blog\Form\PostForm;
-use Blog\Entity\Post;
-
-class FileController extends EntityUsingController
+class MediaController extends EntityUsingController
 {
     /**
     * Index action
@@ -16,10 +13,10 @@ class FileController extends EntityUsingController
     public function indexAction()
     {
         $em = $this->getEntityManager();
-        $files = $em->getRepository('Blog\Entity\File')->findBy(array(), array('date' => 'ASC'));
+        $medias = $em->getRepository('Blog\Entity\Media')->findBy(array(), array('slug' => 'ASC'));
 
         return new ViewModel(array(
-            'files' => $files,
+            'medias' => $medias,
         ));
     }
 
@@ -32,12 +29,12 @@ class FileController extends EntityUsingController
         $objectManager = $this->getEntityManager();
 
         // Create the form and inject the object manager
-        $form = new \Blog\Form\PostEdit($objectManager);
+        $form = new \Blog\Form\MediaEdit($objectManager);
         
         //Get a new entity with the id 
-        $blogPost = $objectManager->find('Blog\Entity\Post', (integer) $this->params('id'));
+        $media = $objectManager->find('Blog\Entity\Media', (integer) $this->params('id'));
         
-        $form->bind($blogPost);
+        $form->bind($media);
 
         if ($this->request->isPost()) {
             $form->setData($this->request->getPost());
@@ -50,84 +47,116 @@ class FileController extends EntityUsingController
 
         return new ViewModel(array(
             'form' => $form,
-            'post' => $blogPost,
+            'entity' => $media,
         ));
     }
 
     /**
-     * Create a blog post
+     * Link media to a post 
      *
      */
-    public function uploadAction()
+    public function linkAction()
     {
+        $objectManager = $this->getEntityManager();
+
         // Create the form and inject the object manager
-        $fieldsetName = 'multiple-file-upload';
-        $form = new \Blog\Form\FileUpload('multiple-file-upload');
+        $form = new \Blog\Form\MediaLink($objectManager);
+        
+        //Get a new entity with the id 
+        $media = $objectManager->find('Blog\Entity\Media', (integer) $this->params('id'));
+        $form->bind($media);
 
-        if (!$this->request->isPost()) {
-            return new ViewModel(array('form' => $form));
+        if ($this->request->isPost()) {
+            $form->setData($this->request->getPost());
+
+            if ($form->isValid()) {
+                //Save changes
+                $objectManager->flush();
+            }
         }
 
-        $filesData = $form->getRemappedFilesDataIfMultiple($this->request->getFiles()->toArray());
+        var_dump($media->getPosts()->getKeys());
+        return new ViewModel(array(
+            'form' => $form,
+            'entity' => $media,
+        ));
+    }
 
-        if (!$form->getFileFieldset()->isMultiple()) {
-            $filesData = array($filesData);
+    /**
+     * Link media to a post 
+     *
+     */
+    public function unlinkAction()
+    {
+        $objectManager = $this->getEntityManager();
+
+        // Create the form and inject the object manager
+        $form = new \Blog\Form\MediaLink($objectManager);
+        
+        //Get a new entity with the id 
+        $mediaId = (integer) $this->params('id');
+        $postId  = (integer) $this->params('fourthparam');
+
+        $media = $objectManager->find('Blog\Entity\Media', $mediaId);
+        $post  = $objectManager->find('Blog\Entity\Post', $postId);
+
+        if ($media && $post) {
+            $media->removePost($post);
+            $objectManager->flush();
+
+            $this->flashMessenger()->addSuccessMessage('Media and post unlinked');
         }
 
-        $errorMessages = array();
-        foreach ($filesData as $fileData) {
-            $form->setData($fileData);
-            if (!$this->isValidAndPersisted($form)) {
-                $nameOfFileTriggeringError = $fileData[$form->getFileFieldset()->getName()][$form->getFileFieldset()->getFileInputName()];
-                $errorMessages[$nameOfFileTriggeringError] = $form->getMessages();
+        return $this->redirect()->toRoute('blog', array('controller' => 'media', 'action' => 'index'));
+    }
+    
+    /**
+     * Create a blog media
+     *
+     */
+    public function createAction()
+    {
+        $objectManager = $this->getEntityManager();
+
+        // Create the form and inject the object manager
+        $form = new \Blog\Form\MediaCreate($objectManager);
+
+        //Create a new, empty entity and bind it to the form
+        $media = new \Blog\Entity\Media();
+        $form->bind($media);
+
+        if ($this->request->isPost()) {
+            $form->setData($this->request->getPost());
+
+            if ($form->isValid()) {
+                $media->setDate(new \DateTime());
+                $objectManager->persist($media);
+                $objectManager->flush();
             }
         }
 
         return new ViewModel(array(
+            'entity' => $media,
             'form' => $form,
-            'errorMessages' => $errorMessages,
         ));
     }
 
-    public function isValidAndPersisted($form)
-    {
-        if (!$form->isValid()) {
-            return false;
-        }
-        $file = $this->getHydratedFile($form->getData());
-        $this->persistFile($file);
-        return true;
-    }
-
-    public function getHydratedFile(array $formData)
-    {
-        $file = new \Blog\Entity\File();
-        $file->setDate(new \DateTime());
-        return $file;
-    }
-
-    public function persistFile(\Blog\Entity\File $file)
-    {
-        $this->getEntityManager()->persist($file);
-        $this->getEntityManager()->flush();
-    }
-
-   /**
+    /**
     * Delete action
     *
     */
     public function deleteAction()
     {
-        $post = $this->getEntityManager()->getRepository('Blog\Entity\Post')->find($this->params('id'));
+        $media = $this->getEntityManager()->getRepository('Blog\Entity\Media')->find($this->params('id'));
 
-        if ($post) {
+        if ($media) {
             $em = $this->getEntityManager();
-            $em->remove($post);
+            $em->remove($media);
             $em->flush();
 
-            $this->flashMessenger()->addSuccessMessage('Post Deleted');
+            $this->flashMessenger()->addSuccessMessage('Media Deleted');
         }
 
-        return $this->redirect()->toRoute('post');
+        return $this->redirect()->toRoute('blog', array('controller' => 'media', 'action' => 'index'));
     }
 }

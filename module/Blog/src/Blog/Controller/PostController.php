@@ -50,7 +50,7 @@ class PostController extends EntityUsingController
 
         return new ViewModel(array(
             'form' => $form,
-            'post' => $blogPost,
+            'entity' => $blogPost,
         ));
     }
 
@@ -70,18 +70,21 @@ class PostController extends EntityUsingController
         $form->bind($blogPost);
 
         if ($this->request->isPost()) {
+            $httpPostData = $this->request->getPost();
             $form->setData($this->request->getPost());
 
             if ($form->isValid()) {
-                $blogPost->setCreatedDate(new \DateTime());
+                $blogPost->setDate(new \DateTime());
                 $objectManager->persist($blogPost);
                 $objectManager->flush();
+                return $this->redirect()->toRoute('blog', array('controller' => 'post', 'action' => 'index'));
             }
         }
 
         return new ViewModel(array(
-            'form' => $form)
-        );
+            'form' => $form,
+            'entity' => $blogPost,
+        ));
     }
 
     /**
@@ -100,6 +103,6 @@ class PostController extends EntityUsingController
             $this->flashMessenger()->addSuccessMessage('Post Deleted');
         }
 
-        return $this->redirect()->toRoute('post');
+        return $this->redirect()->toRoute('blog', array('controller' => 'post', 'action' => 'index'));
     }
 }

@@ -345,34 +345,56 @@ class Category extends \Blog\Entity\Category implements \Doctrine\ORM\Proxy\Prox
     /**
      * {@inheritDoc}
      */
-    public function addPost(\Blog\Entity\Post $posts)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addPost', array($posts));
-
-        return parent::addPost($posts);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function removePost(\Blog\Entity\Post $posts)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removePost', array($posts));
-
-        return parent::removePost($posts);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function getPosts()
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPosts', array());
 
         return parent::getPosts();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addPost(\Blog\Entity\Post $post)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addPost', array($post));
+
+        return parent::addPost($post);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addPosts(\Doctrine\Common\Collections\Collection $posts)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addPosts', array($posts));
+
+        return parent::addPosts($posts);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removePost(\Blog\Entity\Post $post)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removePost', array($post));
+
+        return parent::removePost($post);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removePosts(\Doctrine\Common\Collections\Collection $posts)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removePosts', array($posts));
+
+        return parent::removePosts($posts);
     }
 
     /**
@@ -400,34 +422,56 @@ class Category extends \Blog\Entity\Category implements \Doctrine\ORM\Proxy\Prox
     /**
      * {@inheritDoc}
      */
-    public function addChild(\Blog\Entity\Category $children)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addChild', array($children));
-
-        return parent::addChild($children);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function removeChild(\Blog\Entity\Category $children)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeChild', array($children));
-
-        return parent::removeChild($children);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function getChildren()
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getChildren', array());
 
         return parent::getChildren();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addChild(\Blog\Entity\Category $child)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addChild', array($child));
+
+        return parent::addChild($child);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addChildren(\Doctrine\Common\Collections\Collection $children)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addChildren', array($children));
+
+        return parent::addChildren($children);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeChild(\Blog\Entity\Category $child)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeChild', array($child));
+
+        return parent::removeChild($child);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeChildren(\Doctrine\Common\Collections\Collection $children)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeChildren', array($children));
+
+        return parent::removeChildren($children);
     }
 
 }

@@ -17,14 +17,6 @@ class Post extends \Zend\Form\Fieldset
         ));
 
         $this->add(array(
-            'name' => 'date',
-            'type'  => 'Zend\Form\Element\Hidden',
-            'attributes' => array(
-                'value' => (string) time(),
-            ),
-        ));
-
-        $this->add(array(
             'name' => 'title',
             'type'  => 'Zend\Form\Element\Text',
             'options' => array(
@@ -42,7 +34,8 @@ class Post extends \Zend\Form\Fieldset
                 'label' => 'Content',
             ),
             'attributes' => array(
-                'class' => 'form-control'
+                'class' => 'form-control',
+                'rows' => '8',
             )
         ));
 
@@ -70,6 +63,22 @@ class Post extends \Zend\Form\Fieldset
                 'property' => 'name',
                 'target_class' => 'Blog\Entity\Category',
                 'object_manager' => $objectManager,
+            ),
+            'attributes' => array(
+                'class' => 'form-control'
+            )
+        ));
+
+        $this->add(array(
+            'name' => 'media',
+            'type' => 'DoctrineModule\Form\Element\ObjectSelect',
+            'options' => array(
+                'label' => 'Featured Image',
+                'property' => 'slug',
+                'target_class' => 'Blog\Entity\Media',
+                'object_manager' => $objectManager,
+                'display_empty_item' => true,
+                'empty_item_label' => '---',
             ),
             'attributes' => array(
                 'class' => 'form-control'
@@ -126,6 +135,10 @@ class Post extends \Zend\Form\Fieldset
             ),
 
             'category' => array(
+                'required' => false,
+            ),
+
+            'media' => array(
                 'required' => false,
             ),
         );

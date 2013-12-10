@@ -16,6 +16,15 @@ class PostEdit extends \Zend\Form\Form
         $this->add($postFieldset);
 
         // ... add CSRF and submit elements
+        $this->add(array(
+            'name' => 'submit',
+            'attributes' => array(
+                'type'  => 'submit',
+                'value' => 'Save',
+                'id' => 'submitbutton',
+                'class' => 'btn btn-default', 
+            ),
+        ));
         // Optionally set your validation group here
     }
 }

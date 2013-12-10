@@ -125,7 +125,7 @@ class Post
         return $this->category;
     }
 
-    public function setMedia(Media $media)
+    public function setMedia(Media $media = null)
     {
         $this->media = $media;
     }
@@ -160,19 +160,29 @@ class Post
         return $this->children;
     }
 
+    public function addChild(Post $child)
+    {
+        $child->setParent($this);
+        $this->children->add($child);
+    }
+
     public function addChildren(\Doctrine\Common\Collections\Collection $children)
     {
         foreach ($children as $child) {
-            $child->setParent($this);
-            $this->children->add($child);
+            $this->addChild($child);
         }
+    }
+
+    public function removeChild(Post $child)
+    {
+        $child->setParent(null);
+        $this->children->removeElement($child);
     }
 
     public function removeChildren(\Doctrine\Common\Collections\Collection $children)
     {
         foreach ($children as $child) {
-            $child->setParent(null);
-            $this->children->removeElement($child);
+            $this->removeChild($child);
         }
     }
 
