@@ -11,7 +11,7 @@ class PostCreate extends \Zend\Form\Form
         $this->setHydrator(new \DoctrineModule\Stdlib\Hydrator\DoctrineObject($objectManager));
         
         //Add the user fieldset, and set it as the base fieldset
-        $postFieldset = new Fieldset\Post($objectManager);
+        $postFieldset = new Fieldset\PostLinkable($objectManager);
         $postFieldset->setUseAsBaseFieldset(true);
         $this->add($postFieldset);
 

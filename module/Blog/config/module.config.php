@@ -28,6 +28,19 @@ return array(
                     ),
                 ),
             ),
+            'blog_media_view' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/media/view[/:slug]',
+                    'constraints' => array(
+                        'slug' => '[a-zA-Z0-9_-]+\\.?[a-z]+',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'media',
+                        'action' => 'view',
+                    ),
+                ),
+            ),
         ),
     ),
 
@@ -50,6 +63,13 @@ return array(
                         'route' => 'blog',
                         'controller' => 'post',
                         'action' => 'create',
+                    ),
+                    'post_link' => array(
+                        'label' => 'Link Post',
+                        //contorller
+                        'route' => 'blog',
+                        'controller' => 'post',
+                        'action' => 'link',
                     ),
                     'category' => array(
                         'divider' => 'above',

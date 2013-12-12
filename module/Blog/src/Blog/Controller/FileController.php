@@ -24,9 +24,9 @@ class FileController extends EntityUsingController
     }
 
     /**
-    * Edit action
-    *
-    */
+     * Edit action
+     *
+     */
     public function editAction()
     {
         $objectManager = $this->getEntityManager();
@@ -44,86 +44,110 @@ class FileController extends EntityUsingController
 
             if ($form->isValid()) {
                 //Save changes
+                $file->move($file->getName());
                 $objectManager->flush();
             }
         }
-
         return new ViewModel(array(
             'form' => $form,
             'entity' => $file,
         ));
     }
 
-    /**
-     * Create a blog post
-     *
-     */
     public function uploadAction()
     {
-        // Create the form and inject the object manager
-        $form = new \Blog\Form\FileUpload(
-            'multiple-file-upload'
-        );
+        $formName = 'file-form';
+        $form = new \Blog\Form\Html5MultiUpload($formName);
+        $file = new \Blog\Entity\File();
 
-        $errorMessages = array();
-        if (!$this->request->isPost()) {
-            return new ViewModel(array(
-                'form' => $form,
-                'errorMessages' => $errorMessages,
-            ));
-        }
+        $messages = array();
 
-        $filesData = $form->getRemappedFilesDataIfMultiple($this->request->getFiles()->toArray());
+        if ($this->getRequest()->isPost()) {
+            $data = array_merge_recursive(
+                $this->getRequest()->getPost()->toArray(),
+                $this->getRequest()->getFiles()->toArray()
+            );
 
-        if (!$form->getFileFieldset()->isMultiple()) {
-            $filesData = array($filesData);
-        }
+            $messages = $this->tryToUploadOneFileAtATime($formName, 'file', $data);
 
-        $errorMessages = $this->processFilesData($filesData, $form);
-        if (!empty($errorMessages)) {
-            return new ViewModel(array(
-                'form' => $form,
-                'errorMessages' => $errorMessages,
-            ));
-        }
-        return $this->redirect()->toRoute('blog', array('controller' => 'file', 'action' => 'index'));
-    }
-
-    public function processFilesData($filesData, $form)
-    {
-        $errorMessages = array();
-        foreach ($filesData as $fileData) {
-            $form = new \Blog\Form\FileUpload('multiple-file-upload');
-            $form->setData($fileData);
-            if (!$this->isValidAndPersisted($form)) {
-                $fileName = $fileData[$form->getFileFieldset()->getName()][$form->getFileFieldset()->getFileInputName()]['name'];
-                $errors = $form->getMessages();
-                $unwrappedErrors = $errors[$form->getFileFieldset()->getName()][$form->getFileFieldset()->getFileInputName()];
-                $errorMessages[$fileName] = $unwrappedErrors;
+            if ($this->areAllFilesUploaded($messages)) {
+                return $this->redirect()->toRoute('blog', array('controller' => 'file', 'action' => 'index'));
             }
         }
-        return $errorMessages;
+
+        return new ViewModel(array(
+            'messages' => $messages,
+            'form' => $form,
+            'entity' => $file,
+        ));
     }
 
-    public function isValidAndPersisted($form)
+    public function areAllFilesUploaded(array $messages)
     {
-        if (!$form->isValid()) {
-            return false;
+        foreach ($messages as $message) {
+            if (!isset($message['success'])) {
+                return false; 
+            }
         }
-        $file = $this->getHydratedFile($form);
-        $this->persistFile($file);
         return true;
     }
 
-    public function getHydratedFile($form)
+    public function tryToUploadOneFileAtATime($formName, $fileInputName, array $data)
     {
+        $messages = array();
+        foreach ($data[$fileInputName] as $fileData) {
+            $singleData = array($fileInputName => $fileData);
+            $fileName = $fileData['name'];
+            $singleFileFormData = $data;
+            $singleFileFormData[$fileInputName] = $fileData;
+            $messages[$fileName] = $this->uploadOneFile($formName, $fileInputName, $singleFileFormData);
+        }
+        return $messages;
+    }
+
+    public function uploadOneFile($formName, $fileInputName, array $data)
+    {
+        $form = new \Blog\Form\Html5MultiUpload($formName);
+        $form->setData($data);
+        if (!$form->isValid()) {
+            return $form->getMessages();
+        }
+        //array('otherinput'=>'inputval', 
+        //      'file' => array(
+        //           name=>filename.jpg, 
+        //           tmp_upload=>'/something/asdfasdf/LKGO'
+        //           ...
+        //       )
+        //       otherinput ...
+        //);
         $formData = $form->getData();
-        $formData = $formData[$form->getFileFieldset()->getName()][$form->getFileFieldset()->getFileInputName()];
-        $persistableData = array_intersect_key($formData, array_flip(array('name', 'type', 'date', 'tmp_name', 'size')));
+        
+        //array(
+        //    name=>filename.jpg,
+        //    tmp_upload=>'/something/asdfasdf/LKGO'
+        //    ...
+        // );
+        $fileData = $formData[$fileInputName];
+        $this->saveFile($fileData);
+        return array('success' => 'File Uploaded');
+    }
+
+    public function saveFile(array $fileData)
+    {
+        $file = $this->getHydratedFile($fileData);
+        $this->persistFile($file);
+    }
+
+    public function getHydratedFile($fileData)
+    {
+        $persistableData = array_intersect_key($fileData, array_flip(array('name', 'type', 'date', 'tmp_name', 'size')));
         $persistableData['date'] = new \DateTime();
 
         $file = new \Blog\Entity\File();
-        $file->hydrate($persistableData);
+        $file->hydrateWithFormData($persistableData);
+        if ($file->getName() !== $file->getBasename()) {
+            $file->move($file->getName());
+        }
         return $file;
     }
 

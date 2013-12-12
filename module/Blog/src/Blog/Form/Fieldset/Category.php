@@ -38,7 +38,8 @@ class Category extends \Zend\Form\Fieldset
                 'label' => 'Name'
             ),
             'attributes' => array(
-                'class' => 'form-control'
+                'placeholder' => 'Category Name',
+                'class' => 'form-control',
             )
         ));
 
@@ -49,7 +50,8 @@ class Category extends \Zend\Form\Fieldset
                 'label' => 'Slug'
             ),
             'attributes' => array(
-                'class' => 'form-control'
+                'class' => 'form-control',
+                'placeholder' => 'the-slug-is-a-lowercase-representation-of-the-name-with-dashes',
             )
         ));
 
@@ -60,7 +62,8 @@ class Category extends \Zend\Form\Fieldset
                 'label' => 'Description',
             ),
             'attributes' => array(
-                'class' => 'form-control'
+                'class' => 'form-control',
+                'placeholder' => 'Descriptions may not be shown, but they are used as meta for search engines',
             )
         ));
     }

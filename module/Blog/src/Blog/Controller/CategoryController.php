@@ -68,8 +68,9 @@ class CategoryController extends EntityUsingController
         }
 
         return new ViewModel(array(
-            'form' => $form)
-        );
+            'form' => $form,
+            'entity' => $blogCategory,
+        ));
     }
 
     public function deleteAction()

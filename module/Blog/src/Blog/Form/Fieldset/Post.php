@@ -2,7 +2,7 @@
 namespace Blog\Form\Fieldset;
 
 class Post extends \Zend\Form\Fieldset 
-    implements \Zend\InputFilter\InputFilterProviderInterface
+implements \Zend\InputFilter\InputFilterProviderInterface
 {
     public function __construct(\Doctrine\Common\Persistence\ObjectManager $objectManager)
     {
@@ -17,25 +17,14 @@ class Post extends \Zend\Form\Fieldset
         ));
 
         $this->add(array(
-            'name' => 'title',
+            'name' => 'slug',
             'type'  => 'Zend\Form\Element\Text',
             'options' => array(
-                'label' => 'Title'
-            ),
-            'attributes' => array(
-                'class' => 'form-control'
-            )
-        ));
-
-        $this->add(array(
-            'name' => 'content',
-            'type'  => 'Zend\Form\Element\Textarea',
-            'options' => array(
-                'label' => 'Content',
+                'label' => 'Slug'
             ),
             'attributes' => array(
                 'class' => 'form-control',
-                'rows' => '8',
+                'placeholder' => 'the-slug-will-be-shown-in-url',
             )
         ));
 
@@ -44,14 +33,15 @@ class Post extends \Zend\Form\Fieldset
             'type' => 'DoctrineModule\Form\Element\ObjectSelect',
             'options' => array(
                 'label' => 'Parent Post',
-                'property' => 'title',
+                'property' => 'slug',
                 'target_class' => 'Blog\Entity\Post',
                 'object_manager' => $objectManager,
                 'display_empty_item' => true,
                 'empty_item_label' => '---',
             ),
             'attributes' => array(
-                'class' => 'form-control'
+                'placeholder' => 'the-slug-will-be-shown-in-url',
+                'class' => 'form-control',
             )
         ));
 
@@ -63,22 +53,6 @@ class Post extends \Zend\Form\Fieldset
                 'property' => 'name',
                 'target_class' => 'Blog\Entity\Category',
                 'object_manager' => $objectManager,
-            ),
-            'attributes' => array(
-                'class' => 'form-control'
-            )
-        ));
-
-        $this->add(array(
-            'name' => 'media',
-            'type' => 'DoctrineModule\Form\Element\ObjectSelect',
-            'options' => array(
-                'label' => 'Featured Image',
-                'property' => 'slug',
-                'target_class' => 'Blog\Entity\Media',
-                'object_manager' => $objectManager,
-                'display_empty_item' => true,
-                'empty_item_label' => '---',
             ),
             'attributes' => array(
                 'class' => 'form-control'
@@ -96,7 +70,7 @@ class Post extends \Zend\Form\Fieldset
                 ),
             ),
 
-            'title' => array(
+            'slug' => array(
                 'required' => true,
                 'filters'  => array(
                     array('name' => 'StripTags'),
@@ -104,27 +78,9 @@ class Post extends \Zend\Form\Fieldset
                 ),
                 'validators' => array(
                     array(
-                        'name'    => 'StringLength',
+                        'name'    => 'Regex',
                         'options' => array(
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-                            'max'      => 255,
-                        ),
-                    ),
-                ),
-            ),
-
-            'content' => array(
-                'required' => true,
-                'filters'  => array(
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array(
-                    array(
-                        'name'    => 'StringLength',
-                        'options' => array(
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
+                            'pattern'      => '/[a-z]+[a-z-]+[a-z]+/',
                         ),
                     ),
                 ),
@@ -135,10 +91,6 @@ class Post extends \Zend\Form\Fieldset
             ),
 
             'category' => array(
-                'required' => false,
-            ),
-
-            'media' => array(
                 'required' => false,
             ),
         );

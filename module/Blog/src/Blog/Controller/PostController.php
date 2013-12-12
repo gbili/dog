@@ -16,7 +16,7 @@ class PostController extends EntityUsingController
     public function indexAction()
     {
         $em = $this->getEntityManager();
-        $posts = $em->getRepository('Blog\Entity\Post')->findBy(array(), array('title' => 'ASC'));
+        $posts = $em->getRepository('Blog\Entity\Post')->findBy(array(), array('slug' => 'ASC'));
 
         return new ViewModel(array(
             'posts' => $posts,
@@ -60,31 +60,89 @@ class PostController extends EntityUsingController
      */
     public function createAction()
     {
-        $objectManager = $this->getEntityManager();
 
+        $objectManager = $this->getEntityManager();
         // Create the form and inject the object manager
-        $form = new \Blog\Form\PostCreate($objectManager);
+        $combinedForm = new \Blog\Form\PostAndPostDataCombinedCreate($objectManager);
 
         //Create a new, empty entity and bind it to the form
+        $blogPostData = new \Blog\Entity\PostData();
         $blogPost = new \Blog\Entity\Post();
-        $form->bind($blogPost);
 
-        if ($this->request->isPost()) {
-            $httpPostData = $this->request->getPost();
-            $form->setData($this->request->getPost());
-
-            if ($form->isValid()) {
-                $blogPost->setDate(new \DateTime());
-                $objectManager->persist($blogPost);
-                $objectManager->flush();
-                return $this->redirect()->toRoute('blog', array('controller' => 'post', 'action' => 'index'));
-            }
+        if (!$this->request->isPost()) {
+            return new ViewModel(array(
+                'entity' => $blogPost,
+                'form' => $combinedForm,
+            ));
         }
 
-        return new ViewModel(array(
-            'form' => $form,
-            'entity' => $blogPost,
-        ));
+        $httpPostData = $this->request->getPost();
+        $combinedForm->setData($httpPostData);
+
+        if (!$combinedForm->isValid()) {
+            return new ViewModel(array(
+                'form' => $combinedForm,
+                'entity' => $blogPost,
+            ));
+        }
+
+        $postDataForm = new \Blog\Form\PostDataCreate($objectManager);
+        $postDataForm->bind($blogPostData);
+        $postDataForm->setData($httpPostData);
+
+        if ($postDataForm->isValid()) {
+            $blogPostData->setDate(new \DateTime());
+            $objectManager->persist($blogPostData);
+            $objectManager->flush();
+        }
+
+        $postForm     = new \Blog\Form\PostCreate($objectManager);
+        $postForm->bind($blogPost);
+
+        $postForm->setData($httpPostData);
+
+        if ($postForm->isValid()) {
+            $blogPost->setData($blogPostData);
+            $objectManager->persist($blogPost);
+            $objectManager->flush();
+            return $this->redirect()->toRoute('blog', array('controller' => 'post', 'action' => 'index'));
+        }
+    }
+
+    /**
+     * Create a blog post
+     *
+     */
+    public function linkAction()
+    {
+
+        $objectManager = $this->getEntityManager();
+        // Create the form and inject the object manager
+        $postForm     = new \Blog\Form\PostCreate($objectManager);
+        //Create a new, empty entity and bind it to the form
+        $blogPost = new \Blog\Entity\Post();
+
+        if (!$this->request->isPost()) {
+            return new ViewModel(array(
+                'entity' => $blogPost,
+                'form' => $postForm,
+            ));
+        }
+
+        $postForm->bind($blogPost);
+        $postForm->setData($blogPost);
+
+        if (!$postForm->isValid()) {
+            return new ViewModel(array(
+                'form' => $postForm,
+                'entity' => $blogPost,
+            ));
+        }
+
+        $objectManager->persist($blogPost);
+        $objectManager->flush();
+
+        return $this->redirect()->toRoute('blog', array('controller' => 'post', 'action' => 'index'));
     }
 
     /**

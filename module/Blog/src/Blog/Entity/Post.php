@@ -20,26 +20,21 @@ class Post
     private $id;
 
     /**
-     * @ORM\Column(name="title", type="string", length=64)
+     * @ORM\Column(name="slug", type="string", length=64)
      */
-    private $title;
+    private $slug;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Media", inversedBy="posts")
-     * @ORM\JoinColumn(name="media_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="PostData", inversedBy="posts")
+     * @ORM\JoinColumn(name="data_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $media;
+    private $data;
 
     /**
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="posts")
      * @ORM\JoinColumn(name="category_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $category;
-
-    /**
-     * @ORM\Column(name="content", type="text")
-     */
-    private $content;
 
     /**
      * @Gedmo\TreeLeft
@@ -78,13 +73,6 @@ class Post
      */
     private $children;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date", type="datetime", nullable=false)
-     */
-    private $date;
-
     public function __construct()
     {
         $this->children = new \Doctrine\Common\Collections\ArrayCollection();
@@ -95,24 +83,35 @@ class Post
         return $this->id;
     }
 
-    public function setTitle($title)
+    public function setSlug($slug)
     {
-        $this->title = $title;
+        $this->slug = $slug;
     }
 
-    public function getTitle()
+    public function getSlug()
     {
-        return $this->title;
+        return $this->slug;
     }
 
-    public function setContent($content)
+    public function setData(PostData $postData)
     {
-        $this->content = $content;
+        $this->data = $postData;
     }
 
-    public function getContent()
+    public function getData()
     {
-        return $this->content;
+        return $this->data;
+    }
+
+    /**
+     * Proxy for post data
+     */
+    public function __call($method, $params)
+    {
+        if (!method_exists($this->getData(), $method)) {
+            throw new \Exception('Call to undefined method: ' . $method);
+        }
+        return ((!empty($params))? $this->getData()->$method(current($params)) : $this->getData()->$method());
     }
 
     public function setCategory(Category $category)
@@ -123,16 +122,6 @@ class Post
     public function getCategory()
     {
         return $this->category;
-    }
-
-    public function setMedia(Media $media = null)
-    {
-        $this->media = $media;
-    }
-
-    public function getMedia()
-    {
-        return $this->media;
     }
 
     public function setParent(Post $parent = null)
@@ -184,23 +173,5 @@ class Post
         foreach ($children as $child) {
             $this->removeChild($child);
         }
-    }
-
-    /**
-    * @ORM\PrePersist
-    */
-    public function setDate(\DateTime $time)
-    {
-        $this->date = $time;
-    }
-
-    /**
-    * Get Created Date
-    *
-    * @return \DateTime
-    */
-    public function getDate()
-    {
-        return $this->date;
     }
 }

@@ -18,14 +18,22 @@ class File
     private $id;
 
     /**
+     * The name it had in the client's machine
+     *
      * @ORM\Column(name="name", type="string", length=64)
      */
     private $name;
 
     /**
-     * @ORM\Column(name="uri", type="string", length=255)
+     * @ORM\Column(name="basename", type="string", length=64)
      */
-    private $uri;
+    private $basename;
+
+    /**
+     * The containing directory path
+     * @ORM\Column(name="dirpath", type="string", length=64)
+     */
+    private $dirpath;
 
     /**
      * Title
@@ -72,14 +80,38 @@ class File
         return $this->name;
     }
 
+    public function setBasename($basename)
+    {
+        $this->basename = $basename;
+    }
+
+    public function getBasename()
+    {
+        return $this->basename;
+    }
+
+    public function setDirpath($dirpath)
+    {
+        $this->dirpath = $dirpath;
+    }
+
+    public function getDirpath()
+    {
+        return $this->dirpath;
+    }
+
     public function setUri($uri)
     {
-        $this->uri = $uri;
+        $parts = explode('/', $uri);
+        $basename = array_pop($parts);
+        $dirpath = implode('/', $parts);
+        $this->setBasename($basename);
+        $this->setDirpath($dirpath);
     }
 
     public function getUri()
     {
-        return $this->uri;
+        return $this->getDirpath() . '/' . $this->getBasename();
     }
 
     public function setSize($size)
@@ -141,6 +173,11 @@ class File
         $this->date = $time;
     }
 
+    public function getSrc()
+    {
+        return '/' . end(explode('/', $this->getDirpath())) . '/' . $this->getBasename();
+    }
+
     /**
     * Get Created Date
     *
@@ -151,7 +188,7 @@ class File
         return $this->date;
     }
 
-    public function hydrate(array $data)
+    public function hydrateWithFormData(array $data)
     {
         foreach ($data as $key => $value) {
             if ($key === 'tmp_name') {
@@ -166,5 +203,31 @@ class File
     {
         exec('rm ' . $this->getUri());
         return !file_exists($this->getUri());
+    }
+
+    public function move($newBasename)
+    {
+        if (0 ===  preg_match('#^[a-zA-Z0-9][a-zA-Z0-9-_]+?\\.[a-zA-Z0-9]+$#', $newBasename)) {
+            throw new \Exception('The filename is not supported');
+        }
+        $newUri = $this->getDirpath() . '/' . $newBasename;
+
+        $count = 0;
+        while (file_exists($newUri)) {
+            if (!isset($basenameNoSuffix)) {
+                $basenameParts = explode('.', $newBasename);
+                $basenameSuffix = array_pop($basenameParts);
+                $basenameNoSuffix = implode('.', $basenameParts);
+            }
+            $newUri = $this->getDirpath() . '/' . $basenameNoSuffix . '-' . ++$count . '.' . $basenameSuffix;
+        }
+
+        exec("mv {$this->getUri()} $newUri");
+        if (!file_exists($newUri) || file_exists($this->getUri())) {
+            return false;
+        }
+        $this->setUri($newUri);
+        $this->setName($this->getBasename());
+        return true;
     }
 }

@@ -35,7 +35,7 @@ class Media
 
     /**
      * The media is linked to this post
-     * @ORM\OneToMany(targetEntity="Post", mappedBy="media", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="PostData", mappedBy="media", cascade={"persist"})
      */
     private $posts;
 

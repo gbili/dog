@@ -3,16 +3,11 @@ namespace Dogtore;
 
 return array(
     'controllers' => array(
-        'invokables' => array(
-            __NAMESPACE__ . '\Controller\\' . __NAMESPACE__ => __NAMESPACE__ . '\Controller\\' . __NAMESPACE__ . 'Controller',
-        ),
         'factories' => array(
-            __NAMESPACE__ . '\Controller\EditorController' => __NAMESPACE__ . '\Service\EditorControllerFactory',
-            __NAMESPACE__ . '\Controller\ListController'   => __NAMESPACE__ . '\Service\ListControllerFactory',
+            __NAMESPACE__ . '\Controller\DoggyController'   => __NAMESPACE__ . '\Service\DoggyControllerFactory',
         ),
         'aliases' => array(
-            'editor' => __NAMESPACE__ . '\Controller\EditorController',
-            'list' => __NAMESPACE__ . '\Controller\ListController',
+            'doggy' => __NAMESPACE__ . '\Controller\DoggyController',
         ),
     ),
 
@@ -21,16 +16,46 @@ return array(
     // Before adding this, it showed a 404 not found
     'router' => array(
         'routes' => array(
-            'list' => array(
+            'dogtore_index' => array(
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
-                    'route'    => '/[:action]',
+                    'route'    => '/[:category]',
                     'constraints' => array(
-                        'action' => 'search',
+                        'category' => '(?:(?:symptom)|(?:cause)|(?:solution))s?',
                     ),
                     'defaults' => array(
-                        'controller'    => 'list',
+                        'controller'    => 'doggy',
                         'action'        => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
+            ),
+            'dogtore_search' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route'    => '/get-me-:category{-}[-talking-about-:terms]',
+                    'constraints' => array(
+                        'category' => '(?:(?:symptom)|(?:cause)|(?:solution))s?',
+                        'terms' => '[a-zA-Z0-9]+[a-zA-Z0-9_-]*',
+                    ),
+                    'defaults' => array(
+                        'controller'    => 'doggy',
+                        'action'        => 'search',
+                    ),
+                ),
+                'may_terminate' => true,
+            ),
+            'dogtore_view' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
+                'options' => array(
+                    'route'    => '/view[-:slug{-}][-:category]',
+                    'constraints' => array(
+                        'category' => '(?:symptom)|(?:cause)|(?:solution)',
+                        'slug' => '[a-zA-Z0-9-_]+',
+                    ),
+                    'defaults' => array(
+                        'controller'    => 'doggy',
+                        'action'        => 'view',
                     ),
                 ),
                 'may_terminate' => true,
@@ -44,18 +69,18 @@ return array(
             // And finally, here is where we define our page hierarchy
             'dogtore_symptom' => array(
                 'label' => 'Symptoms',
-                'route' => 'list',
-                'action' => 'symptoms',
+                'route' => 'dogtore_index',
+                'params' => array('category' => 'symptoms'),
             ),
             'dogtore_cause' => array(
                 'label' => 'Causes',
-                'route' => 'list',
-                'action' => 'causes',
+                'route' => 'dogtore_index',
+                'params' => array('category' => 'causes'),
             ),
             'dogtore_solution' => array(
                 'label' => 'Solutions',
-                'route' => 'list',
-                'action' => 'solutions',
+                'route' => 'dogtore_index',
+                'params' => array('category' => 'solutions'),
             ),
         ),
     ),

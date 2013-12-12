@@ -1,6 +1,25 @@
 <?php echo $this->form($form);?>
 
-<?php foreach ($errorMessages as $fileName => $errorMessage) :?>
-<?php $errorMessage = implode(', ', $errorMessage) ?>
-    <p><?php echo "$fileName, was not uploaded: $errorMessage" ?></p>
-<?php endforeach ?>
+<?php if (!empty($messages)) :?>
+    <ul>
+    <?php foreach ($messages as $filename => $messageArray) : ?>
+        <?php if (isset($messageArray['success'])) : ?>
+        <li><?php echo $filename . ' : ' . $messageArray['success']?></li>
+        <?php else : ?>
+        <li><?php echo $filename ?>
+            <ul>
+                <?php foreach ($messageArray as $inputType => $inputErrors ) : ?>
+                <li><?php echo $inputType ?>
+                    <ul>
+                        <?php foreach ($inputErrors as $errorType => $error) : ?>
+                        <li><?php echo $error?></li>
+                        <?php endforeach ?>
+                    </ul>
+                </li>
+                <?php endforeach ?>
+            </ul>
+        </li>
+        <?php endif ?>
+    <?php endforeach ?>
+    </ul>
+<?php endif ?>

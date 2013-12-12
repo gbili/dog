@@ -9,13 +9,21 @@ $this->headTitle($title);
 ));?>">Add new File</a></p>
 <table class="table table-bordered table-hover">
     <tr>
-        <th>File</th>
+        <th>Name</th>
+        <th>Dirpath</th>
+        <th>Basename</th>
+        <th>Type</th>
+        <th>Size</th>
         <th>&nbsp;</th>
         <th>&nbsp;</th>
     </tr>
     <?php foreach($files as $file) : ?>
 	    <tr>
 	        <td><?php echo $this->escapeHtml($file->getName());?></td>
+	        <td><?php echo $this->escapeHtml($file->getDirpath());?></td>
+	        <td><?php echo $this->escapeHtml($file->getBasename());?></td>
+	        <td><?php echo $this->escapeHtml($file->getType());?></td>
+	        <td><?php echo $this->escapeHtml($file->getSize());?></td>
 	        <td>
                 <a href="<?php echo $this->url('blog', array(
                     'controller' => 'file', 

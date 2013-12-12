@@ -42,6 +42,7 @@ class MediaController extends EntityUsingController
             if ($form->isValid()) {
                 //Save changes
                 $objectManager->flush();
+                return $this->redirectToMediaView($media);
             }
         }
 
@@ -75,7 +76,6 @@ class MediaController extends EntityUsingController
             }
         }
 
-        var_dump($media->getPosts()->getKeys());
         return new ViewModel(array(
             'form' => $form,
             'entity' => $media,
@@ -106,7 +106,6 @@ class MediaController extends EntityUsingController
 
             $this->flashMessenger()->addSuccessMessage('Media and post unlinked');
         }
-
         return $this->redirect()->toRoute('blog', array('controller' => 'media', 'action' => 'index'));
     }
     
@@ -132,12 +131,22 @@ class MediaController extends EntityUsingController
                 $media->setDate(new \DateTime());
                 $objectManager->persist($media);
                 $objectManager->flush();
+                return $this->redirectToMediaView($media);
             }
         }
 
         return new ViewModel(array(
             'entity' => $media,
             'form' => $form,
+        ));
+    }
+
+    public function redirectToMediaView(\Blog\Entity\Media $media)
+    {
+        return $this->redirect()->toRoute('blog_media_view', array(
+            'controller' => 'media',
+            'action' => 'view',
+            'slug' => $media->getSlug()
         ));
     }
 
@@ -156,7 +165,22 @@ class MediaController extends EntityUsingController
 
             $this->flashMessenger()->addSuccessMessage('Media Deleted');
         }
-
         return $this->redirect()->toRoute('blog', array('controller' => 'media', 'action' => 'index'));
+    }
+
+    public function viewAction()
+    {   
+        $slug = $this->params('slug');
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $queryBuilder->select('m')
+            ->from('Blog\Entity\Media', 'm')
+            ->where('m.slug = ?1')
+            ->setParameter(1, $slug); 
+        $media = current($queryBuilder->getQuery()->getResult());
+
+        return new ViewModel(array(
+            'entity' => $media,
+        ));
     }
 }
