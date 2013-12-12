@@ -1,25 +1,54 @@
-<?php echo $this->form($form);?>
+<?php
+$fileparts = explode('/', __FILE__);
+$action = substr(end($fileparts), 0, -6);
+$controller = prev($fileparts); 
+$title = ucfirst($action) . ' ' . ucfirst($controller);
+$this->headTitle($title);
+$form->prepare();
+?>
+<div class="row">
+    <div class="col-sm-0 col-md-2 col-lg-2"></div>
+    <div class="col-sm-12 col-md-8 col-lg-8">
+        <h1><?php echo $this->escapeHtml($title); ?></h1>
+    </div>
+    <div class="col-sm-0 col-md-2 col-lg-2"></div>
+</div>
 
-<?php if (!empty($messages)) :?>
-    <ul>
-    <?php foreach ($messages as $filename => $messageArray) : ?>
-        <?php if (isset($messageArray['success'])) : ?>
-        <li><?php echo $filename . ' : ' . $messageArray['success']?></li>
-        <?php else : ?>
-        <li><?php echo $filename ?>
-            <ul>
+<div class="row">
+    <div class="col-sm-0 col-md-2 col-lg-2"></div>
+    <div class="col-sm-12 col-md-8 col-lg-8">
+    <?php echo $this->form()->openTag($form)?>
+        <?php foreach ($form->getElements() as $element) : ?>
+            <div class="form-group">
+                <?php echo ((null !== $element->getLabel())? $this->formLabel($element) : '') ?>
+                <?php echo $this->formElement($element) ?>
+            </div>
+        <?php endforeach ?>
+    <?php echo $this->form()->closeTag() ?>
+    <?php if (!empty($messages)) :?>
+        <?php foreach ($messages as $filename => $messageArray) : ?>
+            <?php if (isset($messageArray['success'])) : ?>
+            <div class="alert alert-success">
+                <strong><?php echo $filename?></strong><?php echo ' : ' . $messageArray['success']?>
+            </div><!-- end success -->
+            <?php else : ?>
                 <?php foreach ($messageArray as $inputType => $inputErrors ) : ?>
-                <li><?php echo $inputType ?>
-                    <ul>
-                        <?php foreach ($inputErrors as $errorType => $error) : ?>
-                        <li><?php echo $error?></li>
-                        <?php endforeach ?>
-                    </ul>
-                </li>
+                    <div class="alert alert-danger">
+                        <?php if ('' === $filename) :?>
+                            <strong>No Files selected</strong>
+                        <?php else : ?>
+                            <strong><?php echo "$filename :" ?></strong>
+                            <?php foreach ($inputErrors as $errorType => $error) : ?>
+                                    <?php echo "$inputType : $errorType : $error" ?>
+                            <?php endforeach ?>
+                        <?php endif ?>
+                    </div><!-- end warning -->
                 <?php endforeach ?>
-            </ul>
-        </li>
-        <?php endif ?>
-    <?php endforeach ?>
-    </ul>
-<?php endif ?>
+            <?php endif ?>
+        <?php endforeach ?>
+    <?php endif ?>
+    </div>
+    <div class="col-sm-0 col-md-2 col-lg-2"></div>
+</div>
+
+
