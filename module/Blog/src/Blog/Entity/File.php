@@ -175,7 +175,8 @@ class File
 
     public function getSrc()
     {
-        return '/' . end(explode('/', $this->getDirpath())) . '/' . $this->getBasename();
+        $dirparts = explode('/', $this->getDirpath());
+        return '/' . end($dirparts) . '/' . $this->getBasename();
     }
 
     /**

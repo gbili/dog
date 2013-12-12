@@ -48,7 +48,7 @@ class MediaController extends EntityUsingController
 
         return new ViewModel(array(
             'form' => $form,
-            'entity' => $media,
+            'entityId' => $media->getId(),
         ));
     }
 
@@ -78,7 +78,7 @@ class MediaController extends EntityUsingController
 
         return new ViewModel(array(
             'form' => $form,
-            'entity' => $media,
+            'entityId' => $media->getId(),
         ));
     }
 
@@ -115,18 +115,41 @@ class MediaController extends EntityUsingController
      */
     public function createAction()
     {
+        $messages = array();
         $objectManager = $this->getEntityManager();
 
+        $files = $this->getEntityManager()->getRepository('Blog\Entity\File')->findAll();
+        //If no files, redirect to file uploads
+        if (empty($files)) {
+            return $this->redirect()->toRoute('blog', array('controller' => 'file', 'action' => 'upload'));
+        }
+        
         // Create the form and inject the object manager
         $form = new \Blog\Form\MediaCreate($objectManager);
+
+        //If file needs to be preselected in the dropdown
+        $fileId = $this->params('id');
+        if (null !== $fileId) {
+            $files = $objectManager->getRepository('Blog\Entity\File')->findById((integer) $fileId);
+            if (!is_array($files)) {
+                $fileId = null;
+                $messages[] = array('danger' => 'The specified id, does not exist');
+            } else {
+                current($form->getFieldsets())->turnFileSelectorIntoHidden();
+            }
+        }
 
         //Create a new, empty entity and bind it to the form
         $media = new \Blog\Entity\Media();
         $form->bind($media);
 
         if ($this->request->isPost()) {
-            $form->setData($this->request->getPost());
-
+            $postData = $this->request->getPost();
+            if (null !== $fileId) {
+                $postData->media['file'] = $fileId;
+            }
+            $form->setData($postData);
+            
             if ($form->isValid()) {
                 $media->setDate(new \DateTime());
                 $objectManager->persist($media);
@@ -136,7 +159,8 @@ class MediaController extends EntityUsingController
         }
 
         return new ViewModel(array(
-            'entity' => $media,
+            'entityId' => $fileId,
+            'messages' => $messages,
             'form' => $form,
         ));
     }

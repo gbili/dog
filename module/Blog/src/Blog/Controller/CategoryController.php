@@ -44,7 +44,7 @@ class CategoryController extends EntityUsingController
 
         return new ViewModel(array(
             'form' => $form,
-            'entity' => $category,
+            'entityId' => $category->getId(),
         ));
     }
 
@@ -69,7 +69,7 @@ class CategoryController extends EntityUsingController
 
         return new ViewModel(array(
             'form' => $form,
-            'entity' => $blogCategory,
+            'entityId' => $blogCategory->getId(),
         ));
     }
 

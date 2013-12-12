@@ -50,7 +50,7 @@ class PostController extends EntityUsingController
 
         return new ViewModel(array(
             'form' => $form,
-            'entity' => $blogPost,
+            'entityId' => $blogPost->getId(),
         ));
     }
 
@@ -71,7 +71,7 @@ class PostController extends EntityUsingController
 
         if (!$this->request->isPost()) {
             return new ViewModel(array(
-                'entity' => $blogPost,
+                'entityId' => $blogPost->getId(),
                 'form' => $combinedForm,
             ));
         }
@@ -82,7 +82,7 @@ class PostController extends EntityUsingController
         if (!$combinedForm->isValid()) {
             return new ViewModel(array(
                 'form' => $combinedForm,
-                'entity' => $blogPost,
+                'entityId' => $blogPost->getId(),
             ));
         }
 
@@ -117,6 +117,11 @@ class PostController extends EntityUsingController
     {
 
         $objectManager = $this->getEntityManager();
+        $postDatas = $objectManager->getRepository('Blog\Entity\PostData')->findAll();
+        if (empty($postDatas)) {
+            return $this->redirect()->toRoute('blog', array('controller' => 'post', 'action' => 'create'));
+        }
+
         // Create the form and inject the object manager
         $postForm     = new \Blog\Form\PostCreate($objectManager);
         //Create a new, empty entity and bind it to the form
@@ -124,7 +129,7 @@ class PostController extends EntityUsingController
 
         if (!$this->request->isPost()) {
             return new ViewModel(array(
-                'entity' => $blogPost,
+                'entityId' => $blogPost->getId(),
                 'form' => $postForm,
             ));
         }
@@ -135,7 +140,7 @@ class PostController extends EntityUsingController
         if (!$postForm->isValid()) {
             return new ViewModel(array(
                 'form' => $postForm,
-                'entity' => $blogPost,
+                'entityId' => $blogPost->getId(),
             ));
         }
 
