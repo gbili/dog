@@ -22,6 +22,7 @@ class CategoryCreate extends \Zend\Form\Form
                 'type'  => 'Submit',
                 'value' => 'Save',
                 'id' => 'submitbutton',
+                'class' => 'btn btn-default', 
             ),
         ));
         // Optionally set your validation group here
