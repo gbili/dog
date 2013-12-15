@@ -11,6 +11,15 @@ return array(
         ),
     ),
 
+    'service_manager' => array(
+        'factories' => array(
+            __NAMESPACE__ . '\Service\AclCheck' => __NAMESPACE__ . '\Service\AclCheckFactory',
+        ),
+        'aliases' => array(
+            'aclcheck' => __NAMESPACE__ . '\Service\AclCheck',
+        ),
+    ),
+
     // The mapping of a URL to a particular action is done using routes that
     // are defined in the module's module.config.php file.
     // Before adding this, it showed a 404 not found
