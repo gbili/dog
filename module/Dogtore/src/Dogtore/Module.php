@@ -1,5 +1,4 @@
 <?php
-
 namespace Dogtore;
 
 class Module 
@@ -22,12 +21,9 @@ class Module
 
     public function onBootstrap(\Zend\Mvc\MvcEvent $e)
     {
-        $this->attachAcl($e);
-    }
+        $eventManager = $e->getApplication()->getEventManager();
 
-    public function attachAcl(\Zend\Mvc\MvcEvent $e)
-    {
-        $aclChecker = $e->getApplication()->getServiceManager()->get('aclcheck');
-        $e->getApplication()->getEventManager()->attach('route', array($aclChecker, 'check'));
+        $aclGuard = $e->getApplication()->getServiceManager()->get('acl_guard');
+        $eventManager->attach(\Zend\Mvc\MvcEvent::EVENT_DISPATCH, array($aclGuard, 'check'));
     }
 }

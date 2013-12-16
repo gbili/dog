@@ -13,10 +13,12 @@ return array(
 
     'service_manager' => array(
         'factories' => array(
-            __NAMESPACE__ . '\Service\AclCheck' => __NAMESPACE__ . '\Service\AclCheckFactory',
+            __NAMESPACE__ . '\Service\Acl' => __NAMESPACE__ . '\Service\AclFactory',
+            __NAMESPACE__ . '\Service\AclGuard' => __NAMESPACE__ . '\Service\AclGuardFactory',
         ),
         'aliases' => array(
-            'aclcheck' => __NAMESPACE__ . '\Service\AclCheck',
+            'acl_guard' => __NAMESPACE__ . '\Service\AclGuard',
+            'acl' => __NAMESPACE__ . '\Service\Acl',
         ),
     ),
 
