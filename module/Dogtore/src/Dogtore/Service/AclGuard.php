@@ -11,6 +11,8 @@ class AclGuard
 
     private $authenticationService = null;
 
+    private $matchedRouteName = null; 
+
     private $mvcEvent = null;
 
     public function setAcl(\Zend\Permissions\Acl\Acl $acl)
@@ -34,6 +36,7 @@ class AclGuard
     public function setMvcEvent(\Zend\Mvc\MvcEvent $e)
     {
         $this->mvcEvent = $e;
+        return $this;
     }
 
     public function getMvcEvent()
@@ -47,6 +50,7 @@ class AclGuard
     public function setAuthenticationService(\Zend\Authentication\AuthenticationService $authService)
     {
         $this->authenticationService = $authService;
+        return $this;
     }
 
     public function getAuthenticationService()
@@ -54,13 +58,23 @@ class AclGuard
         return $this->authenticationService;
     }
 
+    public function setMatchedRouteName($routename)
+    {
+        $this->matchedRouteName = $routename;
+        return $this;
+    }
+
+    public function getMatchedRouteName()
+    {
+        if (null === $this->matchedRouteName) {
+             $this->setMatchedRouteName($this->getMvcEvent()->getRouteMatch()->getMatchedRouteName());
+        }
+        return $this->matchedRouteName;
+    }
+
     public function check(\Zend\Mvc\MvcEvent $e)
     {
-        $this->setMvcEvent($e);
-
-        $routename = $e->getRouteMatch()->getMatchedRouteName();
-
-        return (($this->getAcl()->isAllowed($this->getRole(), $routename))? $this->allowed() : $this->denied()); 
+        return (($this->getAcl()->isAllowed($this->getRole(), $this->getMatchedRouteName()))? $this->allowed() : $this->denied()); 
     }
 
     public function getRole()
@@ -78,7 +92,7 @@ class AclGuard
         $controller = $e->getTarget();           
 
         if ($this->getRole() === self::NO_RIGHTS_ROLE) {
-            $controller->redirect()->toRoute('auth', array('controller' => 'auth', 'action' => 'login'));
+            $controller->redirect()->toRoute('auth_login');
         } else {
             $controller->redirect()->toRoute('snap', array('controller' => 'snap', 'action' => 'forbidden'));
         }

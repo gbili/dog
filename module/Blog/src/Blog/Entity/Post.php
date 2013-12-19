@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @Gedmo\Tree(type="nested")
  * @ORM\Table(name="posts")
- * use repository for handy tree functions
+ *  use repository for handy tree functions
  * @ORM\Entity(repositoryClass="Gedmo\Tree\Entity\Repository\NestedTreeRepository")
  */
 class Post
@@ -35,6 +35,12 @@ class Post
      * @ORM\JoinColumn(name="category_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $category;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="\User\Entity\User", inversedBy="posts")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    private $user;
 
     /**
      * @Gedmo\TreeLeft
@@ -173,5 +179,15 @@ class Post
         foreach ($children as $child) {
             $this->removeChild($child);
         }
+    }
+
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
+
+    public function getUser()
+    {
+        return $this->user;
     }
 }

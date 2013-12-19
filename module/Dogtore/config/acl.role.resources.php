@@ -6,12 +6,16 @@ return array(
             'dogtore_index',
             'dogtore_search',
             'dogtore_view',
-            'auth',
+            'profile_view',
+            'auth_login',
+            'auth_register',
         ),
     ),
     'blacklist' => array(
         'user' => array(
             //empty blacklist allowed everything
+            'auth_login',
+            'auth_register',
         ),
     ),
 );

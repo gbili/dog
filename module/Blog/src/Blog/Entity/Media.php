@@ -202,6 +202,11 @@ class Media
         return $this->date;
     }
 
+    public function getSrc()
+    {
+        return $this->getFile()->getSrc();
+    }
+
     public function setFile(File $file)
     {
         $this->file = $file;

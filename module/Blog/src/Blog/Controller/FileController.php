@@ -7,7 +7,7 @@ use Zend\View\Model\ViewModel;
 use Blog\Form\PostForm;
 use Blog\Entity\Post;
 
-class FileController extends EntityUsingController
+class FileController extends \User\Controller\LoggedInController 
 {
     /**
     * Index action
@@ -56,105 +56,22 @@ class FileController extends EntityUsingController
 
     public function uploadAction()
     {
-        $formName = 'file-form';
-        $form = new \Blog\Form\Html5MultiUpload($formName);
-        $file = new \Blog\Entity\File();
-
-        $messages = array();
+        $fileUploader = new \Blog\Service\FileEntityUploader();
 
         if ($this->getRequest()->isPost()) {
-            $data = array_merge_recursive(
-                $this->getRequest()->getPost()->toArray(),
-                $this->getRequest()->getFiles()->toArray()
-            );
+            $fileUploader->setFileInputName('file')
+                         ->setEntityManager($this->getEntityManager())
+                         ->setRequest($this->getRequest());
 
-            $messages = $this->tryToUploadOneFileAtATime($formName, 'file', $data);
-
-            if ($this->areAllFilesUploaded($messages)) {
+            if ($fileUploader->uploadFiles()) {
                 return $this->redirect()->toRoute('blog', array('controller' => 'file', 'action' => 'index'));
             }
+            $messages = $fileUploader->getMessages();
         }
-
         return new ViewModel(array(
-            'messages' => $messages,
-            'form' => $form,
-            'entity' => $file,
+            'messages' => ((isset($messages))? $messages : array()),
+            'form' => $fileUploader->getFormCopy(),
         ));
-    }
-
-    public function areAllFilesUploaded(array $messages)
-    {
-        foreach ($messages as $message) {
-            if (!isset($message['success'])) {
-                return false; 
-            }
-        }
-        return true;
-    }
-
-    public function tryToUploadOneFileAtATime($formName, $fileInputName, array $data)
-    {
-        $messages = array();
-        foreach ($data[$fileInputName] as $fileData) {
-            $singleData = array($fileInputName => $fileData);
-            $fileName = $fileData['name'];
-            $singleFileFormData = $data;
-            $singleFileFormData[$fileInputName] = $fileData;
-            $messages[$fileName] = $this->uploadOneFile($formName, $fileInputName, $singleFileFormData);
-        }
-        return $messages;
-    }
-
-    public function uploadOneFile($formName, $fileInputName, array $data)
-    {
-        $form = new \Blog\Form\Html5MultiUpload($formName);
-        $form->setData($data);
-        if (!$form->isValid()) {
-            return $form->getMessages();
-        }
-        //array('otherinput'=>'inputval', 
-        //      'file' => array(
-        //           name=>filename.jpg, 
-        //           tmp_upload=>'/something/asdfasdf/LKGO'
-        //           ...
-        //       )
-        //       otherinput ...
-        //);
-        $formData = $form->getData();
-        
-        //array(
-        //    name=>filename.jpg,
-        //    tmp_upload=>'/something/asdfasdf/LKGO'
-        //    ...
-        // );
-        $fileData = $formData[$fileInputName];
-        $this->saveFile($fileData);
-        return array('success' => 'File Uploaded');
-    }
-
-    public function saveFile(array $fileData)
-    {
-        $file = $this->getHydratedFile($fileData);
-        $this->persistFile($file);
-    }
-
-    public function getHydratedFile($fileData)
-    {
-        $persistableData = array_intersect_key($fileData, array_flip(array('name', 'type', 'date', 'tmp_name', 'size')));
-        $persistableData['date'] = new \DateTime();
-
-        $file = new \Blog\Entity\File();
-        $file->hydrateWithFormData($persistableData);
-        if ($file->getName() !== $file->getBasename()) {
-            $file->move($file->getName());
-        }
-        return $file;
-    }
-
-    public function persistFile(\Blog\Entity\File $file)
-    {
-        $this->getEntityManager()->persist($file);
-        $this->getEntityManager()->flush();
     }
 
    /**

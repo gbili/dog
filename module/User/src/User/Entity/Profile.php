@@ -32,7 +32,7 @@ class Profile
 
     /**
      *
-     * @ORM\OneToOne(targetEntity="User", mappedBy="profile")
+     * @ORM\OneToOne(targetEntity="User", mappedBy="profile", cascade={"persist"})
      */
     private $user;
 
@@ -96,7 +96,7 @@ class Profile
         return $this->content;
     }
 
-    public function setMedia(Media $media = null)
+    public function setMedia(\Blog\Entity\Media $media = null)
     {
         $this->media = $media;
     }
@@ -104,6 +104,22 @@ class Profile
     public function getMedia()
     {
         return $this->media;
+    }
+
+    public function hasMedia()
+    {
+        return $this->media instanceof \Blog\Entity\Media;
+    }
+
+    public function setUser(User $user)
+    {
+        $user->setProfile($this);
+        $this->user = $user;
+    }
+
+    public function getUser()
+    {
+        return $this->user;
     }
 
     /**

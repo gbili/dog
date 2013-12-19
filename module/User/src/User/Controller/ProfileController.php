@@ -1,7 +1,7 @@
 <?php
 namespace User\Controller;
 
-class ProfileController extends EntityUsingController
+class ProfileController extends LoggedInController
 {
     /**
     * Index action
@@ -9,139 +9,76 @@ class ProfileController extends EntityUsingController
     */
     public function indexAction()
     {
-        if (!$entity = $this->identity()) {
-            throw new \Exception('should not be here, acl not working'); 
+        if (!$user->hasProfile()) {
+            return $this->redirect()->toRoute('profile_edit');
         }
+
+        $profile = $user->getProfile();        
+        $media = $profile->getMedia();
         return new \Zend\View\Model\ViewModel(array(
-            'entity' => $entity
+            'profile' => $profile, 
+            'media' => $media, 
+            'entity' => $user, 
         ));
     }
 
     /**
-     * Edit action
+     *
+     */
+    public function listAction()
+    {
+        $profiles = $this->getEntityManager()->getRepository('User\Entity\Profile')->findAll();
+        return new \Zend\View\Model\ViewModel(array(
+            'profiles' => $profiles,
+        ));
+    }
+
+    /**
+     * Create a blog post
      *
      */
     public function editAction()
     {
         $objectManager = $this->getEntityManager();
 
-        // Create the form and inject the object manager
-        $form = new \Blog\Form\PostEdit($objectManager);
+        $user = $this->identity();
         
-        //Get a new entity with the id 
-        $blogPost = $objectManager->find('Blog\Entity\Post', (integer) $this->params('id'));
-        
-        $form->bind($blogPost);
-
-        if ($this->request->isPost()) {
-            $form->setData($this->request->getPost());
-
-            if ($form->isValid()) {
-                //Save changes
-                $objectManager->flush();
-            }
-        }
-
-        return new ViewModel(array(
-            'form' => $form,
-            'entityId' => $blogPost->getId(),
-        ));
-    }
-
-    /**
-     * Create a blog post
-     *
-     */
-    public function createAction()
-    {
-
-        $objectManager = $this->getEntityManager();
         // Create the form and inject the object manager
-        $combinedForm = new \Blog\Form\PostAndPostDataCombinedCreate($objectManager);
+        $profileForm = new \User\Form\ProfileEdit($objectManager);
 
         //Create a new, empty entity and bind it to the form
-        $blogPostData = new \Blog\Entity\PostData();
-        $blogPost = new \Blog\Entity\Post();
+        $profile = new \User\Entity\Profile();
+        $profileForm->bind($profile);
 
         if (!$this->request->isPost()) {
-            return new ViewModel(array(
-                'entityId' => $blogPost->getId(),
-                'form' => $combinedForm,
+            return new \Zend\View\Model\ViewModel(array(
+                'entityId' => $profile->getId(),
+                'form' => $profileForm,
             ));
         }
 
         $httpPostData = $this->request->getPost();
-        $combinedForm->setData($httpPostData);
+        $profileForm->setData($httpPostData);
 
-        if (!$combinedForm->isValid()) {
-            return new ViewModel(array(
-                'form' => $combinedForm,
-                'entityId' => $blogPost->getId(),
+        if (!$profileForm->isValid()) {
+            return new \Zend\View\Model\ViewModel(array(
+                'entityId' => $profile->getId(),
+                'form' => $profileForm,
             ));
         }
 
-        $postDataForm = new \Blog\Form\PostDataCreate($objectManager);
-        $postDataForm->bind($blogPostData);
-        $postDataForm->setData($httpPostData);
-
-        if ($postDataForm->isValid()) {
-            $blogPostData->setDate(new \DateTime());
-            $objectManager->persist($blogPostData);
-            $objectManager->flush();
+        $profile->setDate(new \DateTime());
+        $profile->setUser($user);
+        
+        if (!$profile->hasMedia()) {
+            $media = $objectManager->getRepository('Blog\Entity\Media')->findBySlug('profile-thumbnail.jpg');
+            $profile->setMedia(current($media));
         }
 
-        $postForm     = new \Blog\Form\PostCreate($objectManager);
-        $postForm->bind($blogPost);
-
-        $postForm->setData($httpPostData);
-
-        if ($postForm->isValid()) {
-            $blogPost->setData($blogPostData);
-            $objectManager->persist($blogPost);
-            $objectManager->flush();
-            return $this->redirect()->toRoute('blog', array('controller' => 'post', 'action' => 'index'));
-        }
-    }
-
-    /**
-     * Create a blog post
-     *
-     */
-    public function linkAction()
-    {
-
-        $objectManager = $this->getEntityManager();
-        $postDatas = $objectManager->getRepository('Blog\Entity\PostData')->findAll();
-        if (empty($postDatas)) {
-            return $this->redirect()->toRoute('blog', array('controller' => 'post', 'action' => 'create'));
-        }
-
-        // Create the form and inject the object manager
-        $postForm     = new \Blog\Form\PostCreate($objectManager);
-        //Create a new, empty entity and bind it to the form
-        $blogPost = new \Blog\Entity\Post();
-
-        if (!$this->request->isPost()) {
-            return new ViewModel(array(
-                'entityId' => $blogPost->getId(),
-                'form' => $postForm,
-            ));
-        }
-
-        $postForm->bind($blogPost);
-        $postForm->setData($blogPost);
-
-        if (!$postForm->isValid()) {
-            return new ViewModel(array(
-                'form' => $postForm,
-                'entityId' => $blogPost->getId(),
-            ));
-        }
-
-        $objectManager->persist($blogPost);
+        $objectManager->persist($profile);
         $objectManager->flush();
 
-        return $this->redirect()->toRoute('blog', array('controller' => 'post', 'action' => 'index'));
+        return $this->redirect()->toRoute('profile_index', array('id' => (string) $user->getId()));
     }
 
     /**

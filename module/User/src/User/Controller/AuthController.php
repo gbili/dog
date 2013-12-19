@@ -51,7 +51,7 @@ class AuthController extends EntityUsingController
 
     public function logged()
     {
-        return $this->redirect()->toRoute('profile', array('controller' => 'profile', 'action' => 'index'));
+        return $this->redirect()->toRoute('profile_index', array('id' => $this->identity()->getId()));
     }
 
     public function authenticate($email, $plainPassword)
@@ -145,7 +145,7 @@ class AuthController extends EntityUsingController
             $authStorage = $authService->getStorage();
             $authStorage->clear();
         }
-        $this->redirect()->toRoute('auth');
+        $this->redirect()->toRoute('auth_login');
     }
 
     /**

@@ -6,6 +6,7 @@ if (!isset($__VIEWFILE__)) {
 $fileparts = explode('/', $__VIEWFILE__);
 $action = substr(end($fileparts), 0, -6);
 $controller = prev($fileparts); 
+$routename = $controller . '_' . $action;
 $route = array(
     'controller' => $controller,
     'action' => $action
@@ -13,7 +14,7 @@ $route = array(
 if (isset($entityId) && null !== $entityId) {
     $route['id'] = $entityId;
 }
-$form->setAttribute('action', $this->url('blog',$route));
+$form->setAttribute('action', $this->url($routename ,$route));
 $form->setAttribute('class', 'form-horizontal');
 $form->prepare();
 $elements = array();

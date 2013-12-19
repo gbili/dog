@@ -1,19 +1,19 @@
 <?php
 namespace Blog\Form;
 
-class ProfileCreate extends \Zend\Form\Form 
+class MediaCreate extends \Zend\Form\Form 
 {
     public function __construct(\Doctrine\Common\Persistence\ObjectManager $objectManager)
     {
-        parent::__construct('form-post-create');
+        parent::__construct('form-media-link');
 
         // The form will hydrate an object of type Post
         $this->setHydrator(new \DoctrineModule\Stdlib\Hydrator\DoctrineObject($objectManager));
         
         //Add the user fieldset, and set it as the base fieldset
-        $postDataFieldset = new Fieldset\PostData($objectManager);
-        $postDataFieldset->setUseAsBaseFieldset(true);
-        $this->add($postDataFieldset);
+        $postFieldset = new Fieldset\Media($objectManager);
+        $postFieldset->setUseAsBaseFieldset(true);
+        $this->add($postFieldset);
 
         // ... add CSRF and submit elements
         // Optionally set your validation group here
@@ -22,7 +22,7 @@ class ProfileCreate extends \Zend\Form\Form
             'name' => 'submit',
             'attributes' => array(
                 'type'  => 'submit',
-                'value' => 'Save',
+                'value' => 'Create',
                 'id' => 'submitbutton',
                 'class' => 'btn btn-default', 
             ),

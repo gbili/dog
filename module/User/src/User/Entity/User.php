@@ -17,6 +17,13 @@ class User
     private $id;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="\Blog\Entity\Post", mappedBy="user")
+     */
+    private $posts;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=64, nullable=false, unique=true)
@@ -69,7 +76,22 @@ class User
 
     public function getEmail()
     {
-        return $this->email;
+        return $this->profile;
+    }
+
+    public function setProfile(Profile $profile)
+    {
+        $this->profile = $profile;
+    }
+
+    public function getProfile()
+    {
+        return $this->profile;
+    }
+
+    public function hasProfile()
+    {
+        return $this->profile instanceof Profile;
     }
 
     public function setPassword($clearPassword)
@@ -95,6 +117,53 @@ class User
             if ('id' === $method) continue;
             $method = 'set' . ucfirst($method);
             $this->$method($param);
+        }
+    }
+
+    public function getPosts()
+    {
+        return $this->posts;
+    }
+
+    /**
+     * Add post
+     * @param \Blog\Entity\Post $posts
+     */
+    public function addPost(Post $post)
+    {
+        $post->setCategory($this);
+        $this->posts->add($post);
+    }
+
+    /**
+     * Add post
+     * @param \Doctrine\Common\Collections\Collection $posts
+     */
+    public function addPosts(\Doctrine\Common\Collections\Collection $posts)
+    {
+        foreach ($posts as $post) {
+            $this->addPost($post);
+        }
+    }
+
+    /**
+     * Remove posts
+     * @param \Blog\Entity\Post $posts
+     */
+    public function removePost(\Blog\Entity\Post $post)
+    {
+        $this->posts->removeElement($post);
+        $post->setCategory(null);
+    }
+
+    /**
+     * Remove posts
+     * @param \Blog\Entity\Post $posts
+     */
+    public function removePosts(\Doctrine\Common\Collections\Collection $posts)
+    {
+        foreach ($posts as $post) {
+            $this->removePost($post);
         }
     }
 }

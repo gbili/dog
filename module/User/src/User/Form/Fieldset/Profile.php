@@ -1,12 +1,12 @@
 <?php
-namespace Blog\Form\Fieldset;
+namespace User\Form\Fieldset;
 
-class PostData extends \Zend\Form\Fieldset 
+class Profile extends \Zend\Form\Fieldset 
 implements \Zend\InputFilter\InputFilterProviderInterface
 {
     public function __construct(\Doctrine\Common\Persistence\ObjectManager $objectManager)
     {
-        parent::__construct('post-data');
+        parent::__construct('profile');
 
         $this->setHydrator(new \DoctrineModule\Stdlib\Hydrator\DoctrineObject($objectManager))
              ->setObject(new \Blog\Entity\PostData());
@@ -17,14 +17,26 @@ implements \Zend\InputFilter\InputFilterProviderInterface
         ));
 
         $this->add(array(
-            'name' => 'title',
+            'name' => 'firstname',
             'type'  => 'Zend\Form\Element\Text',
             'options' => array(
-                'label' => 'Title'
+                'label' => 'Name'
             ),
             'attributes' => array(
                 'class' => 'form-control',
-                'placeholder' => 'The post title',
+                'placeholder' => 'John',
+            )
+        ));
+
+        $this->add(array(
+            'name' => 'surname',
+            'type'  => 'Zend\Form\Element\Text',
+            'options' => array(
+                'label' => 'Surname'
+            ),
+            'attributes' => array(
+                'class' => 'form-control',
+                'placeholder' => 'McKenzy',
             )
         ));
 
@@ -32,12 +44,12 @@ implements \Zend\InputFilter\InputFilterProviderInterface
             'name' => 'content',
             'type'  => 'Zend\Form\Element\Textarea',
             'options' => array(
-                'label' => 'Content',
+                'label' => 'Describe yourself',
             ),
             'attributes' => array(
                 'class' => 'form-control',
                 'rows' => '8',
-                'placeholder' => 'Write cool content..',
+                'placeholder' => 'Write some cool stuff about you or your dog',
             )
         ));
 
@@ -68,7 +80,25 @@ implements \Zend\InputFilter\InputFilterProviderInterface
                 ),
             ),
 
-            'title' => array(
+            'firstname' => array(
+                'required' => true,
+                'filters'  => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array(
+                        'name'    => 'StringLength',
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min'      => 1,
+                            'max'      => 255,
+                        ),
+                    ),
+                ),
+            ),
+
+            'surname' => array(
                 'required' => true,
                 'filters'  => array(
                     array('name' => 'StripTags'),
@@ -87,7 +117,7 @@ implements \Zend\InputFilter\InputFilterProviderInterface
             ),
 
             'content' => array(
-                'required' => true,
+                'required' => false,
                 'filters'  => array(
                     array('name' => 'StringTrim'),
                 ),
@@ -97,6 +127,7 @@ implements \Zend\InputFilter\InputFilterProviderInterface
                         'options' => array(
                             'encoding' => 'UTF-8',
                             'min'      => 1,
+                            'max'      => 700,
                         ),
                     ),
                 ),

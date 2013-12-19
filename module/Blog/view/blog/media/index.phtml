@@ -2,65 +2,70 @@
 $title = 'Media Library';
 $this->headTitle($title);
 ?>
-<h1><?php echo $this->escapeHtml($title); ?></h1>
-<p><a href="<?php echo $this->url('blog', array(
-    'controller' => 'media', 
-    'action'=>'create',
-));?>">Add new media</a></p>
-<table class="table table-bordered table-hover">
-    <tr>
-        <th>Media</th>
-        <th>&nbsp;</th>
-        <th>&nbsp;</th>
-        <th>&nbsp;</th>
-        <th>&nbsp;</th>
-    </tr>
+<div class="row">
+    <div class="col-sm-4 col-md-4 col-4">
+        <h1><?php echo $this->escapeHtml($title); ?></h1>
+    </div>
+    <div class="col-sm-4 col-md-4 col-4">
+    </div>
+    <div class="col-sm-4 col-md-4 col-4">
+        <p><a class="btn btn-success" href="<?php echo $this->url('blog', array(
+            'controller' => 'media', 
+            'action'=>'create',
+        ));?>">Add new media</a></p>
+    </div>
+</div>
+<?php $count = count($medias) ?>
+<?php $itemsPerRow = 4 ?>
+<?php $excess = $count % $itemsPerRow ?>
+<?php $rows = ($count - $excess) / $itemsPerRow ?>
+<?php $i = 1 ?>
     <?php foreach($medias as $media) : ?>
-	    <tr>
-            <td><a href="<?php echo $this->url('blog_media_view', array(
+<?php if (1 === $i || 0 === ($i % $itemsPerRow)) : ?> 
+<div class="row">
+<?php endif ?>
+<div class="col-sm-6 col-md-4 col-lg-3">
+    <div class="thumbnail">
+      <a href="<?php echo $this->url('blog_media_view', array(
                     'slug' => $media->getSlug(),
-                ))?>"><img src="<?php echo $this->escapeHtml($media->getFile()->getSrc());?>"></a></td>
-	        <td><?php echo $this->escapeHtml($media->getSlug());?></td>
-	        <td>
-                <a href="<?php echo $this->url('blog', array(
-                    'controller' => 'media', 
-                    'action' => 'link', 
-                    'id' => $media->getId(),
-                )); ?>">Link to Post</a>
-	        </td>
-	        <td>
-                <a href="<?php echo $this->url('blog', array(
-                    'controller' => 'media', 
-                    'action' => 'edit', 
-                    'id' => $media->getId(),
-                )); ?>">Edit</a>
-	        </td>
-	        <td>
-                <a href="<?php echo $this->url('blog', array(
-                    'controller' => 'media', 
-                    'action' => 'delete',
-                    'id' => $media->getId()
-                )); ?>" onclick="return confirm('Are you sure?')">Delete</a>
-	        </td>
-	    </tr>
-        <?php if (!$media->getPosts()->isEmpty()) : ?>
-        <tr>
-            <td>
-            <?php 
-                $return = '';
-                foreach ($media->getPosts() as $post) :
-                $return = (('' === $return)? '' : $return . ', ' ) . $post->getTitle() . ':<a href="' . $this->url(
-                    'blog', array(
-                    'controller' => 'media', 
-                    'action' => 'unlink', 
-                    'id' => $media->getId(),
-                    'fourthparam' => $post->getId(),
-                )) . '">unlink</a>';
-                endforeach;
-                echo $return;
-                ?>
-            </td>
-        </tr>
-        <?php endif ?>
+                ))?>"><img class="img-responsive" src="<?php echo $this->escapeHtml($media->getFile()->getSrc());?>">
+     </a>
+      <div class="caption">
+        <h5><?php echo $this->escapeHtml($media->getSlug());?></h5>
+        <p>
+            <?php if (!$media->getPosts()->isEmpty()) : ?>
+                <?php $return = '';
+                    foreach ($media->getPosts() as $post) :
+                        $return = (('' === $return)? '' : $return . ', ' ) . $post->getTitle() . ':<a href="' . $this->url(
+                            'blog', array(
+                            'controller' => 'media', 
+                            'action' => 'unlink', 
+                            'id' => $media->getId(),
+                            'fourthparam' => $post->getId(),
+                        )) . '">unlink</a>';
+                    endforeach;
+                    echo $return;?>
+            <?php endif ?>
+            <a class="btn btn-default btn-xs" role="button"href="<?php echo $this->url('blog', array(
+                'controller' => 'media', 
+                'action' => 'link', 
+                'id' => $media->getId(),
+            )); ?>">Link to</a>
+            <a class="btn btn-primary btn-xs" role="button" href="<?php echo $this->url('blog', array(
+                'controller' => 'media', 
+                'action' => 'edit', 
+                'id' => $media->getId(),
+            )); ?>">Edit</a>
+            <a class="btn btn-danger btn-xs" role="button" href="<?php echo $this->url('blog', array(
+                'controller' => 'media', 
+                'action' => 'delete',
+                'id' => $media->getId()
+            )); ?>" onclick="return confirm('Are you sure?')">Delete</a>
+      </p>
+    <?php if (1 === $i || 0 === ($i % $itemsPerRow)) : ?> 
+    </div>
+    <?php endif ?>
+  </div>
+</div>
+        <?php $i++ ?>
     <?php endforeach; ?>
-</table>

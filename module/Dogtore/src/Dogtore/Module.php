@@ -23,7 +23,9 @@ class Module
     {
         $eventManager = $e->getApplication()->getEventManager();
 
-        $aclGuard = $e->getApplication()->getServiceManager()->get('acl_guard');
+        $aclGuard = $e->getApplication()->getServiceManager()->get('acl_guard')->setMvcEvent($e);
+        $e->getViewModel()->aclGuard = $aclGuard;
+
         $eventManager->attach(\Zend\Mvc\MvcEvent::EVENT_DISPATCH, array($aclGuard, 'check'));
     }
 }

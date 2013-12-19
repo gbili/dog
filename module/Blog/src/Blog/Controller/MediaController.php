@@ -4,7 +4,7 @@ namespace Blog\Controller;
 use DoctrineORMModule\Stdlib\Hydrator\DoctrineEntity;
 use Zend\View\Model\ViewModel;
 
-class MediaController extends EntityUsingController
+class MediaController extends \User\Controller\LoggedInController 
 {
     /**
     * Index action

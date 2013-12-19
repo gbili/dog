@@ -7,8 +7,9 @@ use Zend\View\Model\ViewModel;
 use Blog\Form\PostForm;
 use Blog\Entity\Post;
 
-class PostController extends EntityUsingController
+class PostController extends \User\Controller\LoggedInController 
 {
+
     /**
     * Index action
     *
@@ -16,7 +17,7 @@ class PostController extends EntityUsingController
     public function indexAction()
     {
         $em = $this->getEntityManager();
-        $posts = $em->getRepository('Blog\Entity\Post')->findBy(array(), array('slug' => 'ASC'));
+        $posts = $em->getRepository('Blog\Entity\Post')->findBy(array('user' => $this->getUser()->getId()), array('slug' => 'ASC'));
 
         return new ViewModel(array(
             'posts' => $posts,
@@ -30,12 +31,20 @@ class PostController extends EntityUsingController
     public function editAction()
     {
         $objectManager = $this->getEntityManager();
-
+        
         // Create the form and inject the object manager
         $form = new \Blog\Form\PostEdit($objectManager);
         
         //Get a new entity with the id 
         $blogPost = $objectManager->find('Blog\Entity\Post', (integer) $this->params('id'));
+
+        if (empty($blogPost)) {
+            return $this->badRequest('NotExists');
+        }
+
+        if ($blogPost->getUser() !== $this->getUser()) {
+            return $this->badRequest('NotMine');
+        }
         
         $form->bind($blogPost);
 
@@ -52,6 +61,11 @@ class PostController extends EntityUsingController
             'form' => $form,
             'entityId' => $blogPost->getId(),
         ));
+    }
+
+    public function badRequest($type)
+    {
+        $this->redirect()->toRoute('auth_logout');
     }
 
     /**
@@ -103,6 +117,7 @@ class PostController extends EntityUsingController
 
         if ($postForm->isValid()) {
             $blogPost->setData($blogPostData);
+            $blogPost->setUser($this->getUser());
             $objectManager->persist($blogPost);
             $objectManager->flush();
             return $this->redirect()->toRoute('blog', array('controller' => 'post', 'action' => 'index'));

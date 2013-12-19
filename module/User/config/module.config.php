@@ -17,35 +17,66 @@ return array(
     ),
     'router' => array(
         'routes' => array(
-            'auth' => array(
+            'auth_login' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/auth[/:action][/:id][/:fourthparam]',
-                    'constraints' => array(
-                        'action' => '(?:login)|(?:logout)|(?:register)',
-                        //some9_person.99-at-some-domain.tld
-                        'id' => '[a-z0-9_\\.]+-at-(?:[a-z0-9]+-?[a-z0-9]+)+\\.[a-z]',
-                        'fourthparam' => '[a-zA-Z0-9_-]+',
-                    ),
+                    'route' => '/login',
                     'defaults' => array(
                         'controller' => 'auth',
                         'action' => 'login',
                     ),
                 ),
             ),
-            'profile' => array(
+            'auth_register' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/profile[/:action][/:id][/:fourthparam]',
+                    'route' => '/register',
+                    'defaults' => array(
+                        'controller' => 'auth',
+                        'action' => 'register',
+                    ),
+                ),
+            ),
+            'auth_logout' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/logout',
+                    'defaults' => array(
+                        'controller' => 'auth',
+                        'action' => 'logout',
+                    ),
+                ),
+            ),
+            'profile_edit' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/profile/edit',
+                    'defaults' => array(
+                        'controller' => 'profile',
+                        'action' => 'edit',
+                    ),
+                ),
+            ),
+            'profile_index' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/profile[/:id]',
                     'constraints' => array(
-                        'action' => '(?:edit)',
-                        //some9_person.99-at-some-domain.tld
-                        'id' => '[a-z0-9_\\.]+-at-(?:[a-z0-9]+-?[a-z0-9]+)+\\.[a-z]',
-                        'fourthparam' => '[a-zA-Z0-9_-]+',
+                        'id' => '[0-9]+',
                     ),
                     'defaults' => array(
                         'controller' => 'profile',
                         'action' => 'index',
+                    ),
+                ),
+            ),
+            'profile_list' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/profiles',
+                    'defaults' => array(
+                        'controller' => 'profile',
+                        'action' => 'list',
                     ),
                 ),
             ),
@@ -54,26 +85,25 @@ return array(
 
     'navigation' => array(
         'default' => array(
-            'auth' => array(
-                'label' => 'User',
-                'route' => 'auth',
-                'pages' => array(
-                    'register' => array(
-                        'label' => 'Register',
-                        'route' => 'auth',
-                        'action' => 'register',
-                    ),
-                    'login' => array(
-                        'label' => 'Login',
-                        'route' => 'auth',
-                        'action' => 'login',
-                    ),
-                    'logout' => array(
-                        'label' => 'Logout',
-                        'route' => 'auth',
-                        'action' => 'logout',
-                    ),
-                ),
+            'profile_view' => array(
+                'label' => 'My Profile',
+                'route' => 'profile_index',
+            ),
+            'profile_list' => array(
+                'label' => 'Profiles',
+                'route' => 'profile_list',
+            ),
+            'auth_login' => array(
+                'label' => 'Login',
+                'route' => 'auth_login',
+            ),
+            'auth_logout' => array(
+                'label' => 'Logout',
+                'route' => 'auth_logout',
+            ),
+            'auth_register' => array(
+                'label' => 'Register',
+                'route' => 'auth_register',
             ),
         ),
     ),

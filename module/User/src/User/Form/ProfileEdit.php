@@ -1,17 +1,17 @@
 <?php
-namespace Blog\Form;
+namespace User\Form;
 
-class PostEdit extends \Zend\Form\Form 
+class ProfileEdit extends \Zend\Form\Form 
 {
     public function __construct(\Doctrine\Common\Persistence\ObjectManager $objectManager)
     {
-        parent::__construct('form-post-edit');
+        parent::__construct('user-profile-edit');
 
         // The form will hydrate an object of type Post
         $this->setHydrator(new \DoctrineModule\Stdlib\Hydrator\DoctrineObject($objectManager));
         
         //Add the user fieldset, and set it as the base fieldset
-        $postFieldset = new Fieldset\Post($objectManager);
+        $postFieldset = new Fieldset\Profile($objectManager);
         $postFieldset->setUseAsBaseFieldset(true);
         $this->add($postFieldset);
 

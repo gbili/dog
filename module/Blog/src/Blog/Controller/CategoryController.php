@@ -6,7 +6,7 @@ use Zend\View\Model\ViewModel;
 use Blog\Form\CategoryForm;
 use Blog\Entity\Category;
 
-class CategoryController extends EntityUsingController
+class CategoryController extends \User\Controller\LoggedInController
 {
     /**
     *
