@@ -9,6 +9,7 @@ class ProfileController extends LoggedInController
     */
     public function indexAction()
     {
+        $user = $this->getUser();
         if (!$user->hasProfile()) {
             return $this->redirect()->toRoute('profile_edit');
         }

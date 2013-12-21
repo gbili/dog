@@ -1,0 +1,58 @@
+<?php
+if (!isset($__VIEWFILE__)) {
+    throw new \Exception('$__VIEWFILE__ variable must be set with __FILE__ constant from the view file, in order for the partial to work.');
+}
+$fileparts = explode('/', $__VIEWFILE__);
+$action = substr(end($fileparts), 0, -6);
+$controller = prev($fileparts); 
+$title = ucfirst($this->translate($action, 'blog')) . ' ' . ucfirst($this->translate($controller, 'blog'));
+$this->headTitle($title);
+$form->prepare();
+?>
+<div class="row">
+    <div class="col-sm-0 col-md-2 col-lg-2"></div>
+    <div class="col-sm-12 col-md-8 col-lg-8">
+        <h1><?php echo $this->escapeHtml($title); ?></h1>
+    </div>
+    <div class="col-sm-0 col-md-2 col-lg-2"></div>
+</div>
+
+<div class="row">
+    <div class="col-sm-0 col-md-2 col-lg-2"></div>
+    <div class="col-sm-12 col-md-8 col-lg-8">
+    <?php echo $this->form()->openTag($form)?>
+        <?php foreach ($form->getElements() as $element) : ?>
+            <div class="form-group">
+                <?php echo ((null !== $element->getLabel())? $this->translate($this->formLabel($element), 'blog') : '') ?>
+                <?php echo $this->formElement($element) ?>
+            </div>
+        <?php endforeach ?>
+    <?php echo $this->form()->closeTag() ?>
+    <?php if (!empty($messages)) :?>
+        <?php foreach ($messages as $filename => $messageArray) : ?>
+            <?php if (isset($messageArray['success'])) : ?>
+            <div class="alert alert-success">
+                <strong><?php echo $filename?></strong><?php echo ' : ' . $this->translate($messageArray['success'], 'blog') ?>
+            </div><!-- end success -->
+            <?php else : ?>
+                <?php foreach ($messageArray as $inputType => $inputErrors ) : ?>
+                    <div class="alert alert-danger">
+                        <?php if ('' === $filename) :?>
+                        <strong><?php echo $this->translate('No Files selected', 'blog')?></strong>
+                        <?php else : ?>
+                            <strong><?php echo "$filename :" ?></strong>
+                            <?php foreach ($inputErrors as $errorType => $error) : ?>
+                                    <?php $inputType = $this->translate($inputType, 'blog') ?>
+                                    <?php $errorType = $this->translate($errorType, 'blog') ?>
+                                    <?php $error     = $this->translate($error,     'blog') ?>
+                                    <?php echo "$inputType : $errorType : $error" ?>
+                            <?php endforeach ?>
+                        <?php endif ?>
+                    </div><!-- end warning -->
+                <?php endforeach ?>
+            <?php endif ?>
+        <?php endforeach ?>
+    <?php endif ?>
+    </div>
+    <div class="col-sm-0 col-md-2 col-lg-2"></div>
+</div>

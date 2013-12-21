@@ -24,7 +24,7 @@ foreach ($form->getFieldsets() as $fieldset) {
 $elements +=$form->getElements();
 ?>
 <?php
-$title = ucfirst($action) . ' ' . ucfirst($controller);
+$title = ucfirst($this->translate($action, 'user')) . ' ' . ucfirst($this->translate($controller, 'user'));
 $this->headTitle($title);
 ?>
 <div class="row">
@@ -41,7 +41,7 @@ $this->headTitle($title);
     <?php foreach ($messages as $message) : ?>
         <?php $class = key($message); $message = current($message)?>
         <div class="alert alert-<?php echo $class ?>">
-            <?php echo $message ?>
+            <?php echo $this->translate($message, 'user') ?>
         </div><!-- end success -->
     <?php endforeach ?>
     </div>
@@ -60,7 +60,7 @@ $this->headTitle($title);
                 <?php echo ((null !== $element->getLabel())? $this->formLabel($element) : '') ?>
                 <?php echo $this->formElement($element) ?>
                 <?php if ($hasErrors) :?>
-                    <label class="control-label" for="<?php $element->getAttribute('name');?>"><?php echo current($errors);?></label>
+                    <label class="control-label" for="<?php $element->getAttribute('name');?>"><?php echo $this->translate(current($errors), 'user');?></label>
                 <?php endif ?>
             </div>
         <?php endforeach ?>

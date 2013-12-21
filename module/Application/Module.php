@@ -16,10 +16,30 @@ class Module
 {
     public function onBootstrap(MvcEvent $e)
     {
-        $e->getApplication()->getServiceManager()->get('translator');
+        $this->setTranslatorLocale($e);
+
         $eventManager        = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
+
+        $this->injectLocaleIntoTranslator($e);
+    }
+    
+    public function injectLocaleIntoTranslator($e)
+    {
+        $eventManager = $e->getApplication()->getEventManager();
+        $eventManager->attach(\Zend\Mvc\MvcEvent::EVENT_DISPATCH, function ($e) {
+            $lang = $e->getRouteMatch()->getParam('lang');
+            $translator = $e->getApplication()->getServiceManager()->get('translator');
+            $translator->setFallbackLocale('en_US');
+            if (null !== $lang) {
+                $translator->setLocale($lang);
+            }
+        });
+    }
+
+    public function setTranslatorLocale(MvcEvent $e)
+    {
     }
 
     public function getConfig()

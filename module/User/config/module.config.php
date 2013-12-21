@@ -2,6 +2,22 @@
 namespace User;
 
 return array(
+    'view_helpers' => array(
+        'invokables' => array(
+            'patternTranslate' => 'User\View\Helper\PatternTranslate',
+            'translate' => 'User\View\Helper\TranslateWriter',
+        ),
+    ),
+    'translator' => array(
+        'translation_file_patterns' => array(
+            array(
+                'type'     => 'gettext',
+                'base_dir' => __DIR__ . '/../language',
+                'pattern'  => '%s.mo',
+                'text_domain' => strtolower(__NAMESPACE__),
+            ),
+        ),
+    ),
     'controllers' => array(
         'invokables' => array(
             'auth' => 'User\Controller\AuthController',

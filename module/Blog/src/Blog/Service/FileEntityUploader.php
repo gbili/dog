@@ -9,10 +9,23 @@ class FileEntityUploader
     private $formName = 'file-form';
     private $messages;
     private $files = array();
+    private $form = null;
 
     public function getFormCopy()
     {
+        if (null !== $this->form) {
+            return clone $this->form;
+        }
         return new \Blog\Form\Html5MultiUpload($this->getFormName());
+    }
+
+    public function setForm($form)
+    {
+        if (!($from instanceof \Blog\Form\Html5MultiUpload)) {
+            throw new \Exception('Form type not supported, must extend Html5MultiUpload');
+        }
+        $this->form = $form;
+        return $this;
     }
 
     public function getFiles()

@@ -2,17 +2,25 @@
 $title = 'Posts';
 $this->headTitle($title);
 ?>
-<h1><?php echo $this->escapeHtml($title); ?></h1>
-<p><a href="<?php echo $this->url('blog', array(
-    'controller' => 'post', 
-    'action'=>'create',
-));?>">Add new blog post</a></p>
+<div class="row">
+    <div class="col-sm-4 col-md-4 col-4">
+        <h1><?php echo $this->escapeHtml($title); ?></h1>
+    </div>
+    <div class="col-sm-4 col-md-4 col-4">
+    </div>
+    <div class="col-sm-4 col-md-4 col-4">
+        <p><a class="btn btn-success" href="<?php echo $this->url('blog', array(
+            'controller' => 'post', 
+            'action'=>'create',
+        ));?>"><?php echo $this->translate('Add New Post', 'blog')?></a></p>
+    </div>
+</div>
 <table class="table table-bordered table-hover">
     <tr>
-        <th>Id</th>
-        <th>Title</th>
-        <th>Slug</th>
-        <th>Category</th>
+        <th><?php echo $this->translate('Id', 'blog')?></th>
+        <th><?php echo $this->translate('Title', 'blog')?></th>
+        <th><?php echo $this->translate('Slug', 'blog')?></th>
+        <th><?php echo $this->translate('Category', 'blog')?></th>
         <th>&nbsp;</th>
         <th>&nbsp;</th>
     </tr>
@@ -27,7 +35,7 @@ $this->headTitle($title);
                     'controller' => 'post', 
                     'action' => 'edit', 
                     'id' => $post->getId(),
-                )); ?>">Edit</a>
+                )); ?>"><?php echo $this->translate('Edit', 'blog')?></a>
 
 	        </td>
 	        <td>
@@ -35,8 +43,13 @@ $this->headTitle($title);
                     'controller' => 'post', 
                     'action' => 'delete',
                     'id' => $post->getId()
-                )); ?>" onclick="return confirm('Are you sure?')">Delete</a>
+                )); ?>" onclick="return confirm('Are you sure?')"><?php echo $this->translate('Delete', 'blog')?></a>
 	        </td>
 	    </tr>
     <?php endforeach; ?>
+    <?php if (empty($posts)) : ?>
+	    <tr>
+            <td><?php echo $this->translate('You have not written any posts for the moment...', 'blog')?></td>
+	    </tr>
+    <?php endif ?>
 </table>

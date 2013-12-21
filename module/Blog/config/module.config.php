@@ -2,6 +2,16 @@
 namespace Blog;
 
 return array(
+    'translator' => array(
+        'translation_file_patterns' => array(
+            array(
+                'type'     => 'gettext',
+                'base_dir' => __DIR__ . '/../language',
+                'pattern'  => '%s.mo',
+                'text_domain' => strtolower(__NAMESPACE__),
+            ),
+        ),
+    ),
     'controllers' => array(
         'invokables' => array(
             'post' => 'Blog\Controller\PostController',
@@ -15,14 +25,16 @@ return array(
             'blog' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/:controller[/:action][/:id][/:fourthparam]',
+                    'route' => '[/:lang]/:controller[/:action][/:id][/:fourthparam]',
                     'constraints' => array(
-                        'controller' => '(?:file)|(?:post)|(?:category)|(?:media)',
+                        'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
+                        'controller' => '(?:post)|(?:category)|(?:media)',
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id' => '[0-9]+',
                         'fourthparam' => '[a-zA-Z0-9_-]+',
                     ),
                     'defaults' => array(
+                        'lang' => 'en',
                         'controller' => 'post',
                         'action' => 'index',
                     ),
@@ -31,13 +43,32 @@ return array(
             'blog_media_view' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/media/view[/:slug]',
+                    'route' => '[/:lang]/media/view[/:slug]',
                     'constraints' => array(
+                        'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
                         'slug' => '[a-zA-Z0-9_-]+\\.?[a-z]+',
                     ),
                     'defaults' => array(
+                        'lang' => 'en',
                         'controller' => 'media',
                         'action' => 'view',
+                    ),
+                ),
+            ),
+            'blog_file' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '[/:lang]/file[/:action][/:id][/:fourthparam]',
+                    'constraints' => array(
+                        'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]+',
+                        'fourthparam' => '[a-zA-Z0-9_-]+',
+                    ),
+                    'defaults' => array(
+                        'lang' => 'en',
+                        'controller' => 'file',
+                        'action' => 'index',
                     ),
                 ),
             ),
@@ -101,14 +132,14 @@ return array(
                 'header' => 'File Manager',
                 'label' => 'Files',
                 //contorller
-                'route' => 'blog',
+                'route' => 'blog_file',
                 'controller' => 'file',
                 'action' => 'index',
             ),
             'file_upload' => array(
                 'label' => 'Upload Files',
                 //contorller
-                'route' => 'blog',
+                'route' => 'blog_file',
                 'controller' => 'file',
                 'action' => 'upload',
             ),
@@ -120,12 +151,12 @@ return array(
                 'controller' => 'media',
                 'action' => 'index',
             ),
-            'media_create' => array(
-                'label' => 'New Media',
+            'media_upload' => array(
+                'label' => 'Add New Media',
                 //contorller
                 'route' => 'blog',
                 'controller' => 'media',
-                'action' => 'create',
+                'action' => 'upload',
             ),
         ),
     ),

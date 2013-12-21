@@ -6,14 +6,14 @@ $this->headTitle($title);
 <p><a href="<?php echo $this->url('blog', array(
     'controller' => 'file', 
     'action'=>'upload',
-));?>">Add new File</a></p>
+));?>"><?php echo $this->translate('Add new File', 'blog') ?></a></p>
 <table class="table table-bordered table-hover">
     <tr>
-        <th>Name</th>
-        <th>Dirpath</th>
-        <th>Basename</th>
-        <th>Type</th>
-        <th>Size</th>
+    <th><?php echo $this->translate('Name','blog')?></th>
+        <th><?php echo $this->translate('Dirpath','blog')?></th>
+        <th><?php echo $this->translate('Basename','blog')?></th>
+        <th><?php echo $this->translate('Type','blog')?></th>
+        <th><?php echo $this->translate('Size','blog')?></th>
         <th>&nbsp;</th>
         <th>&nbsp;</th>
         <th>&nbsp;</th>
@@ -30,14 +30,14 @@ $this->headTitle($title);
                     'controller' => 'media', 
                     'action' => 'create',
                     'id' => $file->getId()
-                )); ?>">Link</a>
+                )); ?>"><?php echo $this->translate('Link', 'blog')?></a>
 	        </td>
 	        <td>
                 <a href="<?php echo $this->url('blog', array(
                     'controller' => 'file', 
                     'action' => 'edit', 
                     'id' => $file->getId(),
-                )); ?>">Edit</a>
+                )); ?>"><?php echo $this->translate('Edit', 'blog')?></a>
 
 	        </td>
 	        <td>
@@ -45,7 +45,7 @@ $this->headTitle($title);
                     'controller' => 'file', 
                     'action' => 'delete',
                     'id' => $file->getId()
-                )); ?>" onclick="return confirm('Are you sure?')">Delete</a>
+                )); ?>" onclick="return confirm('Are you sure?')"><?php echo $this->translate('Delete', 'blog')?></a>
 	        </td>
 	    </tr>
     <?php endforeach; ?>

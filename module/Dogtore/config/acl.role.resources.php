@@ -13,9 +13,15 @@ return array(
     ),
     'blacklist' => array(
         'user' => array(
-            //empty blacklist allowed everything
             'auth_login',
             'auth_register',
+            'blog_file',
+            //empty blacklist allowed everything
+        ),
+        'admin' => array(
+            'auth_login',
+            'auth_register',
+            //empty blacklist allowed everything
         ),
     ),
 );

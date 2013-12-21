@@ -13,7 +13,7 @@ class MediaController extends \User\Controller\LoggedInController
     public function indexAction()
     {
         $em = $this->getEntityManager();
-        $medias = $em->getRepository('Blog\Entity\Media')->findBy(array(), array('slug' => 'ASC'));
+        $medias = $em->getRepository('Blog\Entity\Media')->findBy(array(), array('date' => 'DESC'));
 
         return new ViewModel(array(
             'medias' => $medias,
@@ -108,61 +108,49 @@ class MediaController extends \User\Controller\LoggedInController
         }
         return $this->redirect()->toRoute('blog', array('controller' => 'media', 'action' => 'index'));
     }
-    
-    /**
-     * Create a blog media
-     *
-     */
-    public function createAction()
+
+    public function uploadAction()
     {
-        $messages = array();
+        $fileUploader = new \Blog\Service\FileEntityUploader();
+
+        if (!$this->getRequest()->isPost()) {
+            return new ViewModel(array(
+                'messages' => array(),
+                'form' => $fileUploader->getFormCopy(),
+            ));
+        }
+
+        $fileUploader->setFileInputName('file')
+                     ->setEntityManager($this->getEntityManager())
+                     ->setRequest($this->getRequest());
+
+        if (!$fileUploader->uploadFiles()) {
+            if ($fileUploader->hasFiles()) {
+                $this->createMedias($fileUploader->getFiles());
+            }
+            return new ViewModel(array(
+                'messages' => $fileUploader->getMessages(),
+                'form' => $fileUploader->getFormCopy(),
+            ));
+        }
+        $this->createMedias($fileUploader->getFiles());
+
+        return $this->redirect()->toRoute('blog', array('controller' => 'media', 'action' => 'index'));
+    }
+
+    public function createMedias(array $files)
+    {
         $objectManager = $this->getEntityManager();
-
-        $files = $this->getEntityManager()->getRepository('Blog\Entity\File')->findAll();
-        //If no files, redirect to file uploads
-        if (empty($files)) {
-            return $this->redirect()->toRoute('blog', array('controller' => 'file', 'action' => 'upload'));
+        foreach ($files as $file) {
+            $media = new \Blog\Entity\Media();
+            $basename = $file->getBasename();
+            $media->setSlug($basename);
+            $media->setAlt($basename);
+            $media->setFile($file);
+            $media->setDate(new \DateTime());
+            $objectManager->persist($media);
+            $objectManager->flush();
         }
-        
-        // Create the form and inject the object manager
-        $form = new \Blog\Form\MediaCreate($objectManager);
-
-        //If file needs to be preselected in the dropdown
-        $fileId = $this->params('id');
-        if (null !== $fileId) {
-            $files = $objectManager->getRepository('Blog\Entity\File')->findById((integer) $fileId);
-            if (!is_array($files)) {
-                $fileId = null;
-                $messages[] = array('danger' => 'The specified id, does not exist');
-            } else {
-                current($form->getFieldsets())->turnFileSelectorIntoHidden();
-            }
-        }
-
-        //Create a new, empty entity and bind it to the form
-        $media = new \Blog\Entity\Media();
-        $form->bind($media);
-
-        if ($this->request->isPost()) {
-            $postData = $this->request->getPost();
-            if (null !== $fileId) {
-                $postData->media['file'] = $fileId;
-            }
-            $form->setData($postData);
-            
-            if ($form->isValid()) {
-                $media->setDate(new \DateTime());
-                $objectManager->persist($media);
-                $objectManager->flush();
-                return $this->redirectToMediaView($media);
-            }
-        }
-
-        return new ViewModel(array(
-            'entityId' => $fileId,
-            'messages' => $messages,
-            'form' => $form,
-        ));
     }
 
     public function redirectToMediaView(\Blog\Entity\Media $media)

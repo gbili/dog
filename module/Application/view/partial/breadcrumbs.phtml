@@ -9,15 +9,15 @@
               <?php if (!$child->isActive()) continue; ?>
               <?php if ($child->hasPages()) : ?>
                     <li id="foreach-has-pages-foreach-has-pages">
-                        <a href="<?=$child->getHref() ?>"><?=$child->getLabel()?></a>
+                        <a href="<?=$child->getHref() ?>"><?= $this->translate($child->getLabel()) ?></a>
                     </li>
               <?php else : ?>
-                <li id="foreach-has-pages-foreach-else"><?=$child->getLabel()?></li>
+                <li id="foreach-has-pages-foreach-else"><?= $this->translate($child->getLabel()) ?></li>
               <?php endif ?>
               <?php break ?>     
         <?php endforeach ?>
     <?php else : ?>
-            <li id="foreach-else"><?=$page->getLabel()?></li>
+            <li id="foreach-else"><?= $this->translate($page->getLabel())?></li>
     <?php endif ?>
     <?php break ?>
 <?php endforeach ?>

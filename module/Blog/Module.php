@@ -27,18 +27,25 @@ class Module
         $em = $e->getApplication()->getEventManager();
 
         $em->attach(\Zend\Mvc\MvcEvent::EVENT_RENDER, function($e) {
-
             $flashMessenger = new \Zend\Mvc\Controller\Plugin\FlashMessenger();
-
             if ($flashMessenger->hasSuccessMessages()) {
                 $e->getViewModel()->setVariable('successMessages', $flashMessenger->getSuccessMessages());
             }
-
         });
+
+        $this->injectLocaleIntoTranslator($e);
     }
-
-    public function getServiceConfig()
+    
+    public function injectLocaleIntoTranslator($e)
     {
-
+        $eventManager = $e->getApplication()->getEventManager();
+        $eventManager->attach(\Zend\Mvc\MvcEvent::EVENT_DISPATCH, function ($e) {
+            $lang = $e->getRouteMatch()->getParam('lang');
+            $translator = $e->getApplication()->getServiceManager()->get('translator');
+            $translator->setFallbackLocale('en_US');
+            if (null !== $lang) {
+                $translator->setLocale($lang);
+            }
+        });
     }
 }
