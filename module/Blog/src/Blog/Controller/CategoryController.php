@@ -16,7 +16,7 @@ class CategoryController extends \User\Controller\LoggedInController
     {
         $em = $this->getEntityManager();
 
-        $categories = $em->getRepository('Blog\Entity\Category')->findBy(array(), array('name' => 'ASC'));
+        $categories = $em->getRepository('Blog\Entity\Category')->findBy(array('locale' => $this->getLocale()), array('name' => 'ASC'));
 
         return new ViewModel(array('categories' => $categories,));
     }
@@ -26,7 +26,7 @@ class CategoryController extends \User\Controller\LoggedInController
         $objectManager = $this->getEntityManager();
 
         // Create the form and inject the object manager
-        $form = new \Blog\Form\CategoryEdit($objectManager);
+        $form = new \Blog\Form\CategoryEdit($this->getServiceLocator());
         
         //Get a new entity with the id 
         $category = $objectManager->find('Blog\Entity\Category', (integer) $this->params('id'));
@@ -38,6 +38,8 @@ class CategoryController extends \User\Controller\LoggedInController
 
             if ($form->isValid()) {
                 //Save changes
+                $category->setLocale($this->getLocale());
+                $objectManager->persist($category);
                 $objectManager->flush();
             }
         }
@@ -52,7 +54,7 @@ class CategoryController extends \User\Controller\LoggedInController
     {
         $objectManager = $this->getEntityManager();
         // Create the form and inject the object manager
-        $form = new \Blog\Form\CategoryCreate($objectManager);
+        $form = new \Blog\Form\CategoryCreate($this->getServiceLocator());
 
         //Create a new, empty entity and bind it to the form
         $blogCategory = new \Blog\Entity\Category();
@@ -62,6 +64,7 @@ class CategoryController extends \User\Controller\LoggedInController
             $form->setData($this->request->getPost());
 
             if ($form->isValid()) {
+                $blogCategory->setLocale($this->getLocale());
                 $objectManager->persist($blogCategory);
                 $objectManager->flush();
             }

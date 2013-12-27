@@ -13,7 +13,7 @@ class MediaController extends \User\Controller\LoggedInController
     public function indexAction()
     {
         $em = $this->getEntityManager();
-        $medias = $em->getRepository('Blog\Entity\Media')->findBy(array(), array('date' => 'DESC'));
+        $medias = $em->getRepository('Blog\Entity\Media')->findBy(array('locale' => $this->getLocale()), array('date' => 'DESC'));
 
         return new ViewModel(array(
             'medias' => $medias,
@@ -141,12 +141,14 @@ class MediaController extends \User\Controller\LoggedInController
     public function createMedias(array $files)
     {
         $objectManager = $this->getEntityManager();
+        $locale = $this->getLocale();
         foreach ($files as $file) {
             $media = new \Blog\Entity\Media();
             $basename = $file->getBasename();
             $media->setSlug($basename);
             $media->setAlt($basename);
             $media->setFile($file);
+            $media->setLocale($locale);
             $media->setDate(new \DateTime());
             $objectManager->persist($media);
             $objectManager->flush();

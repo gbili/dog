@@ -64,10 +64,10 @@ class Media extends \Blog\Entity\Media implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'id', 'slug', 'alt', 'description', 'posts', 'file', 'width', 'height', 'csspercent', 'date');
+            return array('__isInitialized__', 'id', 'user', 'locale', 'translated', 'slug', 'alt', 'description', 'posts', 'file', 'width', 'height', 'csspercent', 'date');
         }
 
-        return array('__isInitialized__', 'id', 'slug', 'alt', 'description', 'posts', 'file', 'width', 'height', 'csspercent', 'date');
+        return array('__isInitialized__', 'id', 'user', 'locale', 'translated', 'slug', 'alt', 'description', 'posts', 'file', 'width', 'height', 'csspercent', 'date');
     }
 
     /**
@@ -186,6 +186,28 @@ class Media extends \Blog\Entity\Media implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getId', array());
 
         return parent::getId();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setUser(\User\Entity\User $user)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setUser', array($user));
+
+        return parent::setUser($user);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getUser()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getUser', array());
+
+        return parent::getUser();
     }
 
     /**
@@ -461,6 +483,39 @@ class Media extends \Blog\Entity\Media implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getFile', array());
 
         return parent::getFile();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setLocale($locale)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setLocale', array($locale));
+
+        return parent::setLocale($locale);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function hasLocale()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'hasLocale', array());
+
+        return parent::hasLocale();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getLocale()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getLocale', array());
+
+        return parent::getLocale();
     }
 
 }

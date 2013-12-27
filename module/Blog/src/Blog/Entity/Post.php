@@ -25,6 +25,17 @@ class Post
     private $slug;
 
     /**
+     * @ORM\Column(name="locale", type="string", length=64)
+     */
+    private $locale;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TranslatedPost", inversedBy="translations")
+     * @ORM\JoinColumn(name="translatedpost_id", referencedColumnName="id")
+     */
+    private $translated;
+
+    /**
      * @ORM\ManyToOne(targetEntity="PostData", inversedBy="posts")
      * @ORM\JoinColumn(name="data_id", referencedColumnName="id", onDelete="CASCADE")
      */
@@ -122,6 +133,7 @@ class Post
 
     public function setCategory(Category $category)
     {
+        $this->reuseLocales($this, $category);
         $this->category = $category;
     }
 
@@ -157,6 +169,7 @@ class Post
 
     public function addChild(Post $child)
     {
+        $this->reuseLocales($this, $child);
         $child->setParent($this);
         $this->children->add($child);
     }
@@ -181,7 +194,17 @@ class Post
         }
     }
 
-    public function setUser(User $user)
+    public function setTranslated(Post $translated = null)
+    {
+        $this->translated = $translated;    
+    }
+
+    public function getTranslated()
+    {
+        return $this->translated;   
+    }
+
+    public function setUser(\User\Entity\User $user)
     {
         $this->user = $user;
     }
@@ -189,5 +212,38 @@ class Post
     public function getUser()
     {
         return $this->user;
+    }
+
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+    }
+
+    public function hasLocale()
+    {
+        return null !== $this->locale;
+    }
+
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    public function reuseLocales($one, $other)
+    {
+        if (!$one->hasLocale() && !$other->hasLocale()) {
+            return;
+        }
+        if ($one->hasLocale() && $other->hasLocale()) {
+            if ($one->getLocale() !== $other->getLocale()) {
+                throw new \Exception('Post locale and post data locale cannot be different');
+            }
+            return;
+        }
+        if ($one->hasLocale()) {
+            $other->setLocale($one->getLocale());
+        } else {
+            $one->setLocale($other->getLocale());
+        }
     }
 }

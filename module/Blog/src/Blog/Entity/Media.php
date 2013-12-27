@@ -9,13 +9,29 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Media 
 {
-
     /**
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue
      */
     private $id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="\User\Entity\User", inversedBy="posts")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    private $user;
+
+    /**
+     * @ORM\Column(name="locale", type="string", length=64)
+     */
+    private $locale;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TranslatedMedia", inversedBy="translations")
+     * @ORM\JoinColumn(name="translatedmedia_id", referencedColumnName="id")
+     */
+    private $translated;
 
     /**
      * @ORM\Column(name="slug", type="string", length=64)
@@ -77,6 +93,17 @@ class Media
     {
         return $this->id;
     }
+
+    public function setUser(\User\Entity\User $user)
+    {
+        $this->user = $user;
+    }
+
+    public function getUser()
+    {
+        return $this->user;
+    }
+
 
     public function setSlug($slug)
     {
@@ -215,5 +242,20 @@ class Media
     public function getFile()
     {
         return $this->file;
+    }
+
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+    }
+
+    public function hasLocale()
+    {
+        return null !== $this->locale;
+    }
+
+    public function getLocale()
+    {
+        return $this->locale;
     }
 }

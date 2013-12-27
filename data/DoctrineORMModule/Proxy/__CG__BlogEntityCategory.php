@@ -64,10 +64,10 @@ class Category extends \Blog\Entity\Category implements \Doctrine\ORM\Proxy\Prox
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'id', 'name', 'slug', 'description', 'lft', 'lvl', 'rgt', 'root', 'posts', 'parent', 'children');
+            return array('__isInitialized__', 'id', 'locale', 'translated', 'name', 'slug', 'description', 'lft', 'lvl', 'rgt', 'root', 'posts', 'parent', 'children');
         }
 
-        return array('__isInitialized__', 'id', 'name', 'slug', 'description', 'lft', 'lvl', 'rgt', 'root', 'posts', 'parent', 'children');
+        return array('__isInitialized__', 'id', 'locale', 'translated', 'name', 'slug', 'description', 'lft', 'lvl', 'rgt', 'root', 'posts', 'parent', 'children');
     }
 
     /**
@@ -472,6 +472,50 @@ class Category extends \Blog\Entity\Category implements \Doctrine\ORM\Proxy\Prox
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeChildren', array($children));
 
         return parent::removeChildren($children);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setLocale($locale)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setLocale', array($locale));
+
+        return parent::setLocale($locale);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function hasLocale()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'hasLocale', array());
+
+        return parent::hasLocale();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getLocale()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getLocale', array());
+
+        return parent::getLocale();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function reuseLocales($one, $other)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'reuseLocales', array($one, $other));
+
+        return parent::reuseLocales($one, $other);
     }
 
 }

@@ -1,0 +1,21 @@
+<?php
+return array (
+  'login' => '',
+  'auth' => '',
+  'register' => '',
+  'firstname' => '',
+  'surname' => '',
+  'firstname surname\'s Profile' => '',
+  'Email' => '',
+  'Password' => '',
+  'The email password combination does not exist, try another password or register' => '',
+  'Confirm Password' => '',
+  'Passwords don\'t match' => '',
+  'edit' => '',
+  'profile' => '',
+  'Name' => '',
+  'Surname' => '',
+  'Describe yourself' => '',
+  'Featured Image' => '',
+  'Value is required and can\'t be empty' => '',
+);

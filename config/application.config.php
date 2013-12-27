@@ -10,12 +10,7 @@ return array(
         'ZfcBase',
         'Blog',
         'User',
-        //'TwitterBootstrap',
-        //'AsseticBundle',
-        //'ZfcUser', //Triggering error : An alias "zfcuser_zend_db_adapter" was requested but no service could be found.
-        //'ZfcUserDoctrineORM',
-        //'BjyAuthorize',
-        //'GbiliUser', // Depends on ZfcUser 
+        'Lang',
     ),
 
     // These are various options for the listeners attached to the ModuleManager

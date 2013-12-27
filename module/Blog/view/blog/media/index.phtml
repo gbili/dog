@@ -40,6 +40,7 @@ $this->headTitle($title);
                     foreach ($media->getPosts() as $post) :
                         $return = (('' === $return)? '' : $return . ', ' ) . $post->getTitle() . ':<a href="' . $this->url(
                             'blog', array(
+                            'lang' => $this->lang(), 
                             'controller' => 'media', 
                             'action' => 'unlink', 
                             'id' => $media->getId(),
@@ -49,16 +50,19 @@ $this->headTitle($title);
                     echo $return;?>
             <?php endif ?>
             <a class="btn btn-default btn-xs" role="button"href="<?php echo $this->url('blog', array(
+                'lang' => $this->lang(), 
                 'controller' => 'media', 
                 'action' => 'link', 
                 'id' => $media->getId(),
             )); ?>"><?php echo $this->translate('Link to', 'blog') ?></a>
             <a class="btn btn-primary btn-xs" role="button" href="<?php echo $this->url('blog', array(
+                'lang' => $this->lang(), 
                 'controller' => 'media', 
                 'action' => 'edit', 
                 'id' => $media->getId(),
             )); ?>"><?php echo $this->translate('Edit', 'blog') ?></a>
             <a class="btn btn-danger btn-xs" role="button" href="<?php echo $this->url('blog', array(
+                'lang' => $this->lang(), 
                 'controller' => 'media', 
                 'action' => 'delete',
                 'id' => $media->getId()

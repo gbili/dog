@@ -19,6 +19,20 @@ class PostData
     private $id;
 
     /**
+     * @ORM\Column(name="locale", type="string", length=64)
+     */
+    private $locale;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TranslatedPostData", inversedBy="translations")
+     * @ORM\JoinColumn(name="translated_postdata_id", referencedColumnName="id")
+     */
+    private $translated;
+
+    /**
+     * A post data can be used in many posts, this would avoid
+     * useless text duplication
+     *
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\OneToMany(targetEntity="Post", mappedBy="data")
@@ -80,6 +94,7 @@ class PostData
 
     public function setMedia(Media $media = null)
     {
+        $this->reuseLocales($media, $this);
         $this->media = $media;
     }
 
@@ -113,7 +128,8 @@ class PostData
      */
     public function addPost(Post $post)
     {
-        $post->setCategory($this);
+        $this->reuseLocales($this, $post);
+        $post->setData($this);
         $this->posts->add($post);
     }
 
@@ -132,7 +148,7 @@ class PostData
     public function removePost(\Blog\Entity\Post $post)
     {
         $this->posts->removeElement($post);
-        $post->setCategory(null);
+        $post->setData(null);
     }
 
     /**
@@ -146,4 +162,30 @@ class PostData
             $this->removePost($post);
         }
     }
+
+    public function setTranslated(Post $translated = null)
+    {
+        $this->translated = $translated;    
+    }
+
+    public function getTranslated()
+    {
+        return $this->translated;   
+    }
+
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+    }
+
+    public function hasLocale()
+    {
+        return null !== $this->locale;
+    }
+
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
 }

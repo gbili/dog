@@ -31,7 +31,7 @@ class Module
         $eventManager->attach(\Zend\Mvc\MvcEvent::EVENT_DISPATCH, function ($e) {
             $lang = $e->getRouteMatch()->getParam('lang');
             $translator = $e->getApplication()->getServiceManager()->get('translator');
-            $translator->setFallbackLocale('en_US');
+            $translator->setFallbackLocale('en');
             if (null !== $lang) {
                 $translator->setLocale($lang);
             }

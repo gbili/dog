@@ -4,9 +4,12 @@ namespace Blog\Form\Fieldset;
 class PostLinkable extends Post 
 implements \Zend\InputFilter\InputFilterProviderInterface
 {
-    public function __construct(\Doctrine\Common\Persistence\ObjectManager $objectManager)
+    public function __construct($sm)
     {
-        parent::__construct($objectManager);
+        parent::__construct($sm);
+
+        $objectManager = $sm->get('Doctrine\ORM\EntityManager');
+        $lang = $sm->get('lang')->getLang();
 
         $this->add(array(
             'name' => 'data',
@@ -16,6 +19,13 @@ implements \Zend\InputFilter\InputFilterProviderInterface
                 'property' => 'title',
                 'target_class' => 'Blog\Entity\PostData',
                 'object_manager' => $objectManager,
+                'is_method' => true,
+                'find_method' => array(
+                    'name' => 'findBy',
+                    'params' => array(
+                        'criteria' => array('locale' => $lang),
+                    ),
+                ),
             ),
             'attributes' => array(
                 'class' => 'form-control',

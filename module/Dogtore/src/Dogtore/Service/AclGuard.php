@@ -72,30 +72,50 @@ class AclGuard
         return $this->matchedRouteName;
     }
 
+    public function hasMatchedRoute()
+    {
+        return null !== $this->getMvcEvent()->getRouteMatch();
+    }
+
     public function check(\Zend\Mvc\MvcEvent $e)
     {
-        return (($this->getAcl()->isAllowed($this->getRole(), $this->getMatchedRouteName()))? $this->allowed() : $this->denied()); 
+        if ($this->getAcl()->isAllowed($this->getRole(), $this->getMatchedRouteName())) {
+            $this->allowed();
+        } else {
+            $this->denied();
+        }
     }
 
     public function getRole()
     {
-        if (null === $this->role) {
-            $this->role = ((!$this->getAuthenticationService()->hasIdentity())? self::NO_RIGHTS_ROLE : $this->getAuthenticationService()->getIdentity()->getRole());
+        if (null !== $this->role) {
+            return $this->role;
         }
+        $aus = $this->getAuthenticationService();
+        if (!$aus->hasIdentity()) {
+            return $this->role = self::NO_RIGHTS_ROLE;
+        }
+        if (null === $aus->getIdentity()) {
+            //User deleted while he had initiated a session
+            $aus->getStorage()->clear();
+            return $this->role = self::NO_RIGHTS_ROLE;
+        }
+        $this->role = $aus->getIdentity()->getRole();
         return $this->role;
     }
 
     public function denied()
     {
-        $e = $this->getMvcEvent();
+      /*$e = $this->getMvcEvent();
         $e->stopPropagation();
-        $controller = $e->getTarget();           
-
+        $controller = $e->getTarget();
+        $lang = $this->getMvcEvent()->getApplication()->getServiceManager()->get('lang')->getLang();
         if ($this->getRole() === self::NO_RIGHTS_ROLE) {
-            $controller->redirect()->toRoute('auth_login');
+            $controller->redirect()->toRoute('auth_login', array('lang' => $lang));
         } else {
-            $controller->redirect()->toRoute('snap', array('controller' => 'snap', 'action' => 'forbidden'));
-        }
+            $controller->redirect()->toRoute('snap', array('controller' => 'snap', 'action' => 'forbidden', 'lang' => $lang));
+        }*/
+        throw new \Exception('Access denied');
     }
 
     public function allowed()

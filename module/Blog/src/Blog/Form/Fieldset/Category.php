@@ -4,13 +4,15 @@ namespace Blog\Form\Fieldset;
 class Category extends \Zend\Form\Fieldset 
     implements \Zend\InputFilter\InputFilterProviderInterface
 {
-    public function __construct(\Doctrine\Common\Persistence\ObjectManager $objectManager)
+    public function __construct($sm)
     {
         parent::__construct('category');
 
+        $objectManager = $sm->get('Doctrine\ORM\EntityManager');
+        $lang = $sm->get('lang')->getLang();
+
         $this->setHydrator(new \DoctrineModule\Stdlib\Hydrator\DoctrineObject($objectManager))
              ->setObject(new \Blog\Entity\Category());
-        
 
         $this->add(array(
             'name' => 'parent',
@@ -20,6 +22,12 @@ class Category extends \Zend\Form\Fieldset
                 'property' => 'name',
                 'target_class' => 'Blog\Entity\Category',
                 'object_manager' => $objectManager,
+                'find_method' => array(
+                    'name' => 'findBy',
+                    'params' => array(
+                        'criteria' => array('locale' => $lang),
+                    ),
+                ),
             ),
             'attributes' => array(
                 'class' => 'form-control'

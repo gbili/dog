@@ -12,6 +12,7 @@ class AclGuardFactory implements \Zend\ServiceManager\FactoryInterface
         $guard = new AclGuard();
         $guard->setAcl($sm->get('acl'));
         $guard->setAuthenticationService($sm->get('Zend\Authentication\AuthenticationService'));
+        $guard->setMvcEvent($sm->get('Application')->getMvcEvent());
         return $guard;
     }
 }

@@ -23,6 +23,17 @@ class Category
     private $id;
 
     /**
+     * @ORM\Column(name="locale", type="string", length=64)
+     */
+    private $locale;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TranslatedCategory", inversedBy="translations")
+     * @ORM\JoinColumn(name="translated_category_id", referencedColumnName="id")
+     */
+    private $translated;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=64, precision=0, scale=0, nullable=false, unique=false)
@@ -334,7 +345,6 @@ class Category
     public function setParent(\Blog\Entity\Category $parent = null)
     {
         $this->parent = $parent;
-
         return $this;
     }
 
@@ -355,6 +365,7 @@ class Category
 
     public function addChild(Category $child)
     {
+        $this->reuseLocales($this, $child);
         $child->setParent($this);
         $this->children->add($child);
     }
@@ -378,4 +389,38 @@ class Category
             $this->removeChild($child);
         }
     }
+
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+    }
+
+    public function hasLocale()
+    {
+        return null !== $this->locale;
+    }
+
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    public function reuseLocales($one, $other)
+    {
+        if (!$one->hasLocale() && !$other->hasLocale()) {
+            return;
+        }
+        if ($one->hasLocale() && $other->hasLocale()) {
+            if ($one->getLocale() !== $other->getLocale()) {
+                throw new \Exception('Post locale and post data locale cannot be different');
+            }
+            return;
+        }
+        if ($one->hasLocale()) {
+            $other->setLocale($one->getLocale());
+        } else {
+            $one->setLocale($other->getLocale());
+        }
+    }
+
 }

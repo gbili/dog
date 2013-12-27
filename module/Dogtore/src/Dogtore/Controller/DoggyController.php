@@ -147,7 +147,8 @@ class DoggyController extends \Zend\Mvc\Controller\AbstractActionController
             ->where('c.slug = ?1')
             ->setParameter(1, $categorySlug); 
         if (null !== $term) {
-            $queryBuilder->andWhere('p.title LIKE ?2')
+            $queryBuilder->innerJoin('p.data', 'd')
+                ->andWhere('d.title LIKE ?2')
                 ->setParameter(2, $term); 
         }
         return $queryBuilder->getQuery()->getResult();

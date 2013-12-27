@@ -4,6 +4,7 @@ $this->headTitle($title);
 ?>
 <h1><?php echo $this->escapeHtml($title); ?></h1>
 <p><a href="<?php echo $this->url('blog', array(
+    'lang' => $this->lang(),
     'controller' => 'file', 
     'action'=>'upload',
 ));?>"><?php echo $this->translate('Add new File', 'blog') ?></a></p>
@@ -27,6 +28,7 @@ $this->headTitle($title);
 	        <td><?php echo $this->escapeHtml($file->getSize());?></td>
 	        <td>
                 <a href="<?php echo $this->url('blog', array(
+                    'lang' => $this->lang(),
                     'controller' => 'media', 
                     'action' => 'create',
                     'id' => $file->getId()
@@ -34,6 +36,7 @@ $this->headTitle($title);
 	        </td>
 	        <td>
                 <a href="<?php echo $this->url('blog', array(
+                    'lang' => $this->lang(),
                     'controller' => 'file', 
                     'action' => 'edit', 
                     'id' => $file->getId(),
@@ -42,6 +45,7 @@ $this->headTitle($title);
 	        </td>
 	        <td>
                 <a href="<?php echo $this->url('blog', array(
+                    'lang' => $this->lang(),
                     'controller' => 'file', 
                     'action' => 'delete',
                     'id' => $file->getId()

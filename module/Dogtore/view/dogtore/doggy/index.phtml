@@ -5,9 +5,9 @@
     <div class="input-group">
       <input type="text" class="form-control" name="term">
       <span class="input-group-btn">
-        <button class="btn btn-primary" type="submit" name="category" value="symptoms">Symptoms</button>
-        <button class="btn btn-warning" type="submit" name="category" value="causes">Causes</button>
-        <button class="btn btn-success" type="submit" name="category" value="solutions">Solutions</button>
+      <button class="btn btn-primary" type="submit" name="category" value="symptoms"><?php echo $this->translate('Symptoms', 'dogtore')?></button>
+        <button class="btn btn-warning" type="submit" name="category" value="causes"><?php echo $this->translate('Causes', 'dogtore')?></button>
+        <button class="btn btn-success" type="submit" name="category" value="solutions"><?php echo $this->translate('Solutions', 'dogtore')?></button>
       </span>
     </div><!-- /input-group -->
   </div><!-- /.col-lg-6 -->
@@ -29,9 +29,9 @@
             <p><?php echo $doggy->getContent() ?></p>
             <p class="category">
             </p>
-            <a href="<?php echo $this->url('dogtore_view', array('controller' => 'doggy', 'action' => 'view', 'id' => $doggy->getId()))?>">Read...</a>
+            <a href="<?php echo $this->url('dogtore_view', array('controller' => 'doggy', 'action' => 'view', 'id' => $doggy->getId()))?>"><?php echo $this->translate('Read', 'dogtore')?>...</a>
             <p class="controls">
-                <a href="<?php echo $this->url('blog', array('controller' => 'post', 'action' => 'edit', 'id' => $doggy->getId())) ?>">Edit</a>
+                <a href="<?php echo $this->url('blog', array('controller' => 'post', 'action' => 'edit', 'id' => $doggy->getId())) ?>"><?php echo $this->translate('Edit', 'dogtore')?></a>
             </p>
           </div>
 </div>

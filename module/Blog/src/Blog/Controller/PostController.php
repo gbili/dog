@@ -1,39 +1,39 @@
 <?php
 namespace Blog\Controller;
 
-use DoctrineORMModule\Stdlib\Hydrator\DoctrineEntity;
-use Zend\View\Model\ViewModel;
-
-use Blog\Form\PostForm;
-use Blog\Entity\Post;
-
 class PostController extends \User\Controller\LoggedInController 
 {
 
     /**
-    * Index action
-    *
-    */
+     * Index action
+     *
+     */
     public function indexAction()
     {
         $em = $this->getEntityManager();
-        $posts = $em->getRepository('Blog\Entity\Post')->findBy(array('user' => $this->getUser()->getId()), array('slug' => 'ASC'));
+        $posts = $em->getRepository('Blog\Entity\Post')->findBy(
+            array(
+                'user' => $this->getUser()->getId(),
+                'locale' => $this->getLocale(),
+            ), 
+            array('slug' => 'ASC')
+        );
 
-        return new ViewModel(array(
+        return new \Zend\View\Model\ViewModel(array(
             'posts' => $posts,
         ));
     }
 
     /**
-    * Edit action
-    *
-    */
+     * Edit action
+     *
+     */
     public function editAction()
     {
         $objectManager = $this->getEntityManager();
         
         // Create the form and inject the object manager
-        $form = new \Blog\Form\PostEdit($objectManager);
+        $form = new \Blog\Form\PostEdit($this->getServiceLocator());
         
         //Get a new entity with the id 
         $blogPost = $objectManager->find('Blog\Entity\Post', (integer) $this->params('id'));
@@ -57,7 +57,7 @@ class PostController extends \User\Controller\LoggedInController
             }
         }
 
-        return new ViewModel(array(
+        return new \Zend\View\Model\ViewModel(array(
             'form' => $form,
             'entityId' => $blogPost->getId(),
         ));
@@ -74,17 +74,16 @@ class PostController extends \User\Controller\LoggedInController
      */
     public function createAction()
     {
-
         $objectManager = $this->getEntityManager();
         // Create the form and inject the object manager
-        $combinedForm = new \Blog\Form\PostAndPostDataCombinedCreate($objectManager);
+        $combinedForm = new \Blog\Form\PostAndPostDataCombinedCreate($this->getServiceLocator());
 
         //Create a new, empty entity and bind it to the form
         $blogPostData = new \Blog\Entity\PostData();
         $blogPost = new \Blog\Entity\Post();
 
         if (!$this->request->isPost()) {
-            return new ViewModel(array(
+            return new \Zend\View\Model\ViewModel(array(
                 'entityId' => $blogPost->getId(),
                 'form' => $combinedForm,
             ));
@@ -94,23 +93,25 @@ class PostController extends \User\Controller\LoggedInController
         $combinedForm->setData($httpPostData);
 
         if (!$combinedForm->isValid()) {
-            return new ViewModel(array(
+            return new \Zend\View\Model\ViewModel(array(
                 'form' => $combinedForm,
                 'entityId' => $blogPost->getId(),
             ));
         }
 
-        $postDataForm = new \Blog\Form\PostDataCreate($objectManager);
+        $postDataForm = new \Blog\Form\PostDataCreate($this->getServiceLocator());
         $postDataForm->bind($blogPostData);
         $postDataForm->setData($httpPostData);
 
         if ($postDataForm->isValid()) {
             $blogPostData->setDate(new \DateTime());
+            // blogPostData Locale will be replicated to blogPost
+            $blogPostData->setLocale($this->getLocale());
             $objectManager->persist($blogPostData);
             $objectManager->flush();
         }
 
-        $postForm     = new \Blog\Form\PostCreate($objectManager);
+        $postForm     = new \Blog\Form\PostCreate($this->getServiceLocator());
         $postForm->bind($blogPost);
 
         $postForm->setData($httpPostData);
@@ -138,12 +139,12 @@ class PostController extends \User\Controller\LoggedInController
         }
 
         // Create the form and inject the object manager
-        $postForm     = new \Blog\Form\PostCreate($objectManager);
+        $postForm     = new \Blog\Form\PostCreate($this->getServiceLocator());
         //Create a new, empty entity and bind it to the form
         $blogPost = new \Blog\Entity\Post();
 
         if (!$this->request->isPost()) {
-            return new ViewModel(array(
+            return new \Zend\View\Model\ViewModel(array(
                 'entityId' => $blogPost->getId(),
                 'form' => $postForm,
             ));
@@ -153,7 +154,7 @@ class PostController extends \User\Controller\LoggedInController
         $postForm->setData($blogPost);
 
         if (!$postForm->isValid()) {
-            return new ViewModel(array(
+            return new \Zend\View\Model\ViewModel(array(
                 'form' => $postForm,
                 'entityId' => $blogPost->getId(),
             ));

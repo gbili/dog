@@ -6,8 +6,10 @@ if (!isset($__VIEWFILE__)) {
 $fileparts = explode('/', $__VIEWFILE__);
 $action = substr(end($fileparts), 0, -6);
 $controller = prev($fileparts); 
+$textDomain = prev($fileparts);
 $routename = $controller . '_' . $action;
 $route = array(
+    'lang' => $this->lang(),
     'controller' => $controller,
     'action' => $action
 );
@@ -24,7 +26,7 @@ foreach ($form->getFieldsets() as $fieldset) {
 $elements +=$form->getElements();
 ?>
 <?php
-$title = ucfirst($this->translate($action, 'user')) . ' ' . ucfirst($this->translate($controller, 'user'));
+$title = ucfirst($this->translate($action, $textDomain)) . ' ' . ucfirst($this->translate($controller, $textDomain));
 $this->headTitle($title);
 ?>
 <div class="row">
@@ -57,7 +59,10 @@ $this->headTitle($title);
             <?php $errors = $element->getMessages(); ?>
             <?php $hasErrors = !empty($errors) ?>
             <div class="form-group<?php echo (($hasErrors)? ' has-error' : '') ?>">
-                <?php echo ((null !== $element->getLabel())? $this->formLabel($element) : '') ?>
+                <?php if (null !== $element->getLabel()) : ?>
+                   <?php $element->setLabel($this->translate($element->getLabel(), $textDomain)) ?>
+                   <?php echo $this->formLabel($element) ?>
+                <?php endif ?>
                 <?php echo $this->formElement($element) ?>
                 <?php if ($hasErrors) :?>
                     <label class="control-label" for="<?php $element->getAttribute('name');?>"><?php echo $this->translate(current($errors), 'user');?></label>
