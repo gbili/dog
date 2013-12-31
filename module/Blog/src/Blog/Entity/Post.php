@@ -117,6 +117,9 @@ class Post
 
     public function getData()
     {
+        if (null === $this->data) {
+            return new PostData();
+        }
         return $this->data;
     }
 

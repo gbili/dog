@@ -7,9 +7,8 @@ use Zend\View\Model\ViewModel;
 class MediaController extends \User\Controller\LoggedInController 
 {
     /**
-    * Index action
-    *
-    */
+     * Index action
+     */
     public function indexAction()
     {
         $em = $this->getEntityManager();
@@ -21,9 +20,8 @@ class MediaController extends \User\Controller\LoggedInController
     }
 
     /**
-    * Edit action
-    *
-    */
+     * Edit action
+     */
     public function editAction()
     {
         $objectManager = $this->getEntityManager();
@@ -54,7 +52,6 @@ class MediaController extends \User\Controller\LoggedInController
 
     /**
      * Link media to a post 
-     *
      */
     public function linkAction()
     {
@@ -84,7 +81,6 @@ class MediaController extends \User\Controller\LoggedInController
 
     /**
      * Link media to a post 
-     *
      */
     public function unlinkAction()
     {
@@ -106,7 +102,8 @@ class MediaController extends \User\Controller\LoggedInController
 
             $this->flashMessenger()->addSuccessMessage('Media and post unlinked');
         }
-        return $this->redirect()->toRoute('blog', array('controller' => 'media', 'action' => 'index'));
+
+        return $this->redirectToMediaLibrary();
     }
 
     public function uploadAction()
@@ -135,7 +132,7 @@ class MediaController extends \User\Controller\LoggedInController
         }
         $this->createMedias($fileUploader->getFiles());
 
-        return $this->redirect()->toRoute('blog', array('controller' => 'media', 'action' => 'index'));
+        return $this->redirectToMediaLibrary();
     }
 
     public function createMedias(array $files)
@@ -160,14 +157,23 @@ class MediaController extends \User\Controller\LoggedInController
         return $this->redirect()->toRoute('blog_media_view', array(
             'controller' => 'media',
             'action' => 'view',
-            'slug' => $media->getSlug()
+            'slug' => $media->getSlug(),
+            'lang' => $this->getLang(),
+        ));
+    }
+
+    public function redirectToMediaLibrary()
+    {
+        return $this->redirect()->toRoute('blog', array(
+            'controller' => 'media', 
+            'action'     => 'index', 
+            'lang' => $this->getLang(),
         ));
     }
 
     /**
-    * Delete action
-    *
-    */
+     * Delete action
+     */
     public function deleteAction()
     {
         $media = $this->getEntityManager()->getRepository('Blog\Entity\Media')->find($this->params('id'));
@@ -179,7 +185,8 @@ class MediaController extends \User\Controller\LoggedInController
 
             $this->flashMessenger()->addSuccessMessage('Media Deleted');
         }
-        return $this->redirect()->toRoute('blog', array('controller' => 'media', 'action' => 'index'));
+
+        return $this->redirectToMediaLibrary();
     }
 
     public function viewAction()

@@ -64,10 +64,10 @@ class Post extends \Blog\Entity\Post implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'id', 'slug', 'data', 'category', 'lft', 'lvl', 'rgt', 'root', 'parent', 'children');
+            return array('__isInitialized__', 'id', 'slug', 'locale', 'translated', 'data', 'category', 'user', 'lft', 'lvl', 'rgt', 'root', 'parent', 'children');
         }
 
-        return array('__isInitialized__', 'id', 'slug', 'data', 'category', 'lft', 'lvl', 'rgt', 'root', 'parent', 'children');
+        return array('__isInitialized__', 'id', 'slug', 'locale', 'translated', 'data', 'category', 'user', 'lft', 'lvl', 'rgt', 'root', 'parent', 'children');
     }
 
     /**
@@ -213,23 +213,23 @@ class Post extends \Blog\Entity\Post implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function setPostData(\Blog\Entity\PostData $postData)
+    public function setData(\Blog\Entity\PostData $postData)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setPostData', array($postData));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setData', array($postData));
 
-        return parent::setPostData($postData);
+        return parent::setData($postData);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getPostData()
+    public function getData()
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPostData', array());
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getData', array());
 
-        return parent::getPostData();
+        return parent::getData();
     }
 
     /**
@@ -362,6 +362,94 @@ class Post extends \Blog\Entity\Post implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeChildren', array($children));
 
         return parent::removeChildren($children);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setTranslated(\Blog\Entity\Post $translated = NULL)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setTranslated', array($translated));
+
+        return parent::setTranslated($translated);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTranslated()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTranslated', array());
+
+        return parent::getTranslated();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setUser(\User\Entity\User $user)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setUser', array($user));
+
+        return parent::setUser($user);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getUser()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getUser', array());
+
+        return parent::getUser();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setLocale($locale)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setLocale', array($locale));
+
+        return parent::setLocale($locale);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function hasLocale()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'hasLocale', array());
+
+        return parent::hasLocale();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getLocale()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getLocale', array());
+
+        return parent::getLocale();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function reuseLocales($one, $other)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'reuseLocales', array($one, $other));
+
+        return parent::reuseLocales($one, $other);
     }
 
 }

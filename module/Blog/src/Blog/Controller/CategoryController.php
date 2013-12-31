@@ -60,20 +60,28 @@ class CategoryController extends \User\Controller\LoggedInController
         $blogCategory = new \Blog\Entity\Category();
         $form->bind($blogCategory);
 
-        if ($this->request->isPost()) {
-            $form->setData($this->request->getPost());
-
-            if ($form->isValid()) {
-                $blogCategory->setLocale($this->getLocale());
-                $objectManager->persist($blogCategory);
-                $objectManager->flush();
-            }
+        if (!$this->request->isPost()) {
+            return new ViewModel(array(
+                'form' => $form,
+                'entityId' => $blogCategory->getId(),
+            ));
         }
 
-        return new ViewModel(array(
-            'form' => $form,
-            'entityId' => $blogCategory->getId(),
-        ));
+        $form->setData($this->request->getPost());
+
+        if (!$form->isValid()) {
+            return new ViewModel(array(
+                'form' => $form,
+                'entityId' => $blogCategory->getId(),
+            ));
+        }
+
+        $blogCategory->setLocale($this->getLocale());
+        $objectManager->persist($blogCategory);
+        $objectManager->flush();
+
+        return $this->redirectToCategoriesList();
+
     }
 
     public function deleteAction()
@@ -87,7 +95,18 @@ class CategoryController extends \User\Controller\LoggedInController
 
             $this->flashMessenger()->addSuccessMessage('Category Deleted');
         }
+        return $this->redirectToCategoriesList();
+    }
 
-        return $this->redirect()->toRoute('category');
+    public function redirectToCategoriesList()
+    {
+        return $this->redirect()->toRoute(
+            'blog', 
+            array(
+                'controller' => 'category', 
+                'action' => 'index', 
+            ), 
+            true
+        );
     }
 }

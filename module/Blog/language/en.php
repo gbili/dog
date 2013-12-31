@@ -43,4 +43,5 @@ return array (
   'Link' => '',
   'Parent' => '',
   'Description' => '',
+  'Value is required and can\'t be empty' => '',
 );

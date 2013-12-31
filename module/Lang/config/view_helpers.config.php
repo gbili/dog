@@ -6,4 +6,7 @@ return array(
         'translate'        => __NAMESPACE__ . '\View\Helper\TranslateWriter',
         'lang'             => __NAMESPACE__ . '\View\Helper\Lang',
     ),
+    'factories' => array(
+        'langSelector' => __NAMESPACE__ . '\View\Helper\LangSelectorFactory',
+    ),
 );

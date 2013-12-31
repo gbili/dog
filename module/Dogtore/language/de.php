@@ -1,0 +1,22 @@
+<?php
+return array (
+  'Understand your Dog' => '',
+  'Dogtore App' => '',
+  'Symptoms' => '',
+  'Causes' => '',
+  'Solutions' => '',
+  'Login' => '',
+  'Register' => '',
+  'by' => '',
+  'All rights reserved.' => '',
+  'Create' => '',
+  'My Profile' => '',
+  'Profiles' => '',
+  'Logout' => '',
+  'Home' => '',
+  'An error occurred' => '',
+  'Additional information' => '',
+  'File' => '',
+  'Message' => '',
+  'Stack trace' => '',
+);

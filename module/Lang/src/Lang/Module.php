@@ -28,15 +28,16 @@ class Module
     {
         $eventManager = $e->getApplication()->getEventManager();
         $eventManager->attach(\Zend\Mvc\MvcEvent::EVENT_DISPATCH, function ($e) {
-            $lang = $e->getRouteMatch()->getParam('lang');
             $sm = $e->getApplication()->getServiceManager();
+            $viewHelperManager = $sm->get('ViewHelperManager');
+
+            $lang = $sm->get('lang')->getLang();
+            $viewHelperManager->get('lang')->setLang($lang);
+
             $translator = $sm->get('translator');
             $translator->setFallbackLocale('en');
-            if (null !== $lang) {
-                $translator->setLocale($lang);
-            }
-            $sm->get('ViewHelperManager')->get('translate')->setTranslator($translator);
-            $sm->get('ViewHelperManager')->get('lang')->setLang(((null !== $lang)? $lang : 'en'));
+            $translator->setLocale($lang);
+            $viewHelperManager->get('translate')->setTranslator($translator);
         });
     }
 }

@@ -16,6 +16,9 @@ return array(
             'auth_login',
             'auth_register',
             'blog_file',
+            'admin_index',
+            'admin_delete',
+            'admin_edit',
             //empty blacklist allowed everything
         ),
         'admin' => array(

@@ -4,16 +4,14 @@ namespace User\Controller;
 class ProfileController extends LoggedInController
 {
     /**
-    * Index action
-    *
-    */
+     * Index action
+     */
     public function indexAction()
     {
         $user = $this->getUser();
         if (!$user->hasProfile()) {
             return $this->redirect()->toRoute('profile_edit');
         }
-
         $profile = $user->getProfile();        
         $media = $profile->getMedia();
         return new \Zend\View\Model\ViewModel(array(
@@ -29,6 +27,7 @@ class ProfileController extends LoggedInController
     public function listAction()
     {
         $profiles = $this->getEntityManager()->getRepository('User\Entity\Profile')->findAll();
+
         return new \Zend\View\Model\ViewModel(array(
             'profiles' => $profiles,
         ));
@@ -36,19 +35,14 @@ class ProfileController extends LoggedInController
 
     /**
      * Create a blog post
-     *
      */
     public function editAction()
     {
         $objectManager = $this->getEntityManager();
+        $user          = $this->identity();
+        $profile       = $user->getProfile();
 
-        $user = $this->identity();
-        
-        // Create the form and inject the object manager
-        $profileForm = new \User\Form\ProfileEdit($objectManager);
-
-        //Create a new, empty entity and bind it to the form
-        $profile = new \User\Entity\Profile();
+        $profileForm   = new \User\Form\ProfileEdit($objectManager);
         $profileForm->bind($profile);
 
         if (!$this->request->isPost()) {
@@ -80,24 +74,5 @@ class ProfileController extends LoggedInController
         $objectManager->flush();
 
         return $this->redirect()->toRoute('profile_index', array('id' => (string) $user->getId()));
-    }
-
-    /**
-    * Delete action
-    *
-    */
-    public function deleteAction()
-    {
-        $post = $this->getEntityManager()->getRepository('Blog\Entity\Post')->find($this->params('id'));
-
-        if ($post) {
-            $em = $this->getEntityManager();
-            $em->remove($post);
-            $em->flush();
-
-            $this->flashMessenger()->addSuccessMessage('Post Deleted');
-        }
-
-        return $this->redirect()->toRoute('blog', array('controller' => 'post', 'action' => 'index'));
     }
 }

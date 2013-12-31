@@ -14,6 +14,18 @@ implements \Zend\InputFilter\InputFilterProviderInterface
         ));
 
         $this->add(array(
+            'name' => 'uniquename',
+            'type'  => 'Zend\Form\Element\Text',
+            'options' => array(
+                'label' => 'Username'
+            ),
+            'attributes' => array(
+                'class' => 'form-control',
+                'placeholder' => 'Jonny.de-Vito_21',
+            )
+        ));
+
+        $this->add(array(
             'name' => 'email',
             'type'  => 'Zend\Form\Element\Email',
             'options' => array(
@@ -47,14 +59,28 @@ implements \Zend\InputFilter\InputFilterProviderInterface
                 ),
             ),
 
+            'uniquename' => array(
+                'required' => true,
+                'validators' => array(
+                    array(
+                        'name'    => 'Regex',
+                        'options' => array(
+                            'pattern' => '/(?:[A-Za-z0-9]+(?:[-_\\.]?[A-Za-z0-9]+)*){4,}/',
+                            'message' => 'The username can contain A-Z, a-z, 0-9 and these special chars: - _ . (dash, underscore, dot)',
+                        ),
+                    ),
+                ),
+            ),
+
             'email' => array(
                 'required' => true,
                 'validators' => array(
                     array(
-                        'name'    => 'EmailAddress',
+                        'name' => 'EmailAddress',
                     ),
                 ),
             ),
+
             'password' => array(
                 'required' => true,
                 'validators' => array(
@@ -63,6 +89,7 @@ implements \Zend\InputFilter\InputFilterProviderInterface
                         'options' => array(
                             'min' => 8,
                             'max' => 64,
+                            'message' => 'Password must be from 8 to 64 characters long',
                         ),
                     ),
                 ),

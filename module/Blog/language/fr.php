@@ -42,4 +42,5 @@ return array (
   'Files' => '',
   'Upload Files' => '',
   'file' => '',
+  'Value is required and can\'t be empty' => '',
 );

@@ -26,6 +26,13 @@ class User
     /**
      * @var string
      *
+     * @ORM\Column(name="uniquename", type="string", length=64, nullable=false, unique=true)
+     */
+    private $uniquename;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="email", type="string", length=64, nullable=false, unique=true)
      */
     private $email;
@@ -54,6 +61,11 @@ class User
     {
     }
 
+    public function isAdmin()
+    {
+        return $this->getRole() === 'admin';
+    }
+
     public function getId()
     {
         return $this->id;
@@ -76,7 +88,17 @@ class User
 
     public function getEmail()
     {
-        return $this->profile;
+        return $this->email;
+    }
+
+    public function setUniquename($uniquename)
+    {
+        $this->uniquename = $uniquename;
+    }
+
+    public function getUniquename()
+    {
+        return $this->uniquename;
     }
 
     public function setProfile(Profile $profile)
@@ -86,6 +108,9 @@ class User
 
     public function getProfile()
     {
+        if (null === $this->profile) {
+            $this->profile = new Profile(); 
+        }
         return $this->profile;
     }
 

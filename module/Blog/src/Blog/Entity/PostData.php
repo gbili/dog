@@ -94,7 +94,9 @@ class PostData
 
     public function setMedia(Media $media = null)
     {
-        $this->reuseLocales($media, $this);
+        if ($media !== null) {
+            $this->reuseLocales($media, $this);
+        }
         $this->media = $media;
     }
 
@@ -188,4 +190,21 @@ class PostData
         return $this->locale;
     }
 
+    public function reuseLocales($one, $other)
+    {
+        if (!$one->hasLocale() && !$other->hasLocale()) {
+            return;
+        }
+        if ($one->hasLocale() && $other->hasLocale()) {
+            if ($one->getLocale() !== $other->getLocale()) {
+                throw new \Exception('Post locale and post data locale cannot be different');
+            }
+            return;
+        }
+        if ($one->hasLocale()) {
+            $other->setLocale($one->getLocale());
+        } else {
+            $one->setLocale($other->getLocale());
+        }
+    }
 }

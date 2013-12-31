@@ -3,72 +3,112 @@ namespace Dogtore\Form;
 
 class PostFieldset extends \Zend\Form\Fieldset implements \Zend\InputFilter\InputFilterProviderInterface
 {
-    public function __construct($name = null)
+    public function __construct($sm)
     {
-       parent::__construct('Post');// not post like in POST, but Post like in blogpost
+        parent::__construct('post');
 
-       $this->setHydrator(new \Zend\Stdlib\Hydrator\ObjectProperty())
-            ->setObject(new \Dogtore\Entity\Post());
+        $objectManager = $sm->get('Doctrine\ORM\EntityManager');
+        $lang = $sm->get('lang')->getLang();
 
-       $this->setLabel('Post');
+        $this->setHydrator(new \DoctrineModule\Stdlib\Hydrator\DoctrineObject($objectManager))
+             ->setObject(new \Blog\Entity\Post());
+        
+        $this->add(array(
+            'name' => 'id',
+            'type'  => 'Zend\Form\Element\Hidden',
+        ));
 
-       $this->add( array(
-            'name' => 'category',
-            'type' => 'Select',
+        $this->add(array(
+            'name' => 'slug',
+            'type'  => 'Zend\Form\Element\Text',
             'options' => array(
-                'label' => 'Type',
-                'value_options' => array(
-                    'Symptom'  => 'Symptom',
-                    'Cause'    => 'Cause',
-                    'Solution' => 'Solution',
-                    'Wiki'     => 'Wiki',
+                'label' => 'Slug'
+            ),
+            'attributes' => array(
+                'class' => 'form-control',
+                'placeholder' => 'the-post-title-without-special-chars',
+            )
+        ));
+
+        $this->add(array(
+            'name' => 'parent',
+            'type' => 'DoctrineModule\Form\Element\ObjectSelect',
+            'options' => array(
+                'label' => 'Parent Post',
+                'property' => 'slug',
+                'target_class' => 'Blog\Entity\Post',
+                'object_manager' => $objectManager,
+                'display_empty_item' => true,
+                'empty_item_label' => '---',
+                'is_method' => true,
+                'find_method' => array(
+                    'name' => 'findBy',
+                    'params' => array(
+                        'criteria' => array('locale' => $lang),
+                    ),
                 ),
             ),
             'attributes' => array(
-                'required' => 'required'
-            ),
+                'placeholder' => 'the-slug-will-be-shown-in-url',
+                'class' => 'form-control',
+            )
         ));
 
         $this->add(array(
-            'name' => 'title',
-            'type' => 'Text',
+            'name' => 'category',
+            'type' => 'DoctrineModule\Form\Element\ObjectSelect',
             'options' => array(
-                'label' => 'Title'
+                'label' => 'Category',
+                'property' => 'name',
+                'target_class' => 'Blog\Entity\Category',
+                'object_manager' => $objectManager,
+                'find_method' => array(
+                    'name' => 'findBy',
+                    'params' => array(
+                        'criteria' => array('locale' => $lang),
+                    ),
+                ),
             ),
             'attributes' => array(
-                'required' => 'required',
-            ),
+                'class' => 'form-control'
+            )
         ));
 
-        $this->add(array(
-            'name' => 'content',
-            'type' => 'Textarea',
-            'options' => array(
-                'label' => 'Content'
-            ),
-        ));
-
-        $this->add(array(
-            'name' => 'submit',
-            'type' => 'Submit',
-            'attributes' => array(
-                'value' => 'Create',
-                'id' => 'submitbutton',
-            ),
-        ));
+        $this->add(new Fieldset\PostData($sm));
     }
 
     public function getInputFilterSpecification()
     {
         return array(
+            'id' => array(
+                'required' => false,
+                'filters'  => array(
+                    array('name' => 'Int'),
+                ),
+            ),
+
+            'slug' => array(
+                'required' => true,
+                'filters'  => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array(
+                        'name'    => 'Regex',
+                        'options' => array(
+                            'pattern'      => '/[a-z0-9]+[a-z0-9-]+[a-z0-9]+/',
+                        ),
+                    ),
+                ),
+            ),
+
+            'parent' => array(
+                'required' => false,
+            ),
+
             'category' => array(
-                'required' => true,
-            ),
-            'title' => array(
-                'required' => true,
-            ),
-            'content' => array(
-                'required' => true,
+                'required' => false,
             ),
         );
     }

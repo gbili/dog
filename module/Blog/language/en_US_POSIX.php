@@ -7,4 +7,6 @@ return array (
   'New Category' => '',
   'Media Library' => '',
   'Add New Media' => '',
+  'Files' => '',
+  'Upload Files' => '',
 );

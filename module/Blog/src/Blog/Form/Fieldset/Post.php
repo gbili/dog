@@ -20,6 +20,19 @@ implements \Zend\InputFilter\InputFilterProviderInterface
         ));
 
         $this->add(array(
+            'name' => 'slug',
+            'type'  => 'Zend\Form\Element\Text',
+            'options' => array(
+                'label' => 'Slug'
+            ),
+            'attributes' => array(
+                'class' => 'form-control',
+                'placeholder' => 'the-post-title-without-special-chars',
+            )
+        ));
+
+
+        $this->add(array(
             'name' => 'parent',
             'type' => 'DoctrineModule\Form\Element\ObjectSelect',
             'options' => array(
@@ -62,6 +75,8 @@ implements \Zend\InputFilter\InputFilterProviderInterface
                 'class' => 'form-control'
             )
         ));
+
+        $this->add(new PostData($sm));
     }
 
     public function getInputFilterSpecification()
@@ -71,6 +86,22 @@ implements \Zend\InputFilter\InputFilterProviderInterface
                 'required' => false,
                 'filters'  => array(
                     array('name' => 'Int'),
+                ),
+            ),
+
+            'slug' => array(
+                'required' => true,
+                'filters'  => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array(
+                        'name'    => 'Regex',
+                        'options' => array(
+                            'pattern'      => '/[a-z0-9]+[a-z0-9-]+[a-z0-9]+/',
+                        ),
+                    ),
                 ),
             ),
 

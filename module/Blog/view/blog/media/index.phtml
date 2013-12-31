@@ -28,26 +28,32 @@ $this->headTitle($title);
 <?php endif ?>
 <div class="col-sm-6 col-md-4 col-lg-3">
     <div class="thumbnail">
-      <a href="<?php echo $this->url('blog_media_view', array(
-                    'slug' => $media->getSlug(),
-                ))?>"><img class="img-responsive" src="<?php echo $this->escapeHtml($media->getFile()->getSrc());?>">
+    <a href="<?php echo $this->url('blog_media_view', 
+                                   array(
+                                        'slug' => $media->getSlug(),
+                                   ),
+                                   true
+                        ) ?>"><img class="img-responsive" src="<?php echo $this->escapeHtml($media->getFile()->getSrc());?>">
      </a>
       <div class="caption">
         <h5><?php echo $this->escapeHtml($media->getSlug());?></h5>
         <p>
             <?php if (!$media->getPosts()->isEmpty()) : ?>
-                <?php $return = '';
+                <?php $linkedPosts = array();
                     foreach ($media->getPosts() as $post) :
-                        $return = (('' === $return)? '' : $return . ', ' ) . $post->getTitle() . ':<a href="' . $this->url(
-                            'blog', array(
-                            'lang' => $this->lang(), 
-                            'controller' => 'media', 
-                            'action' => 'unlink', 
-                            'id' => $media->getId(),
-                            'fourthparam' => $post->getId(),
-                        )) . '">' . $this->translate('unlink', 'blog') .'</a>';
+                        $unlinkPostActionHref = $this->url('blog', 
+                            array(
+                                //'lang' => $this->lang(), 
+                                'controller' => 'media', 
+                                'action' => 'unlink', 
+                                'id' => $media->getId(),
+                                'fourthparam' => $post->getId(),
+                            ),
+                            true
+                        );
+                        $unlinkablePosts[] = $post->getTitle() . ':<a href="' . $unlinkPostActionHref . '">' . $this->translate('unlink', 'blog') .'</a>';
                     endforeach;
-                    echo $return;?>
+                    echo implode(', ', $unlinkablePosts);?>
             <?php endif ?>
             <a class="btn btn-default btn-xs" role="button"href="<?php echo $this->url('blog', array(
                 'lang' => $this->lang(), 

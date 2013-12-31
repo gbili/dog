@@ -1,0 +1,22 @@
+<?php
+return array (
+  'login' => '',
+  'auth' => '',
+  'Email' => '',
+  'Password' => '',
+  'register' => '',
+  'Confirm Password' => '',
+  'firstname' => '',
+  'surname' => '',
+  'firstname surname\'s Profile' => '',
+  'Users' => '',
+  'Id' => '',
+  'Role' => '',
+  'Uniquename' => '',
+  'Picture' => '',
+  'Edit' => '',
+  'Delete' => '',
+  'Read' => '',
+  'Username or Email' => '',
+  'Edit Profile' => '',
+);

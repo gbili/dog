@@ -5,14 +5,11 @@
 </div>
 <div class="row">
     <div class="col-sm-12 col-md-12 col-lg-12">
-    <a href="<?php echo $this->url(
-                            'blog', 
-                            array(
-                                'lang' => $this->lang(),
-                                'controller' => 'media', 
-                                'action' => 'index',
-                           )
-                       );
+    <a href="<?php echo $this->url('blog', array(
+                                       'lang' => $this->lang(),
+                                       'controller' => 'media', 
+                                       'action' => 'index',
+                                  ));
             ?>"><?php $this->translate('Back to media library', 'blog')?></a>
     </div>
 </div>

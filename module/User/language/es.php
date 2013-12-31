@@ -1,0 +1,20 @@
+<?php
+return array (
+  'login' => 'conectarse',
+  'auth' => '',
+  'Email' => '',
+  'Password' => '',
+  'Value is required and can\'t be empty' => 'El valor es requerido y no puede estar vacío',
+  'firstname' => 'nombre',
+  'surname' => 'apellido',
+  'firstname surname\'s Profile' => 'Perfil de nombre apellido',
+  'Read' => 'Leer',
+  'Users' => '',
+  'Id' => '',
+  'Role' => '',
+  'Uniquename' => '',
+  'Picture' => '',
+  'Edit' => '',
+  'Delete' => '',
+  'Edit Profile' => '',
+);

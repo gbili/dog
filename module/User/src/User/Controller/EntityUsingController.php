@@ -5,6 +5,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 
 class EntityUsingController extends AbstractActionController
 {
+    protected $locale = null;
 
 	/**
 	* @var EntityManager
@@ -40,4 +41,27 @@ class EntityUsingController extends AbstractActionController
 		}
 		return $this->entityManager;
 	}
+
+	/**
+	* Returns the EntityManager
+	*
+	* Fetches the EntityManager from ServiceLocator if it has not been initiated
+	* and then returns it
+	*
+	* @access protected
+	* @return EntityManager
+	*/
+	protected function getLocale()
+	{
+		if (null === $this->locale) {
+			$this->setLocale($this->getServiceLocator()->get('lang')->getLang());
+		}
+		return $this->locale;
+	}
+
+    protected function setLocale($locale)
+    {
+        $this->locale = $locale;
+        return $this;
+    }
 } 

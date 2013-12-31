@@ -6,6 +6,12 @@ $fileparts = explode('/', $__VIEWFILE__);
 $action = substr(end($fileparts), 0, -6);
 $controller = prev($fileparts); 
 $title = ucfirst($this->translate($action, 'blog')) . ' ' . ucfirst($this->translate($controller, 'blog'));
+$route = array(
+    'lang' => $this->lang(),
+    'controller' => $controller,
+    'action' => $action
+);
+$form->setAttribute('action', $this->url('blog',$route));
 $this->headTitle($title);
 $form->prepare();
 ?>

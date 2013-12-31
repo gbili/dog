@@ -18,11 +18,6 @@ if (null !== $entityId) {
 $form->setAttribute('action', $this->url('blog',$route));
 $form->setAttribute('class', 'form-horizontal');
 $form->prepare();
-$elements = array();
-foreach ($form->getFieldsets() as $fieldset) {
-    $elements += $fieldset->getElements();
-}
-$elements +=$form->getElements();
 ?>
 <?php
 $title = ucfirst($this->translate($action, $textDomain)) . ' ' . ucfirst($this->translate($controller, $textDomain));
@@ -40,7 +35,7 @@ $this->headTitle($title);
     <div class="col-sm-0 col-md-2 col-lg-2"></div>
     <div class="col-sm-12 col-md-8 col-lg-8">
     <?php echo $this->form()->openTag($form)?>
-        <?php foreach ($elements as $element) : ?>
+        <?php foreach ($this->elementsFlatArray($form) as $element) : ?>
             <?php $errors = $element->getMessages(); ?>
             <?php $hasErrors = !empty($errors) ?>
             <div class="form-group<?php echo (($hasErrors)? ' has-error' : '') ?>">

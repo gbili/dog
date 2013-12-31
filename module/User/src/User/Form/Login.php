@@ -20,7 +20,7 @@ class Login extends \Zend\Form\Form
             'attributes' => array(
                 'type'  => 'submit',
                 'value' => 'Login',
-                'id' => 'submitbutton',
+                'id'    => 'submitbutton',
                 'class' => 'btn btn-default', 
             ),
         ));

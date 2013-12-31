@@ -54,4 +54,9 @@ class LoggedInController extends EntityUsingController
 		}
 		return $this->locale;
 	}
+
+    protected function getLang()
+    {
+        return $this->getLocale();
+    }
 } 

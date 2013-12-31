@@ -64,10 +64,10 @@ class PostData extends \Blog\Entity\PostData implements \Doctrine\ORM\Proxy\Prox
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'id', 'posts', 'title', 'media', 'content', 'date');
+            return array('__isInitialized__', 'id', 'locale', 'translated', 'posts', 'title', 'media', 'content', 'date');
         }
 
-        return array('__isInitialized__', 'id', 'posts', 'title', 'media', 'content', 'date');
+        return array('__isInitialized__', 'id', 'locale', 'translated', 'posts', 'title', 'media', 'content', 'date');
     }
 
     /**
@@ -318,6 +318,72 @@ class PostData extends \Blog\Entity\PostData implements \Doctrine\ORM\Proxy\Prox
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'removePosts', array($posts));
 
         return parent::removePosts($posts);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setTranslated(\Blog\Entity\Post $translated = NULL)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setTranslated', array($translated));
+
+        return parent::setTranslated($translated);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTranslated()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTranslated', array());
+
+        return parent::getTranslated();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setLocale($locale)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setLocale', array($locale));
+
+        return parent::setLocale($locale);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function hasLocale()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'hasLocale', array());
+
+        return parent::hasLocale();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getLocale()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getLocale', array());
+
+        return parent::getLocale();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function reuseLocales($one, $other)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'reuseLocales', array($one, $other));
+
+        return parent::reuseLocales($one, $other);
     }
 
 }

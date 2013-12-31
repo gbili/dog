@@ -6,6 +6,18 @@ use Zend\View\Model\ViewModel;
 
 class AuthController extends EntityUsingController
 {
+    protected $messages = array();
+
+    public function addMessage($type, $message)
+    {
+        $this->messages[] = array($type => $message);
+    }
+
+    public function getMessages()
+    {
+        return $this->messages;
+    }
+
     /**
      * Edit action
      *
@@ -16,42 +28,65 @@ class AuthController extends EntityUsingController
             return $this->logged();
         }
 
-        $messages = array();
-
-        $form = new \User\Form\Login($this->getEntityManager());
+        $form = new \User\Form\LoginUniquenameOrEmail();
 
         if (!$this->request->isPost()) {
             return new ViewModel(array(
                 'form' => $form,
-                'messages' => $messages,
+                'messages' => $this->getMessages(),
             ));
         }
-        $form->setData($data = $this->request->getPost());
+        $form->setData($this->request->getPost());
 
         if (!$form->isValid()) {
             return new ViewModel(array(
                 'form' => $form,
-                'messages' => $messages,
+                'messages' => $this->getMessages(),
             ));
         }
 
         $formData = $form->getData();
-        $userFormData = $formData['user'];
+        $userEmail = $this->getUserEmail($formData);
 
-        if (!$this->authenticate($userFormData['email'], $userFormData['password'])) {
-            $messages[] = array('danger' => 'The email password combination does not exist, try another password or register');
+        if (!$userEmail || !$this->authenticate($userEmail, $formData['user']['password'])) {
+            $this->addMessage('danger', 'The credential/password combination does not exist, try something else or register');
             return new ViewModel(array(
                 'form' => $form,
-                'messages' => $messages,
+                'messages' => $this->getMessages(),
             ));
         }
-
         return $this->logged();
+    }
+
+    public function getUserEmail($data)
+    {
+        $formUniquename = new \User\Form\LoginUniquename();
+        $data['user']['uniquename'] = $data['user']['uniquenameoremail'];
+        $formUniquename->setData($data);
+        if ($formUniquename->isValid()) {
+            $validData = $formUniquename->getData();
+            $users = $this->getEntityManager()->getRepository('User\Entity\User')->findByUniquename($validData['user']['uniquename']);
+            if (empty($users)) {
+                return false;
+            }
+            return current($users)->getEmail();
+        }
+
+        $formEmail = new \User\Form\LoginEmail();
+        $data['user']['email'] = $data['user']['uniquenameoremail'];
+        $formEmail->setData($data);
+        if ($formEmail->isValid()) {
+            $validData = $formEmail->getData();
+            return $validData['user']['email'];
+        }
+        throw new \Exception('Neither uniquename nor email are valid, this is weird');
     }
 
     public function logged()
     {
-        return $this->redirect()->toRoute('profile_index', array('id' => $this->identity()->getId()));
+        $params = array('uniquename' => $this->identity()->getUniquename());
+        $reuseMatchedParams = true;
+        return $this->redirect()->toRoute('profile_index', $params, $reuseMatchedParams);
     }
 
     public function authenticate($email, $plainPassword)
@@ -100,10 +135,19 @@ class AuthController extends EntityUsingController
         $formData = $form->getData();
         $validatedUserData = $formData['user'];
         $providedEmail = $validatedUserData['email'];
+        $providedUniquename = $validatedUserData['uniquename'];
         $providedPassword = $validatedUserData['password'];
 
         if ($this->isEmailAlreadyInUse($providedEmail)) {
             $messages[] = array('danger' => 'A user with this email address is already registered, try to login, or use a different email address');
+            return new ViewModel(array(
+                'form' => $form,
+                'messages' => $messages,
+            ));
+        }
+
+        if ($this->isUniquenameAlreadyInUse($providedUniquename)) {
+            $messages[] = array('danger' => 'This username already exists, try to login, or use a different username');
             return new ViewModel(array(
                 'form' => $form,
                 'messages' => $messages,
@@ -134,6 +178,13 @@ class AuthController extends EntityUsingController
         return !empty($users);
     }
 
+    public function isUniquenameAlreadyInUse($uniquename)
+    {
+        $objectManager = $this->getEntityManager();
+        $users = $objectManager->getRepository('User\Entity\User')->findByUniquename($uniquename);
+        return !empty($users);
+    }
+
     /**
      * Link media to a post 
      *
@@ -145,24 +196,12 @@ class AuthController extends EntityUsingController
             $authStorage = $authService->getStorage();
             $authStorage->clear();
         }
-        $this->redirect()->toRoute('auth_login');
+        $this->toLogin();
     }
 
-    /**
-     * Delete action
-     *
-     */
-    public function deleteAction()
+    public function toLogin()
     {
-        $media = $this->getEntityManager()->getRepository('Blog\Entity\Media')->find($this->params('id'));
-
-        if ($media) {
-            $em = $this->getEntityManager();
-            $em->remove($media);
-            $em->flush();
-
-            $this->flashMessenger()->addSuccessMessage('Media Deleted');
-        }
-        return $this->redirect()->toRoute('blog', array('controller' => 'media', 'action' => 'index'));
+        $reuseMatchedParams = true;
+        $this->redirect()->toRoute('auth_login', array(), $reuseMatchedParams);
     }
 }

@@ -6,7 +6,7 @@ implements \Zend\InputFilter\InputFilterProviderInterface
 {
     public function __construct($sm)
     {
-        parent::__construct('post-data');
+        parent::__construct('data');
 
         $objectManager = $sm->get('Doctrine\ORM\EntityManager');
         $lang = $sm->get('lang')->getLang();
@@ -17,18 +17,6 @@ implements \Zend\InputFilter\InputFilterProviderInterface
         $this->add(array(
             'name' => 'id',
             'type'  => 'Zend\Form\Element\Hidden',
-        ));
-
-        $this->add(array(
-            'name' => 'slug',
-            'type'  => 'Zend\Form\Element\Text',
-            'options' => array(
-                'label' => 'Slug'
-            ),
-            'attributes' => array(
-                'class' => 'form-control',
-                'placeholder' => 'the-post-title-without-special-chars',
-            )
         ));
 
         $this->add(array(
@@ -87,22 +75,6 @@ implements \Zend\InputFilter\InputFilterProviderInterface
                 'required' => false,
                 'filters'  => array(
                     array('name' => 'Int'),
-                ),
-            ),
-
-            'slug' => array(
-                'required' => true,
-                'filters'  => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array(
-                    array(
-                        'name'    => 'Regex',
-                        'options' => array(
-                            'pattern'      => '/[a-z0-9]+[a-z0-9-]+[a-z0-9]+/',
-                        ),
-                    ),
                 ),
             ),
 

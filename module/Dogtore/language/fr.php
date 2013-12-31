@@ -12,4 +12,11 @@ return array (
   'Logout' => 'Déconnexion',
   'by' => 'par',
   'Home' => 'Accueil',
+  'Login' => '',
+  'Register' => '',
+  'An error occurred' => '',
+  'Additional information' => '',
+  'File' => '',
+  'Message' => '',
+  'Stack trace' => '',
 );

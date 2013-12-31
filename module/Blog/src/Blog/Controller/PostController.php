@@ -3,7 +3,6 @@ namespace Blog\Controller;
 
 class PostController extends \User\Controller\LoggedInController 
 {
-
     /**
      * Index action
      *
@@ -31,56 +30,13 @@ class PostController extends \User\Controller\LoggedInController
     public function editAction()
     {
         $objectManager = $this->getEntityManager();
-        
-        // Create the form and inject the object manager
-        $form = new \Blog\Form\PostEdit($this->getServiceLocator());
-        
-        //Get a new entity with the id 
-        $blogPost = $objectManager->find('Blog\Entity\Post', (integer) $this->params('id'));
-
-        if (empty($blogPost)) {
-            return $this->badRequest('NotExists');
-        }
-
-        if ($blogPost->getUser() !== $this->getUser()) {
-            return $this->badRequest('NotMine');
-        }
-        
-        $form->bind($blogPost);
-
-        if ($this->request->isPost()) {
-            $form->setData($this->request->getPost());
-
-            if ($form->isValid()) {
-                //Save changes
-                $objectManager->flush();
-            }
-        }
-
-        return new \Zend\View\Model\ViewModel(array(
-            'form' => $form,
-            'entityId' => $blogPost->getId(),
-        ));
-    }
-
-    public function badRequest($type)
-    {
-        $this->redirect()->toRoute('auth_logout');
-    }
-
-    /**
-     * Create a blog post
-     *
-     */
-    public function createAction()
-    {
-        $objectManager = $this->getEntityManager();
-        // Create the form and inject the object manager
-        $combinedForm = new \Blog\Form\PostAndPostDataCombinedCreate($this->getServiceLocator());
 
         //Create a new, empty entity and bind it to the form
-        $blogPostData = new \Blog\Entity\PostData();
-        $blogPost = new \Blog\Entity\Post();
+        $blogPost = $this->getBlogPost();
+        
+        // Create the form and inject the object manager
+        $combinedForm = new \Blog\Form\PostEditor($this->getServiceLocator());
+        $combinedForm->bind($blogPost);
 
         if (!$this->request->isPost()) {
             return new \Zend\View\Model\ViewModel(array(
@@ -99,30 +55,54 @@ class PostController extends \User\Controller\LoggedInController
             ));
         }
 
-        $postDataForm = new \Blog\Form\PostDataCreate($this->getServiceLocator());
-        $postDataForm->bind($blogPostData);
-        $postDataForm->setData($httpPostData);
-
-        if ($postDataForm->isValid()) {
-            $blogPostData->setDate(new \DateTime());
-            // blogPostData Locale will be replicated to blogPost
+        $blogPostData = $blogPost->getData();
+        $blogPostData->setDate(new \DateTime());
+        if (!$blogPostData->hasLocale()) {
             $blogPostData->setLocale($this->getLocale());
-            $objectManager->persist($blogPostData);
-            $objectManager->flush();
         }
 
-        $postForm     = new \Blog\Form\PostCreate($this->getServiceLocator());
-        $postForm->bind($blogPost);
+        $objectManager->persist($blogPostData);
+        $objectManager->flush();
 
-        $postForm->setData($httpPostData);
+        $blogPost->setUser($this->getUser());
 
-        if ($postForm->isValid()) {
-            $blogPost->setData($blogPostData);
-            $blogPost->setUser($this->getUser());
-            $objectManager->persist($blogPost);
-            $objectManager->flush();
-            return $this->redirect()->toRoute('blog', array('controller' => 'post', 'action' => 'index'));
+        $objectManager->persist($blogPost);
+        $objectManager->flush();
+
+        $reuseMatchedParams = true;
+        return $this->redirect()->toRoute('blog', array('controller' => 'post', 'action' => 'index'), $reuseMatchedParams);
+    }
+
+    public function badRequest($type)
+    {
+        $reuseMatchedParams = true;
+        $this->redirect()->toRoute('auth_logout', array(), $reuseMatchedParams);
+    }
+
+    public function getBlogPost()
+    {
+        $objectManager = $this->getEntityManager();
+        $blogPostId = $this->params()->fromRoute('id');
+        $blogPost = null;
+
+        if (null !== $blogPostId) {
+            $blogPost = $objectManager->find('Blog\Entity\Post', (integer) $blogPostId);
         }
+
+        if (null === $blogPost) {
+            return new \Blog\Entity\Post();
+        }
+
+        return $blogPost;
+    }
+
+    /**
+     * Create a blog post
+     *
+     */
+    public function createAction()
+    {
+        return $this->editAction();
     }
 
     /**
@@ -135,7 +115,8 @@ class PostController extends \User\Controller\LoggedInController
         $objectManager = $this->getEntityManager();
         $postDatas = $objectManager->getRepository('Blog\Entity\PostData')->findAll();
         if (empty($postDatas)) {
-            return $this->redirect()->toRoute('blog', array('controller' => 'post', 'action' => 'create'));
+            $reuseMatchedParams = true;
+            return $this->redirect()->toRoute('blog', array('controller' => 'post', 'action' => 'create'), $reuseMatchedParams);
         }
 
         // Create the form and inject the object manager
@@ -163,7 +144,8 @@ class PostController extends \User\Controller\LoggedInController
         $objectManager->persist($blogPost);
         $objectManager->flush();
 
-        return $this->redirect()->toRoute('blog', array('controller' => 'post', 'action' => 'index'));
+        $reuseMatchedParams = true;
+        return $this->redirect()->toRoute('blog', array('controller' => 'post', 'action' => 'index'), $reuseMatchedParams);
     }
 
     /**
@@ -182,6 +164,7 @@ class PostController extends \User\Controller\LoggedInController
             $this->flashMessenger()->addSuccessMessage('Post Deleted');
         }
 
-        return $this->redirect()->toRoute('blog', array('controller' => 'post', 'action' => 'index'));
+        $reuseMatchedParams = true;
+        return $this->redirect()->toRoute('blog', array('controller' => 'post', 'action' => 'index'), $reuseMatchedParams);
     }
 }

@@ -1,0 +1,22 @@
+<?php
+return array (
+  'Understand your Dog' => 'Comprende tu perro',
+  'Dogtore App' => '',
+  'Symptoms' => 'Síntomas',
+  'Causes' => 'Causas',
+  'Solutions' => 'Soluciones',
+  'Login' => 'Conectate',
+  'Register' => 'Registrate',
+  'by' => 'por',
+  'All rights reserved.' => 'Todos derechos reservados',
+  'An error occurred' => 'La chinga de su madre, huevón!!',
+  'Additional information' => 'Información adicional',
+  'File' => 'Fichero',
+  'Message' => 'Mensaje',
+  'Stack trace' => 'Rastros de la pila',
+  'Create' => 'Crear',
+  'My Profile' => 'Mi Perfil',
+  'Profiles' => 'Perfiles',
+  'Logout' => 'Desconexion',
+  'Home' => 'Inicio',
+);

@@ -1,0 +1,9 @@
+<p class="navbar-text navbar-right">
+<?php $langs = $this->langSelector() ?>
+<?php $langsCount = count($langs) ?>
+<?php foreach ($langs as $lang): ?>
+    <a class="navbar-link" href="<?php echo ((!$this->langSelector('hasMatchedRoute'))? "/$lang/" : $this->url(null, array('lang' => $lang), true)) ?>">
+        <?= $this->translate($lang, 'lang') ?>
+    </a><?php if (0 !== --$langsCount) echo '<span>&nbsp;|&nbsp;</span>'?>
+<?php endforeach ?>
+</p>

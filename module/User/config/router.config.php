@@ -44,12 +44,57 @@ return array(
                 ),
             ),
         ),
+        'admin_index' => array(
+            'type' => 'segment',
+            'options' => array(
+                'route' => '[/:lang]/admin[/]',
+                'constraints' => array(
+                    'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
+                ),
+                'defaults' => array(
+                    'lang' => 'en',
+                    'controller' => 'admin',
+                    'action' => 'index',
+                ),
+            ),
+        ),
+        'admin_edit' => array(
+            'type' => 'segment',
+            'options' => array(
+                'route' => '[/:lang]/admin/edit[/:id]',
+                'constraints' => array(
+                    'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
+                    'id' => '[0-9]+',
+                ),
+                'defaults' => array(
+                    'lang' => 'en',
+                    'controller' => 'admin',
+                    'action' => 'edit',
+                ),
+            ),
+        ),
+        'admin_delete' => array(
+            'type' => 'segment',
+            'options' => array(
+                'route' => '[/:lang]/admin/delete/:id',
+                'constraints' => array(
+                    'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
+                    'id' => '[0-9]+',
+                ),
+                'defaults' => array(
+                    'lang' => 'en',
+                    'controller' => 'admin',
+                    'action' => 'delete',
+                ),
+            ),
+        ),
         'profile_edit' => array(
             'type' => 'segment',
             'options' => array(
-                'route' => '[/:lang]/profile/edit',
+                'route' => '[/:lang]/profile/edit[/:id]',
                 'constraints' => array(
                     'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
+                    'id' => '[0-9]+',
                 ),
                 'defaults' => array(
                     'lang' => 'en',
@@ -61,10 +106,10 @@ return array(
         'profile_index' => array(
             'type' => 'segment',
             'options' => array(
-                'route' => '[/:lang]/profile[/:id]',
+                'route' => '[/:lang]/profile[/:uniquename]',
                 'constraints' => array(
                     'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
-                    'id' => '[0-9]+',
+                    'uniquename' => '[A-Za-z0-9]+(?:[-_.]?[A-Za-z0-9]+){4,}',
                 ),
                 'defaults' => array(
                     'lang' => 'en',
