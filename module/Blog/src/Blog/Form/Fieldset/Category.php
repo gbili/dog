@@ -24,6 +24,7 @@ class Category extends \Zend\Form\Fieldset
                 'object_manager' => $objectManager,
                 'query_param' => array('locale' => $lang),
                 'indent_chars' => '-',
+                'indent_multiplyer' => 3,
             ),
             'attributes' => array(
                 'class' => 'form-control'

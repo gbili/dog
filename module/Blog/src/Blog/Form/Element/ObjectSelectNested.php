@@ -44,17 +44,26 @@ class ObjectSelectNested extends \Zend\Form\Element\Select
     /**
      * @var string 
      */
-    protected $indentChars;
+    protected $indentMultiplyer = 1;
+
+    /**
+     * @var string 
+     */
+    protected $indentChars = '-';
 
     /**
      * @var array 
      */
-    protected $supportedOptions = array(
+    protected $requiredOptions = array(
         'property',
-        'indent_chars',
         'target_class',
         'object_manager',
         'query_param',
+    );
+
+    protected $optionalOptions = array(
+        'indent_multiplyer',
+        'indent_chars',
     );
 
     public function getObjectManager()
@@ -118,18 +127,35 @@ class ObjectSelectNested extends \Zend\Form\Element\Select
         return $this;
     }
 
+    public function getIndentMultiplyer()
+    {
+        return $this->indentMultiplyer;
+    }
+
+    public function setIndentMultiplyer($indentMultiplyer)
+    {
+        $this->indentMultiplyer = $indentMultiplyer;
+        return $this;
+    }
+
     /**
      * @param  array|\Traversable $options
      * @return ObjectSelect
      */
     public function setOptions($options)
     {
-        foreach ($this->supportedOptions as $key) {
+        foreach ($this->requiredOptions as $key) {
             if (!isset($options[$key])) {
                 throw new \Exception('Required option is not present in options array');
             }
             $setOptionMethod = $this->getOptionSetterMethod($key);
             $this->$setOptionMethod($options[$key]);
+        }
+        foreach ($this->optionalOptions as $key) {
+            if (isset($options[$key])) {
+                $setOptionMethod = $this->getOptionSetterMethod($key);
+                $this->$setOptionMethod($options[$key]);
+            }
         }
         return parent::setOptions($options);
     }
@@ -160,7 +186,8 @@ class ObjectSelectNested extends \Zend\Form\Element\Select
 
     public function getIndentedLabel($node)
     {
-        return str_repeat($this->getIndentChars(), $node['lvl']) . ' ' . $node[$this->getProperty()];
+        $multiplyBy = $node['lvl'] * $this->getIndentMultiplyer();
+        return str_repeat($this->getIndentChars(), $multiplyBy) . ' ' . $node[$this->getProperty()];
     }
 
     public function getTreeQuery()
