@@ -16,18 +16,14 @@ class Category extends \Zend\Form\Fieldset
 
         $this->add(array(
             'name' => 'parent',
-            'type' => 'DoctrineModule\Form\Element\ObjectSelect',
+            'type' => 'Blog\Form\Element\ObjectSelectNested',
             'options' => array(
                 'label' => 'Parent',
                 'property' => 'name',
                 'target_class' => 'Blog\Entity\Category',
                 'object_manager' => $objectManager,
-                'find_method' => array(
-                    'name' => 'findBy',
-                    'params' => array(
-                        'criteria' => array('locale' => $lang),
-                    ),
-                ),
+                'query_param' => array('locale' => $lang),
+                'indent_chars' => '-',
             ),
             'attributes' => array(
                 'class' => 'form-control'

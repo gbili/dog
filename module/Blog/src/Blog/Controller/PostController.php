@@ -119,7 +119,9 @@ class PostController extends \User\Controller\LoggedInController
             return $this->redirect()->toRoute('blog', array('controller' => 'post', 'action' => 'create'), $reuseMatchedParams);
         }
 
-        // Create the form and inject the object manager
+        // TODO all this is wrong find a way to ignore the postdata fieldset and add a hidden element with the postdata id
+        throw new \Exception('TODO all this is wrong find a way to ignore the postdata fieldset and add a hidden element with the postdata id
+');
         $postForm     = new \Blog\Form\PostCreate($this->getServiceLocator());
         //Create a new, empty entity and bind it to the form
         $blogPost = new \Blog\Entity\Post();

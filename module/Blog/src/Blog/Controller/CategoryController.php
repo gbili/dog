@@ -8,11 +8,37 @@ use Blog\Entity\Category;
 
 class CategoryController extends \User\Controller\LoggedInController
 {
+    public function indexAction()
+    {
+        $em = $this->getEntityManager();
+        $repo = $em->getRepository('Blog\Entity\Category');
+        $tree = $repo->buildTree($this->getNestedCategoriesArray());
+
+        //$categories = $repo->findBy(array('locale' => $this->getLocale()), array('name' => 'ASC'));
+
+        return new ViewModel(array('categories' => $tree,));
+    }
+
+    public function getNestedCategoriesArray()
+    {
+        $queryBuilder = $this->getEntityManager()
+            ->createQueryBuilder()
+                ->select('node')
+                ->from('Blog\Entity\Category', 'node')
+                    ->where('node.locale = ?1')
+                ->orderBy('node.root, node.lft', 'ASC')
+                ->setParameter(1, $this->getLocale())
+                ->getQuery();
+
+        return $queryBuilder->getArrayResult();
+    }
+
+
     /**
     *
     *
     */
-    public function indexAction()
+    public function indexBackAction()
     {
         $em = $this->getEntityManager();
 

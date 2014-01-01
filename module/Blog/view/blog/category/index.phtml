@@ -25,16 +25,16 @@ $this->headTitle($title);
         <th>&nbsp;</th>
         <th>&nbsp;</th>
     </tr>
-    <?php foreach($categories as $category) : ?>
+    <?php foreach($this->renderTree($categories, 'flatArray') as $category) : ?>
 	    <tr>
-	        <td><?php echo $this->escapeHtml($category->getName());?></td>
+            <td style="padding-left:<?php echo ($category['lvl'] * 2) + 1?>em;"><?php echo $category['name'];?></td>
 	        <td>
                 <a href="<?php echo $this->url(
                     'blog', 
                     array(
                         'controller' => 'category', 
                         'action'=>'edit', 
-                        'id' => $category->getId()
+                        'id' => $category['id']
                     ),
                     true
                 ); ?>"><?php echo $this->translate('Edit', 'blog') ?></a>
@@ -45,7 +45,7 @@ $this->headTitle($title);
                     array(
                         'controller' => 'category', 
                         'action'=>'delete', 
-                        'id' => $category->getId()
+                        'id' => $category['id']
                     ),
                     true
                 ); ?>" onclick="return confirm('Are you sure?')"><?php echo $this->translate('Delete', 'blog') ?></a>

@@ -39,8 +39,9 @@ return array (
   'Height (px)' => 'Hauteur (px)',
   'link' => 'lier',
   'Link to Posts' => 'Lier a des Articles',
-  'Files' => '',
-  'Upload Files' => '',
-  'file' => '',
-  'Value is required and can\'t be empty' => '',
+  'Files' => 'Fichiers',
+  'Upload Files' => 'Téléverser des Fichiers',
+  'file' => 'fichier',
+  'Value is required and can\'t be empty' => 'La valeure est requise et ne peut être vide',
+  'Parent2' => '',
 );
