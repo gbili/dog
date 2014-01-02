@@ -44,4 +44,7 @@ return array (
   'Parent' => '',
   'Description' => '',
   'Value is required and can\'t be empty' => '',
+  'Bulk' => '',
+  'Language' => '',
+  'Locale' => '',
 );

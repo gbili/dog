@@ -1,37 +1,8 @@
 <?php
 namespace Dogtore\Controller;
 
-class DoggyController extends \Zend\Mvc\Controller\AbstractActionController
+class DoggyController extends \User\Controller\LoggedInController
 {
-    /**
-     *
-     * @var \Doctrine\ORM\EntityMangager
-     */
-    protected $em;
-
-    /**
-     *
-     * @return \Doctrine\ORM\EntityMangager
-     */
-    public function getEntityManager()
-    {
-        if (null === $this->em) {
-           throw new \Dogtore\Exception\GetBeforeSetException('Must be set from factory'); 
-        }
-        return $this->em;
-    }
-
-    /**
-     *
-     * @param \Doctrine\ORM\EntityMangager $em
-     * @return \Malouer\Controller\MeasurementController
-     */
-    public function setEntityManager(\Doctrine\ORM\EntityManager $em)
-    {
-        $this->em = $em;
-        return $this;
-    }
-
     /**
      *
      *
@@ -39,25 +10,9 @@ class DoggyController extends \Zend\Mvc\Controller\AbstractActionController
     public function indexAction()
     {
         $category = $this->params('category');
-        if (null !== $category) {
-            $category = $this->getCannonicalCategoryName($category);
-        }
         return new \Zend\View\Model\ViewModel(array(
             'doggies' => $this->getDoggies($category),
         ));
-    }
-
-    /**
-     * @return null|string: the real category symptom or null 
-     */
-    public function getCannonicalCategoryName($alias)
-    {
-        $categoriesAliases = array(
-            'symptoms' => 'symptom',
-            'causes' => 'cause',
-            'solutions' => 'solution',
-        );
-        return ((isset($categoriesAliases[$alias]))? $categoriesAliases[$alias] : null );
     }
 
     /**
@@ -95,9 +50,6 @@ class DoggyController extends \Zend\Mvc\Controller\AbstractActionController
     { 
         $category = $this->params('category');
         $terms = $this->params('terms');
-        if (null !== $category) {
-            $category = $this->getCannonicalCategoryName($category);
-        }
         $doggies = $this->getDoggies($category, $terms); 
         return new \Zend\View\Model\ViewModel(array(
             'doggies' => $doggies,
@@ -145,11 +97,13 @@ class DoggyController extends \Zend\Mvc\Controller\AbstractActionController
             ->from('Blog\Entity\Post', 'p')
             ->innerJoin('p.category', 'c')
             ->where('c.slug = ?1')
-            ->setParameter(1, $categorySlug); 
+            ->andWhere('c.locale LIKE ?2')
+            ->setParameter(1, $categorySlug) 
+            ->setParameter(2, $this->getLocale()); 
         if (null !== $term) {
             $queryBuilder->innerJoin('p.data', 'd')
-                ->andWhere('d.title LIKE ?2')
-                ->setParameter(2, $term); 
+                ->andWhere('d.title LIKE ?3')
+                ->setParameter(3, $term); 
         }
         return $queryBuilder->getQuery()->getResult();
     }

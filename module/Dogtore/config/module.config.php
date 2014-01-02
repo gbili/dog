@@ -3,10 +3,7 @@ namespace Dogtore;
 
 return array(
     'controllers' => array(
-        'factories' => array(
-            __NAMESPACE__ . '\Controller\DoggyController'   => __NAMESPACE__ . '\Service\DoggyControllerFactory',
-        ),
-        'aliases' => array(
+        'invokables' => array(
             'doggy' => __NAMESPACE__ . '\Controller\DoggyController',
         ),
     ),

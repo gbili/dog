@@ -30,7 +30,7 @@ class Post
     private $locale;
 
     /**
-     * @ORM\ManyToOne(targetEntity="TranslatedPost", inversedBy="translations")
+     * @ORM\ManyToOne(targetEntity="TranslatedPost", inversedBy="translations", cascade={"persist"})
      * @ORM\JoinColumn(name="translatedpost_id", referencedColumnName="id")
      */
     private $translated;
@@ -197,14 +197,22 @@ class Post
         }
     }
 
-    public function setTranslated(Post $translated = null)
+    public function setTranslated(TranslatedPost $translated = null)
     {
         $this->translated = $translated;    
     }
 
     public function getTranslated()
     {
-        return $this->translated;   
+        if (null === $this->translated) {
+            return new TranslatedPost();
+        }
+        return $this->translated;
+    }
+
+    public function hasTranslated()
+    {
+        return null !== $this->translated;
     }
 
     public function setUser(\User\Entity\User $user)

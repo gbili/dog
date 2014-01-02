@@ -1,32 +1,66 @@
 <?php
 namespace Blog\Form;
 
-class PostCreate extends \Zend\Form\Form 
+class Post extends \Zend\Form\Form 
 {
-    public function __construct($sm)
+    public function __construct($name)
     {
-        parent::__construct('form-post-create');
-
-        $objectManager = $sm->get('Doctrine\ORM\EntityManager');
-        // The form will hydrate an object of type Post
-        $this->setHydrator(new \DoctrineModule\Stdlib\Hydrator\DoctrineObject($objectManager));
+        parent::__construct('bulk-action');
         
-        //Add the user fieldset, and set it as the base fieldset
-        $postFieldset = new Fieldset\Post($sm);
-        $postFieldset->setUseAsBaseFieldset(true);
-        $this->add($postFieldset);
+        $this->add(array(
+            'name' => 'action',
+            'type'  => 'Zend\Form\Element\Select',
+            'options' => array(
+                'empty_option' => 'Bulk Actions',
+                'value_options' => array(
+                    'linkTranslations' => 'Link Translations',
+                    'deletePosts' => 'Delete',
+                ),
+            ),
+            'attributes' => array(
+                'class' => 'form-control',
+            ),
+        ));
 
-        // ... add CSRF and submit elements
-        // Optionally set your validation group here
+        $this->add(array(
+            'name' => 'posts',
+            'type'  => 'Zend\Form\Element\MultiCheckbox',
+            'options' => array(
+                'label' => 'Mark',
+                'value_options' => array(
+                ),
+            ),
+            'attributes' => array(
+                'class' => 'form-control input-sm',
+            ),
+        ));
 
         $this->add(array(
             'name' => 'submit',
             'attributes' => array(
                 'type'  => 'submit',
-                'value' => 'Save',
+                'value' => 'Apply',
                 'id' => 'submitbutton',
                 'class' => 'btn btn-default', 
             ),
         ));
+    }
+
+    public function getInputSpecification()
+    {
+        return array(
+            'action-select' => array(
+                'required' => true,
+                'validators' => array(
+                    'type' => 'Int',
+                ),
+            ),
+            'multicheck' => array(
+                'required' => true,
+                'validators' => array(
+                    'type' => 'Int',
+                ),
+            ),
+        );
     }
 }

@@ -58,18 +58,15 @@ implements \Zend\InputFilter\InputFilterProviderInterface
 
         $this->add(array(
             'name' => 'category',
-            'type' => 'DoctrineModule\Form\Element\ObjectSelect',
+            'type' => 'Blog\Form\Element\ObjectSelectNested',
             'options' => array(
                 'label' => 'Category',
                 'property' => 'name',
                 'target_class' => 'Blog\Entity\Category',
                 'object_manager' => $objectManager,
-                'find_method' => array(
-                    'name' => 'findBy',
-                    'params' => array(
-                        'criteria' => array('locale' => $lang),
-                    ),
-                ),
+                'query_param' => array('locale' => $lang),
+                'indent_chars' => '-',
+                'indent_multiplyer' => 3,
             ),
             'attributes' => array(
                 'class' => 'form-control'

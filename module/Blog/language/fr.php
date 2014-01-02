@@ -44,4 +44,11 @@ return array (
   'file' => 'fichier',
   'Value is required and can\'t be empty' => 'La valeure est requise et ne peut être vide',
   'Parent2' => '',
+  'Add new File' => '',
+  'Dirpath' => '',
+  'Basename' => '',
+  'Type' => '',
+  'Size' => '',
+  'Link' => '',
+  'Bulk' => '',
 );
