@@ -19,4 +19,10 @@ return array (
   'Read' => '',
   'Username or Email' => '',
   'Edit Profile' => '',
+  'edit' => '',
+  'profile' => '',
+  'Name' => '',
+  'Surname' => '',
+  'Describe yourself' => '',
+  'Featured Image' => '',
 );

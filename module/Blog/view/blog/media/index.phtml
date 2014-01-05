@@ -7,12 +7,16 @@ $this->headTitle($title);
         <h1><?php echo $this->escapeHtml($title); ?></h1>
     </div>
     <div class="col-sm-4 col-md-4 col-4">
+        <p><a class="btn btn-default" href="<?php echo $this->url('blog', array(
+            'controller' => 'media', 
+            'action'=>'create',
+        ), true);?>" title="<?php echo $this->translate('Media from previously uploaded image', 'blog') ?>"><?php echo $this->translate('Create from Existing', 'blog') ?></a></p>
     </div>
     <div class="col-sm-4 col-md-4 col-4">
         <p><a class="btn btn-success" href="<?php echo $this->url('blog', array(
             'controller' => 'media', 
             'action'=>'upload',
-        ));?>"><?php echo $this->translate('Add new media', 'blog') ?></a></p>
+        ), true);?>"><?php echo $this->translate('Upload media', 'blog') ?></a></p>
     </div>
 </div>
 <?php $count = count($medias) ?>
@@ -74,8 +78,8 @@ $this->headTitle($title);
                 'id' => $media->getId()
             )); ?>" onclick="return confirm(<?php echo $this->translate('Are you sure?', 'blog') ?>'')"><?php echo $this->translate('Delete', 'blog') ?></a>
         </p>
-      </div><!-- end caption -->
-  </div><!-- end thumbnail -->
+     </div><!-- end caption -->
+   </div><!-- end thumbnail -->
 </div><!-- end col -->
     <?php $i++ ?>
     <?php if (0 === ($i % $itemsPerRow)) : ?> 
@@ -85,4 +89,7 @@ $this->headTitle($title);
 <?php endforeach ?>
 <?php if (true === $isRowOpened) : ?>
              </div><!-- end row -->
+<?php endif ?>
+<?php if (empty($medias)) : ?>
+    <p><?php echo $this->translate('No medias have been uploaded', 'blog') ?></p>
 <?php endif ?>

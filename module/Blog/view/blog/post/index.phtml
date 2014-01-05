@@ -52,7 +52,7 @@ $form->prepare();
 	        <td><?php echo $this->escapeHtml($post->getLocale());?></td>
 	        <td>
                 <a href="<?php echo $this->url('blog', array(
-                    'lang' => $this->lang(),
+                    'lang' => $post->getLocale(),
                     'controller' => 'post', 
                     'action' => 'edit', 
                     'id' => $post->getId(),

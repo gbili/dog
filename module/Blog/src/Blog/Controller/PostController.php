@@ -19,19 +19,6 @@ class PostController extends \User\Controller\LoggedInController
             'form'  => $this->getBulkForm(),
             'page'  => $this->getPageSelectorCurrentPage(),
         ));
-
-        /*$em = $this->getEntityManager();
-        $posts = $em->getRepository('Blog\Entity\Post')->findBy(
-            array(
-                'user' => $this->getUser()->getId(),
-                'locale' => $this->getLocale(),
-            ), 
-            array('slug' => 'ASC')
-        );
-
-        return new \Zend\View\Model\ViewModel(array(
-            'posts' => $posts,
-        ));*/
     }
 
     public function getPageSelectorCurrentPage()
@@ -77,14 +64,14 @@ class PostController extends \User\Controller\LoggedInController
     public function bulkAction()
     {
         if ($this->request->isPost()) {
-            return $this->redirect()->toRoute('blog', array('controller' => 'post', 'action' => 'index'), true);
+            return $this->redirectToIndex();
         }
 
         $form = $this->getBulkForm(true);
         $form->setData($formData = $this->request->getPost());
 
         if (!$form->isValid()) {
-            return $this->redirect()->toRoute('blog', array('controller' => 'post', 'action' => 'index'), true);
+            return $this->redirectToIndex();
         }
 
         $formValidData = $form->getData();
@@ -92,7 +79,7 @@ class PostController extends \User\Controller\LoggedInController
         $this->$action($formValidData['posts']);
 
         $this->flashMessenger()->addMessage($action . ' succeed');
-        return $this->redirect()->toRoute('blog', array('controller' => 'post', 'action' => 'index'), true);
+        return $this->redirectToIndex();
     }
 
     public function linkTranslations(array $formPostsData)
@@ -185,11 +172,15 @@ class PostController extends \User\Controller\LoggedInController
 
         $blogPost->setUser($this->getUser());
 
+        if (!$blogPost->hasMedia()) {
+            $medias = $objectManager->getRepository('Blog\Entity\Media')->findBy(array('slug' => 'symptom-thumbnail.jpg', 'locale' => $this->getLocale()));
+            $blogPost->setMedia(current($medias));
+        }
+
         $objectManager->persist($blogPost);
         $objectManager->flush();
 
-        $reuseMatchedParams = true;
-        return $this->redirect()->toRoute('blog', array('controller' => 'post', 'action' => 'index'), $reuseMatchedParams);
+        return $this->redirect()->toRoute('blog', array('controller' => 'post', 'action' => 'index', 'id' => null), true);
     }
 
     public function badRequest($type)
@@ -265,8 +256,7 @@ class PostController extends \User\Controller\LoggedInController
         $objectManager->persist($blogPost);
         $objectManager->flush();
 
-        $reuseMatchedParams = true;
-        return $this->redirect()->toRoute('blog', array('controller' => 'post', 'action' => 'index'), $reuseMatchedParams);
+        return $this->redirectToIndex();
     }
 
     public function deletePosts(array $ids)
@@ -292,8 +282,12 @@ class PostController extends \User\Controller\LoggedInController
     */
     public function deleteAction()
     {
-
         $this->deletePost($this->params('id'));
+        return $this->redirectToIndex();
+    }
+
+    public function redirectToIndex()
+    {
         $reuseMatchedParams = true;
         return $this->redirect()->toRoute('blog', array('controller' => 'post', 'action' => 'index'), $reuseMatchedParams);
     }

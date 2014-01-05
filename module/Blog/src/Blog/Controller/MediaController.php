@@ -135,6 +135,11 @@ class MediaController extends \User\Controller\LoggedInController
         return $this->redirectToMediaLibrary();
     }
 
+
+    /**
+     * Create medias from array of Blog\Entity\File 
+     * @param array $files instances of Blog\Entity\File 
+     */
     public function createMedias(array $files)
     {
         $objectManager = $this->getEntityManager();
@@ -150,6 +155,20 @@ class MediaController extends \User\Controller\LoggedInController
             $objectManager->persist($media);
             $objectManager->flush();
         }
+    }
+
+    /**
+     * Create media from file id passed as route param or form
+     */
+    public function createAction()
+    {
+        $id = $this->params()->fromRoute('id');
+        if (null === $id) {
+            throw new \Exception('Need to create a media form where files can be selected as ids and send it to this action');
+        }
+        $this->createMedias($this->getEntityManager()->getRepository('Blog\Entity\File')->findById( (integer) $id));
+
+        return $this->redirectToMediaLibrary();
     }
 
     public function redirectToMediaView(\Blog\Entity\Media $media)
@@ -176,7 +195,7 @@ class MediaController extends \User\Controller\LoggedInController
      */
     public function deleteAction()
     {
-        $media = $this->getEntityManager()->getRepository('Blog\Entity\Media')->find($this->params('id'));
+        $media = $this->getEntityManager()->getRepository('Blog\Entity\Media')->find($this->params()->fromRoute('id'));
 
         if ($media) {
             $em = $this->getEntityManager();

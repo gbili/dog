@@ -367,7 +367,7 @@ class Post extends \Blog\Entity\Post implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function setTranslated(\Blog\Entity\Post $translated = NULL)
+    public function setTranslated(\Blog\Entity\TranslatedPost $translated = NULL)
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setTranslated', array($translated));
@@ -384,6 +384,17 @@ class Post extends \Blog\Entity\Post implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTranslated', array());
 
         return parent::getTranslated();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function hasTranslated()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'hasTranslated', array());
+
+        return parent::hasTranslated();
     }
 
     /**

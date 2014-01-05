@@ -19,4 +19,10 @@ return array (
   'File' => '',
   'Message' => '',
   'Stack trace' => '',
+  'Read' => '',
+  'Edit' => '',
+  'A 404 error occurred' => '',
+  'The requested controller was unable to dispatch the request.' => '',
+  'Controller' => '',
+  'No Exception available' => '',
 );

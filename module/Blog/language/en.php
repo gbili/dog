@@ -47,4 +47,7 @@ return array (
   'Bulk' => '',
   'Language' => '',
   'Locale' => '',
+  'Media from previously uploaded image' => '',
+  'Create from Existing' => '',
+  'Upload media' => '',
 );

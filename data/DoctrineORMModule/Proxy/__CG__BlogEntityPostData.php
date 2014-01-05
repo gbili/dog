@@ -257,6 +257,17 @@ class PostData extends \Blog\Entity\PostData implements \Doctrine\ORM\Proxy\Prox
     /**
      * {@inheritDoc}
      */
+    public function hasMedia()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'hasMedia', array());
+
+        return parent::hasMedia();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function setDate(\DateTime $time)
     {
 

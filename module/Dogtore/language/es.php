@@ -19,4 +19,6 @@ return array (
   'Profiles' => 'Perfiles',
   'Logout' => 'Desconexion',
   'Home' => 'Inicio',
+  'Read' => '',
+  'Edit' => '',
 );

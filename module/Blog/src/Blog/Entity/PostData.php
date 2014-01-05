@@ -105,6 +105,11 @@ class PostData
         return $this->media;
     }
 
+    public function hasMedia()
+    {
+        return null !== $this->media;
+    }
+
     /**
     * @ORM\PrePersist
     */

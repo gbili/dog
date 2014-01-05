@@ -24,4 +24,6 @@ return array (
   'The requested controller was unable to dispatch the request.' => '',
   'Controller' => '',
   'No Exception available' => '',
+  'Read' => '',
+  'Edit' => '',
 );
