@@ -16,7 +16,7 @@ $route = array(
 if (isset($entityId) && null !== $entityId) {
     $route['id'] = $entityId;
 }
-$form->setAttribute('action', $this->url($routename ,$route));
+$form->setAttribute('action', $this->url($routename, $route));
 $form->setAttribute('class', 'form-horizontal');
 $form->prepare();
 ?>

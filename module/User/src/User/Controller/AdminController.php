@@ -1,7 +1,7 @@
 <?php
 namespace User\Controller;
 
-class AdminController extends LoggedInController
+class AdminController extends \Zend\Mvc\Controller\AbstractActionController
 {
     /**
      * Index action

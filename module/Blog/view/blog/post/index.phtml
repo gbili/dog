@@ -17,13 +17,13 @@ $form->prepare();
             'lang' => $this->lang(),
             'controller' => 'post', 
             'action'=>'create',
-        ));?>"><?php echo $this->translate('Add New Post', 'blog')?></a></p>
+        ), true);?>"><?php echo $this->translate('Add New Post', 'blog')?></a></p>
     </div>
 </div>
 <?php echo $this->form()->openTag($form) ?>
 <div class="form-group">
     <div class="col-sm-4 col-md-4 col-lg-4">
-        <?php echo $this->formElement($form->get('action')) ?>
+        <?php echo $this->formElement($form->get('action-top')) ?>
     </div>
     <div class="col-sm-4 col-md-4 col-lg-4">
         <?php echo $this->formElement($form->get('submit')) ?>
@@ -77,7 +77,7 @@ $form->prepare();
 </table>
 <div class="form-group">
     <div class="col-sm-4 col-md-4 col-lg-4">
-        <?php echo $this->formElement($form->get('action')) ?>
+        <?php echo $this->formElement($form->get('action-bottom')) ?>
     </div>
     <div class="col-sm-4 col-md-4 col-lg-4">
         <?php echo $this->formElement($form->get('submit')) ?>

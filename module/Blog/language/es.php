@@ -42,4 +42,10 @@ return array (
   'Are you sure?' => '¿Estas seguro?',
   'Bulk' => 'Grupo',
   'Locale' => 'Lengua',
+  'Lang' => '',
+  'en' => '',
+  'fr' => '',
+  'es' => '',
+  'Translated Id' => '',
+  'edit' => '',
 );

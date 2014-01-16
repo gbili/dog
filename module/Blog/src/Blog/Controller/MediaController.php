@@ -1,20 +1,17 @@
 <?php
 namespace Blog\Controller;
 
-use DoctrineORMModule\Stdlib\Hydrator\DoctrineEntity;
-use Zend\View\Model\ViewModel;
-
-class MediaController extends \User\Controller\LoggedInController 
+class MediaController extends \Zend\Mvc\Controller\AbstractActionController
 {
     /**
      * Index action
      */
     public function indexAction()
     {
-        $em = $this->getEntityManager();
-        $medias = $em->getRepository('Blog\Entity\Media')->findBy(array('locale' => $this->getLocale()), array('date' => 'DESC'));
+        $em = $this->em();
+        $medias = $em->getRepository('Blog\Entity\Media')->findBy(array('locale' => $this->locale()), array('date' => 'DESC'));
 
-        return new ViewModel(array(
+        return new \Zend\View\Model\ViewModel(array(
             'medias' => $medias,
         ));
     }
@@ -24,7 +21,7 @@ class MediaController extends \User\Controller\LoggedInController
      */
     public function editAction()
     {
-        $objectManager = $this->getEntityManager();
+        $objectManager = $this->em();
 
         // Create the form and inject the object manager
         $form = new \Blog\Form\MediaEdit($objectManager);
@@ -44,7 +41,7 @@ class MediaController extends \User\Controller\LoggedInController
             }
         }
 
-        return new ViewModel(array(
+        return new \Zend\View\Model\ViewModel(array(
             'form' => $form,
             'entityId' => $media->getId(),
         ));
@@ -55,7 +52,7 @@ class MediaController extends \User\Controller\LoggedInController
      */
     public function linkAction()
     {
-        $objectManager = $this->getEntityManager();
+        $objectManager = $this->em();
 
         // Create the form and inject the object manager
         $form = new \Blog\Form\MediaLink($objectManager);
@@ -73,7 +70,7 @@ class MediaController extends \User\Controller\LoggedInController
             }
         }
 
-        return new ViewModel(array(
+        return new \Zend\View\Model\ViewModel(array(
             'form' => $form,
             'entityId' => $media->getId(),
         ));
@@ -84,7 +81,7 @@ class MediaController extends \User\Controller\LoggedInController
      */
     public function unlinkAction()
     {
-        $objectManager = $this->getEntityManager();
+        $objectManager = $this->em();
 
         // Create the form and inject the object manager
         $form = new \Blog\Form\MediaLink($objectManager);
@@ -111,21 +108,21 @@ class MediaController extends \User\Controller\LoggedInController
         $fileUploader = new \Blog\Service\FileEntityUploader();
 
         if (!$this->getRequest()->isPost()) {
-            return new ViewModel(array(
+            return new \Zend\View\Model\ViewModel(array(
                 'messages' => array(),
                 'form' => $fileUploader->getFormCopy(),
             ));
         }
 
         $fileUploader->setFileInputName('file')
-                     ->setEntityManager($this->getEntityManager())
+                     ->setEntityManager($this->em())
                      ->setRequest($this->getRequest());
 
         if (!$fileUploader->uploadFiles()) {
             if ($fileUploader->hasFiles()) {
                 $this->createMedias($fileUploader->getFiles());
             }
-            return new ViewModel(array(
+            return new \Zend\View\Model\ViewModel(array(
                 'messages' => $fileUploader->getMessages(),
                 'form' => $fileUploader->getFormCopy(),
             ));
@@ -142,8 +139,8 @@ class MediaController extends \User\Controller\LoggedInController
      */
     public function createMedias(array $files)
     {
-        $objectManager = $this->getEntityManager();
-        $locale = $this->getLocale();
+        $objectManager = $this->em();
+        $locale = $this->locale();
         foreach ($files as $file) {
             $media = new \Blog\Entity\Media();
             $basename = $file->getBasename();
@@ -166,7 +163,7 @@ class MediaController extends \User\Controller\LoggedInController
         if (null === $id) {
             throw new \Exception('Need to create a media form where files can be selected as ids and send it to this action');
         }
-        $this->createMedias($this->getEntityManager()->getRepository('Blog\Entity\File')->findById( (integer) $id));
+        $this->createMedias($this->em()->getRepository('Blog\Entity\File')->findById( (integer) $id));
 
         return $this->redirectToMediaLibrary();
     }
@@ -177,7 +174,7 @@ class MediaController extends \User\Controller\LoggedInController
             'controller' => 'media',
             'action' => 'view',
             'slug' => $media->getSlug(),
-            'lang' => $this->getLang(),
+            'lang' => $this->locale(),
         ));
     }
 
@@ -186,7 +183,7 @@ class MediaController extends \User\Controller\LoggedInController
         return $this->redirect()->toRoute('blog', array(
             'controller' => 'media', 
             'action'     => 'index', 
-            'lang' => $this->getLang(),
+            'lang' => $this->locale(),
         ));
     }
 
@@ -195,10 +192,10 @@ class MediaController extends \User\Controller\LoggedInController
      */
     public function deleteAction()
     {
-        $media = $this->getEntityManager()->getRepository('Blog\Entity\Media')->find($this->params()->fromRoute('id'));
+        $media = $this->em()->getRepository('Blog\Entity\Media')->find($this->params()->fromRoute('id'));
 
         if ($media) {
-            $em = $this->getEntityManager();
+            $em = $this->em();
             $em->remove($media);
             $em->flush();
 
@@ -212,14 +209,14 @@ class MediaController extends \User\Controller\LoggedInController
     {   
         $slug = $this->params('slug');
 
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $queryBuilder = $this->em()->createQueryBuilder();
         $queryBuilder->select('m')
             ->from('Blog\Entity\Media', 'm')
             ->where('m.slug = ?1')
             ->setParameter(1, $slug); 
         $media = current($queryBuilder->getQuery()->getResult());
 
-        return new ViewModel(array(
+        return new \Zend\View\Model\ViewModel(array(
             'entity' => $media,
         ));
     }

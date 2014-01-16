@@ -43,3 +43,20 @@ div#doggies-container .row {
 div#doggies-container .thumbnail {
     margin-left: 0px;
 }
+
+.listing .pagination {
+    margin: 0;
+}
+
+.highlighted-term {
+    color: #FFFFFF;
+    background: #FF83DC;
+    border-radius: 0.3em; 
+}
+
+.label, .listing {
+    float: right;
+    font-size: 0.9em;
+    margin-top: 10px;
+    padding: 5px;
+}

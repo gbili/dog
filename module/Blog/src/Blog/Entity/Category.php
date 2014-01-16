@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @Gedmo\Tree(type="nested")
  * @ORM\Table(name="categories")
- * @ORM\Entity(repositoryClass="Gedmo\Tree\Entity\Repository\NestedTreeRepository")
+ * @ORM\Entity(repositoryClass="Blog\Entity\Repository\NestedTreeFlat")
  */
 class Category
 {
@@ -28,7 +28,7 @@ class Category
     private $locale;
 
     /**
-     * @ORM\ManyToOne(targetEntity="TranslatedCategory", inversedBy="translations")
+     * @ORM\ManyToOne(targetEntity="TranslatedCategory", inversedBy="translations", cascade={"persist"})
      * @ORM\JoinColumn(name="translated_category_id", referencedColumnName="id")
      */
     private $translated;
@@ -423,4 +423,21 @@ class Category
         }
     }
 
+    public function setTranslated(TranslatedCategory $translated = null)
+    {
+        $this->translated = $translated;    
+    }
+
+    public function getTranslated()
+    {
+        if (null === $this->translated) {
+            return new TranslatedCategory();
+        }
+        return $this->translated;
+    }
+
+    public function hasTranslated()
+    {
+        return null !== $this->translated;
+    }
 }

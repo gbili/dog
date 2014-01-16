@@ -40,6 +40,7 @@ class Lang extends \Zend\View\Helper\AbstractHelper
             throw new \Exception("Parameter not supported");
         }
     }
+
     public function injectLangAsPageRouteParam($page)
     {
         $page->setParams(array_merge(array('lang' => $this->lang), $page->getParams()));

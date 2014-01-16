@@ -44,4 +44,7 @@ return array (
   'Type' => '',
   'Size' => '',
   'Link' => '',
+  'Bulk' => '',
+  'Lang' => '',
+  'You have not added any category for the moment...' => '',
 );

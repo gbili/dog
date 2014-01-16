@@ -154,7 +154,7 @@ class User
      * Add post
      * @param \Blog\Entity\Post $posts
      */
-    public function addPost(Post $post)
+    public function addPost(\Blog\Entity\Post $post)
     {
         $post->setCategory($this);
         $this->posts->add($post);

@@ -24,14 +24,17 @@ return array(
             ),
         ),
     ),
-    /*'db' => array(
-        'driver'         => 'Pdo',
-        'dsn'            => 'mysql:dbname=miner;host=localhost',
-        'driver_options' => array(
-            PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''
+/*    Charset not working, using Doctrine PDOConnection instead
+ *    'gbili' => array(
+        'db_req' => array(
+            'driver_class'   => '\PDO',
+            'dsn'            => 'mysql:dbname=dog;host=localhost;charset=utf8',
+            'driver_options' => array(
+                //\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES UTF8'
+            ),
         ),
-    ),
-    'service_manager' => array(
+    ),/*
+    /*'service_manager' => array(
         'factories' => array(
             'Zend\Db\Adapter\Adapter'
                     => 'Zend\Db\Adapter\AdapterServiceFactory',

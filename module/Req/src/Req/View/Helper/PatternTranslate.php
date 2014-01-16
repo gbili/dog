@@ -1,5 +1,5 @@
 <?php
-namespace Dogtore\View\Helper;
+namespace Lang\View\Helper;
 
 class PatternTranslate extends \Zend\View\Helper\AbstractHelper
 {

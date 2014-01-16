@@ -7,7 +7,7 @@
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace User\View\Helper;
+namespace Lang\View\Helper;
 
 /**
  * View helper for translating messages.

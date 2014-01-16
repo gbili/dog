@@ -1,14 +1,14 @@
 <?php
 namespace User\Controller;
 
-class ProfileController extends LoggedInController
+class ProfileController extends \Zend\Mvc\Controller\AbstractActionController
 {
     /**
      * Index action
      */
     public function indexAction()
     {
-        $user = $this->getUser();
+        $user = $this->identity();
         if (!$user->hasProfile()) {
             return $this->redirect()->toRoute('profile_edit');
         }
@@ -26,7 +26,7 @@ class ProfileController extends LoggedInController
      */
     public function listAction()
     {
-        $profiles = $this->getEntityManager()->getRepository('User\Entity\Profile')->findAll();
+        $profiles = $this->em()->getRepository('User\Entity\Profile')->findAll();
 
         return new \Zend\View\Model\ViewModel(array(
             'profiles' => $profiles,
@@ -38,7 +38,7 @@ class ProfileController extends LoggedInController
      */
     public function editAction()
     {
-        $objectManager = $this->getEntityManager();
+        $objectManager = $this->em();
         $user          = $this->identity();
         $profile       = $user->getProfile();
 
@@ -73,6 +73,6 @@ class ProfileController extends LoggedInController
         $objectManager->persist($profile);
         $objectManager->flush();
 
-        return $this->redirect()->toRoute('profile_index', array('id' => (string) $user->getId()));
+        return $this->redirect()->toRoute('profile_index', array('id' => (string) $user->getId()), true);
     }
 }

@@ -3,16 +3,104 @@ namespace Dogtore\Form;
 
 class Search extends \Zend\Form\Form 
 {
-    public function __construct(\Doctrine\Common\Persistence\ObjectManager $objectManager)
+    protected $validData;
+    protected $categoryName;
+
+    public function __construct($name, array $options=array())
     {
-        parent::__construct('search');
-        
-        //Add the user fieldset, and set it as the base fieldset
-        $searchFieldset = new Fieldset\Search($objectManager);
-        $searchFieldset->setUseAsBaseFieldset(true);
-        $this->add($searchFieldset);
+        parent::__construct($name, $options);
 
         // ... add CSRF and submit elements
         // Optionally set your validation group here
+
+        $this->add(array(
+            'name' => 't', //terms
+            'type'  => 'Zend\Form\Element\Text',
+            'options' => array(
+                'label' => 'search'
+            ),
+            'attributes' => array(
+                'class' => 'form-control'
+            )
+        ));
+
+        $this->add(array(
+            'name' => 'c', //category
+            'type'  => 'Zend\Form\Element\Button',
+            'attributes' => array(
+                'class' => 'btn btn-success',
+                'type' => 'submit',
+            )
+        ));
+    }
+
+    public function getInputFilterSpecification()
+    {
+        return array(
+            't' => array(//terms
+                'required' => false,
+                'filters'  => array(
+                    /*array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),*/
+                ),
+                'validators' => array(
+                    array(
+                        'name'    => 'Alnum',
+                        'options' => array(
+                            'allowWhiteSpace' => true,
+                        ),
+                    ),
+                    array(
+                        'name'    => 'StringLength',
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min'      => 1,
+                            'max'      => 255,
+                        ),
+                    ),
+                ),
+            ),
+            'c' => array(//category
+                'required' => false,
+                'validators' => array(
+                   array(
+                        'name'    => 'Regex',
+                        'options' => array(
+                            'pattern' => '/([a-z-]+)/',
+                        ),
+                    ),
+                ),
+            ),
+        );
+    }
+
+    public function isValid()
+    {
+        if ($this->hasValidated) {
+            return $this->isValid;
+        }
+        return $this->isValid = parent::isValid() && ($this->hasTerms() || $this->hasCategory());
+    }
+
+    public function getElementData($elementName)
+    {
+        if (null === $this->validData) {
+            $this->validData = $this->getData();
+        }
+        if (!array_key_exists($elementName, $this->validData)) {
+            throw new \Exception('Element with name ' . $elementName . ' is not set in ' . __CLASS__ . ' : ' . $this->validData . ' data');
+        }
+        return $this->validData[$elementName];
+    }
+
+    public function hasTerms()
+    {
+        $terms = $this->getElementData('t');
+        return (null !== $terms && '' !== $terms);
+    }
+
+    public function hasCategory()
+    {
+        return null !== $this->getElementData('c');
     }
 }

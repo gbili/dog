@@ -7,18 +7,8 @@
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace Blog\Navigation\Service;
+namespace Blog\Controller\Exception;
 
-/**
- * Side navigation factory.
- */
-class SideNavigationFactory extends \Zend\Navigation\Service\AbstractNavigationFactory
+class BadRequest extends \Exception implements \Zend\Mvc\Exception\ExceptionInterface
 {
-    /**
-     * @return string
-     */
-    protected function getName()
-    {
-        return 'side';
-    }
 }

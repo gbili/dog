@@ -21,4 +21,8 @@ return array (
   'Home' => 'Inicio',
   'Read' => '',
   'Edit' => '',
+  'Any' => '',
+  'symptom' => '',
+  'cause' => '',
+  'solution' => '',
 );

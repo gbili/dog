@@ -23,4 +23,9 @@ return array (
   'Surname' => 'Nom',
   'Describe yourself' => 'Décrivez vous',
   'Featured Image' => 'Image à la une',
+  'Username or Email' => '',
+  'The credential/password combination does not exist, try something else or register' => '',
+  'register' => '',
+  'Username' => '',
+  'Confirm Password' => '',
 );

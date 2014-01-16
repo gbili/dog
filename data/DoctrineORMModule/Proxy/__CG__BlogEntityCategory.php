@@ -518,4 +518,37 @@ class Category extends \Blog\Entity\Category implements \Doctrine\ORM\Proxy\Prox
         return parent::reuseLocales($one, $other);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public function setTranslated(\Blog\Entity\TranslatedCategory $translated = NULL)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setTranslated', array($translated));
+
+        return parent::setTranslated($translated);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTranslated()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTranslated', array());
+
+        return parent::getTranslated();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function hasTranslated()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'hasTranslated', array());
+
+        return parent::hasTranslated();
+    }
+
 }

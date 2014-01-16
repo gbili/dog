@@ -4,7 +4,7 @@ namespace User\Controller;
 use DoctrineORMModule\Stdlib\Hydrator\DoctrineEntity;
 use Zend\View\Model\ViewModel;
 
-class AuthController extends EntityUsingController
+class AuthController extends \Zend\Mvc\Controller\AbstractActionController
 {
     protected $messages = array();
 
@@ -65,7 +65,7 @@ class AuthController extends EntityUsingController
         $formUniquename->setData($data);
         if ($formUniquename->isValid()) {
             $validData = $formUniquename->getData();
-            $users = $this->getEntityManager()->getRepository('User\Entity\User')->findByUniquename($validData['user']['uniquename']);
+            $users = $this->em()->getRepository('User\Entity\User')->findByUniquename($validData['user']['uniquename']);
             if (empty($users)) {
                 return false;
             }
@@ -166,21 +166,21 @@ class AuthController extends EntityUsingController
         $user = new \User\Entity\User();
         $user->hydrate($validatedUserData);
         $user->setRole('user');
-        $objectManager = $this->getEntityManager();
+        $objectManager = $this->em();
         $objectManager->persist($user);
         $objectManager->flush();
     }
 
     public function isEmailAlreadyInUse($email)
     {
-        $objectManager = $this->getEntityManager();
+        $objectManager = $this->em();
         $users = $objectManager->getRepository('User\Entity\User')->findByEmail($email);
         return !empty($users);
     }
 
     public function isUniquenameAlreadyInUse($uniquename)
     {
-        $objectManager = $this->getEntityManager();
+        $objectManager = $this->em();
         $users = $objectManager->getRepository('User\Entity\User')->findByUniquename($uniquename);
         return !empty($users);
     }

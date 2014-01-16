@@ -1,11 +1,8 @@
 <?php
 namespace Blog\Controller;
 
-class PostController extends \User\Controller\LoggedInController 
+class PostController extends \Zend\Mvc\Controller\AbstractActionController
 {
-    protected $offset = null;
-    protected $page   = null;
-
     protected $posts = null;
 
     /**
@@ -14,33 +11,14 @@ class PostController extends \User\Controller\LoggedInController
      */
     public function indexAction()
     {
+        $paginator = $this->paginator();
+        $paginator->setTotalItemsCount($this->repository()->getNestedTreeTotalCount());
+
         return new \Zend\View\Model\ViewModel(array(
             'posts' => $this->getPosts(),
             'form'  => $this->getBulkForm(),
-            'page'  => $this->getPageSelectorCurrentPage(),
+            'paginator' => $paginator,
         ));
-    }
-
-    public function getPageSelectorCurrentPage()
-    {
-        if (null === $this->page) {
-            $paramPage = $this->params()->fromRoute('id');
-            $this->page = ((null === $paramPage)? 0 : $paramPage);
-        }
-        return $this->page;
-    }
-
-    public function getPageSelectorOffset()
-    {
-        if (null === $this->offset) {
-            $this->offset = $this->getPageSelectorCurrentPage() * $this->getPageSelectorLimit();
-        }
-        return $this->offset;
-    }
-
-    public function getPageSelectorLimit()
-    {
-        return 20;
     }
 
     public function getPosts()
@@ -48,22 +26,23 @@ class PostController extends \User\Controller\LoggedInController
         if (null !== $this->posts) {
             return $this->posts;
         }
-        $this->posts = $this->getEntityManager()->getRepository('Blog\Entity\Post')->findBy(
+        $paginator = $this->paginator();
+        $this->posts = $this->em()->getRepository('Blog\Entity\Post')->findBy(
             array(
-                'user' => $this->getUser()->getId(),
+                'user' => $this->identity()->getId(),
             ),
             array(
                 'slug' => 'ASC',
             ),
-            $this->getPageSelectorLimit(),
-            $this->getPageSelectorOffset()
+            $paginator->getItemsPerPage(),
+            $paginator->getPageFirstItem()
         );
         return $this->posts;
     }
 
     public function bulkAction()
     {
-        if ($this->request->isPost()) {
+        if (!$this->request->isPost()) {
             return $this->redirectToIndex();
         }
 
@@ -75,7 +54,7 @@ class PostController extends \User\Controller\LoggedInController
         }
 
         $formValidData = $form->getData();
-        $action = $formValidData['action'];
+        $action = $form->getSelectedAction();
         $this->$action($formValidData['posts']);
 
         $this->flashMessenger()->addMessage($action . ' succeed');
@@ -104,7 +83,7 @@ class PostController extends \User\Controller\LoggedInController
             $translated = $post->getTranslated();
         }
 
-        $em = $this->getEntityManager();
+        $em = $this->em();
         foreach ($selectedPosts as $post) {
             $post->setTranslated($translated);
             $em->persist($post);
@@ -115,7 +94,7 @@ class PostController extends \User\Controller\LoggedInController
 
     public function getBulkForm($populateMulticheck = false)
     {
-        $bulkForm = new \Blog\Form\Post('bulk-action');
+        $bulkForm = new \Blog\Form\PostBulk('bulk-action');
 
         if (!$populateMulticheck) {
             return $bulkForm;
@@ -135,7 +114,7 @@ class PostController extends \User\Controller\LoggedInController
      */
     public function editAction()
     {
-        $objectManager = $this->getEntityManager();
+        $objectManager = $this->em();
 
         //Create a new, empty entity and bind it to the form
         $blogPost = $this->getBlogPost();
@@ -164,16 +143,16 @@ class PostController extends \User\Controller\LoggedInController
         $blogPostData = $blogPost->getData();
         $blogPostData->setDate(new \DateTime());
         if (!$blogPostData->hasLocale()) {
-            $blogPostData->setLocale($this->getLocale());
+            $blogPostData->setLocale($this->locale());
         }
 
         $objectManager->persist($blogPostData);
         $objectManager->flush();
 
-        $blogPost->setUser($this->getUser());
+        $blogPost->setUser($this->identity());
 
         if (!$blogPost->hasMedia()) {
-            $medias = $objectManager->getRepository('Blog\Entity\Media')->findBy(array('slug' => 'symptom-thumbnail.jpg', 'locale' => $this->getLocale()));
+            $medias = $objectManager->getRepository('Blog\Entity\Media')->findBy(array('slug' => 'symptom-thumbnail.jpg', 'locale' => $this->locale()));
             $blogPost->setMedia(current($medias));
         }
 
@@ -191,7 +170,7 @@ class PostController extends \User\Controller\LoggedInController
 
     public function getBlogPost()
     {
-        $objectManager = $this->getEntityManager();
+        $objectManager = $this->em();
         $blogPostId = $this->params()->fromRoute('id');
         $blogPost = null;
 
@@ -222,7 +201,7 @@ class PostController extends \User\Controller\LoggedInController
     public function linkAction()
     {
 
-        $objectManager = $this->getEntityManager();
+        $objectManager = $this->em();
         $postDatas = $objectManager->getRepository('Blog\Entity\PostData')->findAll();
         if (empty($postDatas)) {
             $reuseMatchedParams = true;
@@ -268,9 +247,9 @@ class PostController extends \User\Controller\LoggedInController
 
     public function deletePost($id)
     {
-        $post = $this->getEntityManager()->getRepository('Blog\Entity\Post')->find($id);
+        $post = $this->em()->getRepository('Blog\Entity\Post')->find($id);
         if ($post) {
-            $em = $this->getEntityManager();
+            $em = $this->em();
             $em->remove($post);
             $em->flush();
         }

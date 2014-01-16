@@ -1,13 +1,7 @@
 <?php
 namespace Blog\Controller;
 
-use DoctrineORMModule\Stdlib\Hydrator\DoctrineEntity;
-use Zend\View\Model\ViewModel;
-
-use Blog\Form\PostForm;
-use Blog\Entity\Post;
-
-class FileController extends \User\Controller\LoggedInController 
+class FileController extends \Zend\Mvc\Controller\AbstractActionController
 {
     /**
     * Index action
@@ -15,10 +9,10 @@ class FileController extends \User\Controller\LoggedInController
     */
     public function indexAction()
     {
-        $em = $this->getEntityManager();
+        $em = $this->em();
         $files = $em->getRepository('Blog\Entity\File')->findBy(array(), array('date' => 'ASC'));
 
-        return new ViewModel(array(
+        return new \Zend\View\Model\ViewModel(array(
             'files' => $files,
         ));
     }
@@ -29,7 +23,7 @@ class FileController extends \User\Controller\LoggedInController
      */
     public function editAction()
     {
-        $objectManager = $this->getEntityManager();
+        $objectManager = $this->em();
 
         // Create the form and inject the object manager
         $form = new \Blog\Form\FileEdit($objectManager);
@@ -48,9 +42,10 @@ class FileController extends \User\Controller\LoggedInController
                 $objectManager->flush();
             }
         }
-        return new ViewModel(array(
+        return new \Zend\View\Model\ViewModel(array(
             'form' => $form,
             'entity' => $file,
+            'entityId' => $file->getId(),
         ));
     }
 
@@ -60,7 +55,7 @@ class FileController extends \User\Controller\LoggedInController
 
         if ($this->getRequest()->isPost()) {
             $fileUploader->setFileInputName('file')
-                         ->setEntityManager($this->getEntityManager())
+                         ->setEntityManager($this->em())
                          ->setRequest($this->getRequest());
 
             if ($fileUploader->uploadFiles()) {
@@ -68,7 +63,7 @@ class FileController extends \User\Controller\LoggedInController
             }
             $messages = $fileUploader->getMessages();
         }
-        return new ViewModel(array(
+        return new \Zend\View\Model\ViewModel(array(
             'messages' => ((isset($messages))? $messages : array()),
             'form' => $fileUploader->getFormCopy(),
         ));
@@ -80,9 +75,9 @@ class FileController extends \User\Controller\LoggedInController
     */
     public function deleteAction()
     {
-        $file = $this->getEntityManager()->getRepository('Blog\Entity\File')->find($this->params('id'));
+        $file = $this->em()->getRepository('Blog\Entity\File')->find($this->params('id'));
         if ($file && $file->delete()) {
-            $em = $this->getEntityManager();
+            $em = $this->em();
             $em->remove($file);
             $em->flush();
             $this->flashMessenger()->addSuccessMessage('File Deleted');

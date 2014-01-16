@@ -11,6 +11,7 @@ return array(
         'Blog',
         'User',
         'Lang',
+        'Req',
     ),
 
     // These are various options for the listeners attached to the ModuleManager

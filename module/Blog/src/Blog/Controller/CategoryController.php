@@ -1,55 +1,84 @@
 <?php
 namespace Blog\Controller;
 
-use Zend\View\Model\ViewModel;
-
-use Blog\Form\CategoryForm;
-use Blog\Entity\Category;
-
-class CategoryController extends \User\Controller\LoggedInController
+class CategoryController extends \Zend\Mvc\Controller\AbstractActionController
 {
-    public function indexAction()
-    {
-        $em = $this->getEntityManager();
-        $repo = $em->getRepository('Blog\Entity\Category');
-        $tree = $repo->buildTree($this->getNestedCategoriesArray());
-
-        //$categories = $repo->findBy(array('locale' => $this->getLocale()), array('name' => 'ASC'));
-
-        return new ViewModel(array('categories' => $tree,));
-    }
-
-    public function getNestedCategoriesArray()
-    {
-        $queryBuilder = $this->getEntityManager()
-            ->createQueryBuilder()
-                ->select('node')
-                ->from('Blog\Entity\Category', 'node')
-                    ->where('node.locale = ?1')
-                ->orderBy('node.root, node.lft', 'ASC')
-                ->setParameter(1, $this->getLocale())
-                ->getQuery();
-
-        return $queryBuilder->getArrayResult();
-    }
-
+    protected $categoriesTreeAsFlatArray = null;
+    protected $categoryRepository = null;
 
     /**
-    *
-    *
-    */
-    public function indexBackAction()
+     * Index action
+     *
+     */
+    public function indexAction()
     {
-        $em = $this->getEntityManager();
+        $categories = $this->getCategoriesTreeAsFlatArray();
+        $paginator = $this->paginator();
+        $paginator->setTotalItemsCount($this->repository()->getNestedTreeTotalCount());
 
-        $categories = $em->getRepository('Blog\Entity\Category')->findBy(array('locale' => $this->getLocale()), array('name' => 'ASC'));
+        return new \Zend\View\Model\ViewModel(array(
+            'user'       => $this->identity(),
+            'categories' => $categories,
+            'form'       => new \Blog\Form\CategoryBulk('bulk-action'),
+            'paginator'  => $paginator,
+            'nonce'      => $this->nonce()->getHash(),
+        ));
+    }
 
-        return new ViewModel(array('categories' => $categories,));
+    public function bulkAction()
+    {
+        if (!$this->request->isPost()) {
+            return $this->redirectToCategoriesList();
+        }
+
+        $form = new \Blog\Form\CategoryBulk('bulk-action');
+        $form->hydrateValueOptions($this->getCategoriesTreeAsFlatArray());
+
+        $form->setData($formData = $this->request->getPost());
+
+        if (!$form->isValid()) {
+            return $this->redirectToCategoriesList();
+        }
+
+        $formValidData = $form->getData();
+        $action = $form->getSelectedAction();
+
+        $this->$action($formValidData['categories']);
+
+        $this->flashMessenger()->addMessage($action . ' succeed');
+        return $this->redirectToCategoriesList();
+    }
+
+    public function linkTranslations(array $categoriesIds)
+    {
+        //translations is limited to admin
+        if (!$this->identity()->isAdmin()) {
+            $this->redirectToCategoriesList();
+        }
+
+        $repo = $this->em()->getRepository('Blog\Entity\Category');
+        $categories = $repo->getFromIds($categoriesIds);
+        $translated = $repo->getNewOrUniqueReusedTranslated($categories);
+
+        $em = $this->em();
+        foreach ($categories as $category) {
+            $category->setTranslated($translated);
+            $em->persist($category);
+        }
+        $em->flush();
+    }
+
+    public function getCategoriesTreeAsFlatArray()
+    {
+        if (null === $this->categoriesTreeAsFlatArray) {
+            $this->categoriesTreeAsFlatArray = $this->repository()->getTreeAsFlatArray();
+        }
+        return $this->categoriesTreeAsFlatArray;
     }
 
     public function editAction()
     {
-        $objectManager = $this->getEntityManager();
+        $objectManager = $this->em();
 
         // Create the form and inject the object manager
         $form = new \Blog\Form\CategoryEdit($this->getServiceLocator());
@@ -57,6 +86,16 @@ class CategoryController extends \User\Controller\LoggedInController
         //Get a new entity with the id 
         $category = $objectManager->find('Blog\Entity\Category', (integer) $this->params('id'));
         
+        //TODO should the user own the category to be able to edit it? add an owner to the category and control that
+
+        if (empty($category)) {
+            throw new Exception\BadRequest('There is no category with that id. Please use links, dont try to be too creative');
+        }
+
+        if ($category->hasLocale() && $category->getLocale() !== $this->locale()) {
+            throw new Exception\BadRequest('Cannot edit a category in a different editor locale than the category\'s locale, it would break parent relationship');
+        }
+
         $form->bind($category);
 
         if ($this->request->isPost()) {
@@ -64,13 +103,15 @@ class CategoryController extends \User\Controller\LoggedInController
 
             if ($form->isValid()) {
                 //Save changes
-                $category->setLocale($this->getLocale());
+                if (!$category->hasLocale()) {
+                    $category->setLocale($this->locale());
+                }
                 $objectManager->persist($category);
                 $objectManager->flush();
             }
         }
 
-        return new ViewModel(array(
+        return new \Zend\View\Model\ViewModel(array(
             'form' => $form,
             'entityId' => $category->getId(),
         ));
@@ -78,7 +119,7 @@ class CategoryController extends \User\Controller\LoggedInController
 
     public function createAction()
     {
-        $objectManager = $this->getEntityManager();
+        $objectManager = $this->em();
         // Create the form and inject the object manager
         $form = new \Blog\Form\CategoryCreate($this->getServiceLocator());
 
@@ -87,7 +128,7 @@ class CategoryController extends \User\Controller\LoggedInController
         $form->bind($blogCategory);
 
         if (!$this->request->isPost()) {
-            return new ViewModel(array(
+            return new \Zend\View\Model\ViewModel(array(
                 'form' => $form,
                 'entityId' => $blogCategory->getId(),
             ));
@@ -96,13 +137,13 @@ class CategoryController extends \User\Controller\LoggedInController
         $form->setData($this->request->getPost());
 
         if (!$form->isValid()) {
-            return new ViewModel(array(
+            return new \Zend\View\Model\ViewModel(array(
                 'form' => $form,
                 'entityId' => $blogCategory->getId(),
             ));
         }
 
-        $blogCategory->setLocale($this->getLocale());
+        $blogCategory->setLocale($this->locale());
         $objectManager->persist($blogCategory);
         $objectManager->flush();
 
@@ -112,27 +153,33 @@ class CategoryController extends \User\Controller\LoggedInController
 
     public function deleteAction()
     {
-        $category = $this->getEntityManager()->getRepository('Blog\Entity\Category')->find($this->params('id'));
+        $nonceParamName = 'fourthparam';
+        $overrideParams = array('id'=>null, $nonceParamName => null);
+
+        if (!$this->nonce($nonceParamName)->isValid()) {
+            return $this->redirectToCategoriesList($overrideParams);
+        }
+        $category = $this->em()->getRepository('Blog\Entity\Category')->find($this->params('id'));
 
         if ($category) {
-            $em = $this->getEntityManager();
+            $em = $this->em();
             $em->remove($category);
             $em->flush();
 
             $this->flashMessenger()->addSuccessMessage('Category Deleted');
         }
-        return $this->redirectToCategoriesList();
+        return $this->redirectToCategoriesList($overrideParams);
     }
 
-    public function redirectToCategoriesList()
+    public function redirectToCategoriesList(array $overrideParams=array())
     {
-        return $this->redirect()->toRoute(
-            'blog', 
-            array(
-                'controller' => 'category', 
-                'action' => 'index', 
-            ), 
-            true
+        $params = array(
+            'controller' => 'category', 
+            'action' => 'index', 
         );
+        if (!empty($overrideParams)) {
+            $params = array_merge($params, $overrideParams);
+        }
+        return $this->redirect()->toRoute('blog', $params, true);
     }
 }

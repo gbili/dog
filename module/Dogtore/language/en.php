@@ -26,4 +26,10 @@ return array (
   'No Exception available' => '',
   'Read' => '',
   'Edit' => '',
+  'symptome' => 'symptom',
+  'solution' => '',
+  'cause' => '',
+  'Any' => '',
+  'symptom' => '',
+  '' => '',
 );

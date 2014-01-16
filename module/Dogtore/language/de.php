@@ -19,4 +19,8 @@ return array (
   'File' => '',
   'Message' => '',
   'Stack trace' => '',
+  'Any' => '',
+  'symptom' => '',
+  'cause' => '',
+  'solution' => '',
 );
