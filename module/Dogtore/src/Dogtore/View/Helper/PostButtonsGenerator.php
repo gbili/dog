@@ -19,13 +19,10 @@ class PostButtonsGenerator extends \Zend\View\Helper\AbstractHelper
      */
     public function __invoke(array $post, $type = null)
     {
-        $buttons = '';
-        //if (null !== $type || 'edit' === $type) {
-        $buttons .= $this->getEditButton($post);
-        
-        //if ($type == 'relations' || (null !== $type)) {
-        $buttons .= $this->getRelatedButtons($post);
-        return $buttons;
+        if ('edit' === $type) {
+            return $this->getEditButton($post);
+        }
+        return $this->getRelatedButtons($post);
     }
 
     protected function getEditButton(array $post)

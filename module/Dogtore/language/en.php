@@ -27,9 +27,10 @@ return array (
   'Read' => '',
   'Edit' => '',
   'symptome' => 'symptom',
-  'solution' => '',
-  'cause' => '',
+  'solution' => 'solution',
+  'cause' => 'cause',
   'Any' => '',
-  'symptom' => '',
   '' => '',
+  'symptom' => '',
+  'Woff, wff!!! There are no posts in your language, be the first one to post.' => '',
 );

@@ -19,10 +19,8 @@ class Message extends \Zend\View\Helper\AbstractHelper
      */
     public function __invoke($class, $message)
     {
-        ob_start()?>
-        <div class="alert alert-<?= $class?>">
-            <p><?= $message?></p>
-        </div>
-  <?php return ob_get_clean();
+        return "<div class=\"alert alert-$class\">"
+               . "<p>$message</p>"
+             . '</div>';
     }
 }

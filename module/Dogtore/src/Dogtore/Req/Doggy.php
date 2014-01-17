@@ -68,10 +68,12 @@ class Doggy extends \Gbili\Db\Req\AbstractReq
 
     public function getPostsWithLevel1Category(array $criteria = array())
     {
+        $this->addKeyedField('parent_post_count', 'count(parent_p.id)');
         $this->addKeyedField('parent_post_slug', 'parent_p.slug');
         $this->addKeyedField('parent_post_title', 'parent_pd.title');
         $this->addKeyedField('parent_lvl1_category_slug', 'parent_pc.slug'); 
         $this->addKeyedField('parent_lvl1_category_name', 'parent_pc.name'); 
+        $this->addKeyedField('child_post_count', 'count(child_p.id)');
         $this->addKeyedField('child_post_slug', 'child_p.slug');
         $this->addKeyedField('child_lvl1_category_slug', 'child_pc.slug'); 
         $this->addKeyedField('child_lvl1_category_name', 'child_pc.name'); 

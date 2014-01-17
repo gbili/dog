@@ -17,17 +17,22 @@ class CategoryCssClass extends \Zend\View\Helper\AbstractHelper
      * Translate a message
      * @return string
      */
-    public function __invoke($categorySlug)
+    public function __invoke($categorySlug = null)
     {
         $cssClass = array(
             'symptom'  => 'primary', 
             'cause'    => 'warning',
             'solution' => 'success', 
         );
+
+        if (null === $categorySlug) {
+            return $cssClass;
+        }
+
         if (!isset($cssClass[$categorySlug])) {
             $categorySlug = $this->getView()->translate($categorySlug, 'blog', 'en');
             if (!isset($cssClass[$categorySlug])) {
-                throw new \Exception('You must translate the category slug in Blog/language/en.php before using CategoryCssClass');
+                throw new \Exception('You must translate the category slug in Blog/language/en.php before using CategoryCssClass : ' . $categorySlug);
             }
         }
         return $cssClass[$categorySlug];

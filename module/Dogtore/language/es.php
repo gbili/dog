@@ -25,4 +25,6 @@ return array (
   'symptom' => '',
   'cause' => '',
   'solution' => '',
+  'Woff, wff!!! There are no posts in your language, be the first one to post.' => 'Uoff, uoff!!! No hay articulos en tu lengua, sé el primero en escribir uno.',
+  'Woff, wff!!! No posts match your search, care to write a little one? Some dog may be thankful' => 'Uoff, uoff!!! Ningun articulo coincidió con la busqueda, quieres escribir uno? Algún perro te lo agradecerá',
 );

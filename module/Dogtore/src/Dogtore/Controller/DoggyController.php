@@ -11,26 +11,33 @@ class DoggyController extends \Zend\Mvc\Controller\AbstractActionController
      */
     public function indexAction()
     {
+        $viewVars = array();
+
         $form = $this->getSearchFormCopy();
+        $viewVars[] = 'form';
+
         $relation = $this->params()->fromRoute('related');
         $postSlug = $this->params()->fromRoute('post_slug');
 
         if (null !== $relation && null !== $postSlug) {
             $method = (('children' === $relation)? 'getChildrenDoggies' : 'getParentDoggy');
-            $doggies = $this->$method($postSlug);
+            $posts = $this->$method($postSlug);
         } else {
-            $doggies = $this->getDoggies();
+            $posts = $this->getDoggies();
+        }
+        $viewVars[] = 'posts';
+
+        if (empty($posts)) {
+            $messages = array('warning' => 'Woff, wff!!! There are no posts in your language, be the first one to post.');
+            $viewVars[] = 'messages';
         }
 
-        return new \Zend\View\Model\ViewModel(array(
-            'form' => $form,
-            'doggies' => $doggies,
-        ));
+        return new \Zend\View\Model\ViewModel(compact($viewVars));
     }
 
     public function getSearchFormCopy()
     {
-        return new \Dogtore\Form\Search('search-doggies');
+        return new \Dogtore\Form\Search('search-posts');
     }
 
     /**
@@ -52,9 +59,9 @@ class DoggyController extends \Zend\Mvc\Controller\AbstractActionController
         //Category not used currently
         $category = $postData['category'];
 
-        $doggies = $this->em()->getRepository('Blog\Entity\Post')->findByTitle($searchTerm);
+        $posts = $this->em()->getRepository('Blog\Entity\Post')->findByTitle($searchTerm);
 
-        $responseContent = ((empty($doggies))? array('response' => false) : array('response' => true, 'doggies' => $doggies));
+        $responseContent = ((empty($posts))? array('response' => false) : array('response' => true, 'posts' => $posts));
         $response->setContent(\Zend\Json\Json::encode($responseContent));
         
         return $response;
@@ -67,22 +74,29 @@ class DoggyController extends \Zend\Mvc\Controller\AbstractActionController
     public function searchAction()
     { 
         $form = $this->getSearchFormCopy();
+        $viewVars[] = 'form';
 
         if ('GET' === $this->request->getMethod()) {
             $form->setData($this->request->getQuery());
             if ($form->isValid()) {
                 $formValidData = $form->getData();
-                $doggies = $this->getDoggies((($form->hasCategory())? $formValidData['c'] : null), (($form->hasTerms())? $formValidData['t'] : null)); 
+                $posts = $this->getDoggies((($form->hasCategory())? $formValidData['c'] : null), (($form->hasTerms())? $formValidData['t'] : null)); 
             }
         }
-        if (!isset($doggies)) {
-            $doggies = $this->getDoggies(); 
+        if (!isset($posts)) {
+            $posts = $this->getDoggies(); 
         }
-        return new \Zend\View\Model\ViewModel(array(
-            'form' => $form,
-            'doggies' => $doggies,
-            'terms' => $this->getTerms(),
-        ));
+        $viewVars[] = 'posts';
+
+        if (empty($posts)) {
+            $messages = array('warning' => 'Woff, wff!!! No posts match your search, care to write a little one? Some dog may be thankful');
+            $viewVars[] = 'messages';
+        }
+
+        $terms = $this->getTerms();
+        $viewVars[] = 'terms';
+        
+        return new \Zend\View\Model\ViewModel(compact($viewVars));
     }
 
     protected function getDoggies($categorySlug = null, $termPhrase = null)

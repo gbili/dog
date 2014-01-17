@@ -1,0 +1,45 @@
+<div id="posts-container">
+    <?php foreach ($posts as $post) : ?>
+    <div class="row post-row">
+      <div class="col-xs-1 col-md-2 col-lg-2"></div>
+      <div class="col-xs-10 col-md-8 col-lg-8">
+        <div class="row post-wrap">
+          <div class="col-xs-12 col-md-12 col-lg-12">
+            <div class="row thumbnail post <?= $this->translate($post['lvl1_category_slug'], 'dogtore', 'en')?>">
+              <div class="col-xs-3 col-md-2 col-lg-2">
+                <?php $imgPathParts = explode('/', $post['file_dirpath']);?>
+                <?php $imgSrc = '/' . end($imgPathParts) . '/' . $post['file_basename'];?>
+                <img class="img-responsive" src="<?php echo $imgSrc ?>" alt="Thumb <?php echo $post['lvl1_category_name'] ?>">
+              </div><!-- col -->
+              <div class="col-xs-9 col-md-10 col-lg-10">
+                <?= $this->postLabels($post)?>
+                <div class="caption">
+                  <h3><?php echo $this->escapeHtml($post['post_title']) ?></h3>
+                  <p><?php echo $this->nlToBr($this->escapeHtml($post['post_content'])) ?></p>
+                  <div class="btn-group">
+                    <?= $this->postButtons($post) ?>
+                  </div><!-- btn-group -->
+                </div><!-- caption -->
+              </div><!-- col -->
+            </div><!-- row thumbnail post -->
+        <?php if ($this->identity() && $this->identity()->getUniquename() === $post['owner_uniquename']) : ?>
+            <div class="row post-owned">
+              <div class="col-xs-1 col-md-1 col-lg-1"></div>
+              <div class="col-xs-10 col-md-10 col-lg-10">
+                <div class="row post-controls">
+                  <div class="col-xs-3 col-md-2 col-lg-2">
+                    <?= $this->postButtons($post, 'edit')?>
+                  </div>
+                  <div class="col-xs-9 col-md-10 col-lg-10"></div>
+                </div>
+              </div>
+              <div class="col-xs-1 col-md-1 col-lg-1"></div>
+            </div>
+        <?php endif ?>
+          </div><!-- wrapping col-12 -->
+        </div> <!-- row post-wrap -->
+      </div><!-- col -->
+      <div class="col-xs-1 col-md-2 col-lg-2"></div>
+    </div><!-- row post-row -->
+    <?php endforeach ?>
+</div>

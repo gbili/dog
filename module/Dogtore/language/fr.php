@@ -34,4 +34,5 @@ return array (
   'or' => '',
   'category' => 'categorie',
   'View category' => 'Voir categorie',
+  'Woff, wff!!! No posts match your search, care to write a little one? Some dog may be thankful' => 'Wouff, wff!!! Aucun article ne correspond à votre recherche, voudriez-vous en écrire un? Un chien vous en sera très reconnaîssant',
 );
