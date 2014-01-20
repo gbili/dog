@@ -6,9 +6,10 @@ return array(
             'dogtore_index',
             'dogtore_search',
             'dogtore_view',
-            'profile_view',
+            'profile_publicly_available',
             'auth_login',
             'auth_register',
+
         ),
     ),
     'blacklist' => array(

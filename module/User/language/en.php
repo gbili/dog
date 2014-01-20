@@ -42,4 +42,10 @@ return array (
   'Delete' => '',
   'Edit Profile' => '',
   'admin' => '',
+  'A user with this email address is already registered, try to login, or use a different email address' => '',
+  'Welcome back!' => '',
+  'Edit your Dog\'s Profile' => '',
+  'John' => '',
+  'McKenzy' => '',
+  'Write some cool stuff about you or your dog' => '',
 );

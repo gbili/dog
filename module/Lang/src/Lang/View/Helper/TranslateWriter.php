@@ -13,6 +13,8 @@ namespace Lang\View\Helper;
  */
 class TranslateWriter extends \Zend\I18n\View\Helper\AbstractTranslatorHelper
 {
+    protected $textDomainService;
+
     /**
      * Translate a message
      *
@@ -31,6 +33,7 @@ class TranslateWriter extends \Zend\I18n\View\Helper\AbstractTranslatorHelper
         if (null === $textDomain) {
             $textDomain = $this->getTranslatorTextDomain();
         }
+
         if (null === $locale) {
             $locale = $this->getTranslator()->getLocale();
         }
@@ -39,6 +42,27 @@ class TranslateWriter extends \Zend\I18n\View\Helper\AbstractTranslatorHelper
         }
         $this->addString($message, $textDomain, $locale);
         return $translator->translate($message, $textDomain, $locale);
+    }
+
+    public function getTranslatorTextDomain()
+    {
+        $textDomain = parent::getTranslatorTextDomain();
+        if ('default' === $textDomain) {
+            $service = $this->getTextDomainService();
+            $textDomain = $service->getTextDomain();
+        }
+        return $textDomain;
+    }
+
+    public function getTextDomainService()
+    {
+        return $this->textDomainService;
+    }
+
+    public function setTextDomainService($service)
+    {
+        $this->textDomainService = $service;
+        return $this;
     }
 
     public function addString($string, $lcModuleName, $locale)

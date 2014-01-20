@@ -7,7 +7,7 @@ return array(
             'options' => array(
                 'route' => '[/:lang]/login',
                 'constraints' => array(
-                    'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
+                    'lang' => $preConfig['regex_patterns']['lang'],
                 ),
                 'defaults' => array(
                     'lang' => 'en',
@@ -21,7 +21,7 @@ return array(
             'options' => array(
                 'route' => '[/:lang]/register',
                 'constraints' => array(
-                    'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
+                    'lang' => $preConfig['regex_patterns']['lang'],
                 ),
                 'defaults' => array(
                     'lang' => 'en',
@@ -35,7 +35,7 @@ return array(
             'options' => array(
                 'route' => '[/:lang]/logout',
                 'constraints' => array(
-                    'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
+                    'lang' => $preConfig['regex_patterns']['lang'],
                 ),
                 'defaults' => array(
                     'lang' => 'en',
@@ -49,7 +49,7 @@ return array(
             'options' => array(
                 'route' => '[/:lang]/admin[/]',
                 'constraints' => array(
-                    'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
+                    'lang' => $preConfig['regex_patterns']['lang'],
                 ),
                 'defaults' => array(
                     'lang' => 'en',
@@ -63,8 +63,8 @@ return array(
             'options' => array(
                 'route' => '[/:lang]/admin/edit[/:id]',
                 'constraints' => array(
-                    'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
-                    'id' => '[0-9]+',
+                    'lang' => $preConfig['regex_patterns']['lang'],
+                    'id' => $preConfig['regex_patterns']['id'],
                 ),
                 'defaults' => array(
                     'lang' => 'en',
@@ -78,8 +78,8 @@ return array(
             'options' => array(
                 'route' => '[/:lang]/admin/delete/:id',
                 'constraints' => array(
-                    'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
-                    'id' => '[0-9]+',
+                    'lang' => $preConfig['regex_patterns']['lang'],
+                    'id' => $preConfig['regex_patterns']['id'],
                 ),
                 'defaults' => array(
                     'lang' => 'en',
@@ -91,39 +91,74 @@ return array(
         'profile_edit' => array(
             'type' => 'segment',
             'options' => array(
-                'route' => '[/:lang]/profile/edit[/:id]',
+                'route' => '[/:lang]/profile/edit/:uniquename',
                 'constraints' => array(
-                    'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
-                    'id' => '[0-9]+',
+                    'lang' => $preConfig['regex_patterns']['lang'],
+                    'uniquename' => $preConfig['regex_patterns']['uniquename'],
                 ),
                 'defaults' => array(
                     'lang' => 'en',
                     'controller' => 'profile',
                     'action' => 'edit',
+                    'uniquename' => false,
                 ),
             ),
         ),
-        'profile_index' => array(
+        //displays logged in user data
+        'profile_private' => array(
             'type' => 'segment',
             'options' => array(
-                'route' => '[/:lang]/profile[/:uniquename]',
+                'route' => '[/:lang]/profile',
                 'constraints' => array(
-                    'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
-                    'uniquename' => '[A-Za-z0-9]+(?:[-_.]?[A-Za-z0-9]+){4,}',
+                    'lang' => $preConfig['regex_patterns']['lang'],
+                ),
+                'defaults' => array(
+                    'lang' => 'en',
+                    'controller' => 'profile',
+                    'action' => 'private',
+                ),
+            ),
+        ),
+        //displays uniquename user restricted set of data
+        'profile_publicly_available' => array(
+            'type' => 'segment',
+            'options' => array(
+                'route' => '[/:lang]/profile/:uniquename',
+                'constraints' => array(
+                    'lang' => $preConfig['regex_patterns']['lang'],
+                    'uniquename' => $preConfig['regex_patterns']['uniquename'],
+                ),
+                'defaults' => array(
+                    'lang' => 'en',
+                    'controller' => 'profile',
+                    'action' => 'public',
+                    'uniquename' => false,
+                ),
+            ),
+        ),
+        //displays uniquename profile of friend 
+/*        'profile_of_friend' => array(
+            'type' => 'segment',
+            'options' => array(
+                'route' => '[/:lang]/friend/:uniquename',
+                'constraints' => array(
+                    'lang' => $preConfig['regex_patterns']['lang'],
+                    'uniquename' => $preConfig['regex_patterns']['uniquename'],
                 ),
                 'defaults' => array(
                     'lang' => 'en',
                     'controller' => 'profile',
                     'action' => 'index',
+                    'uniquename' => false,
                 ),
             ),
-        ),
+        ), */
         'profile_list' => array(
             'type' => 'segment',
             'options' => array(
                 'route' => '[/:lang]/profiles',
                 'constraints' => array(
-                    'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
+                    'lang' => $preConfig['regex_patterns']['lang'],
                 ),
                 'defaults' => array(
                     'lang' => 'en',

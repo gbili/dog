@@ -2,6 +2,10 @@
 namespace User\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+/**
+ * Replace User\Entity\Profile with dogtore's
+ */
+use Dogtore\Entity\Profile;
 
 /**
  * @ORM\Table(name="users")

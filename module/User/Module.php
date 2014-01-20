@@ -19,6 +19,7 @@ class Module
 
     public function getConfig()
     {
+        $preConfig = include __DIR__ . '/config/module.pre_config.php';
         return include __DIR__ . '/config/module.config.php';
     }
 

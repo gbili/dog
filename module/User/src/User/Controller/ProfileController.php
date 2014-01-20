@@ -3,22 +3,107 @@ namespace User\Controller;
 
 class ProfileController extends \Zend\Mvc\Controller\AbstractActionController
 {
+    protected $paramsUniquename;
+    protected $paramsUniquenameUser;
+
     /**
-     * Index action
+     * Access logged in user profile
      */
-    public function indexAction()
+    public function privateAction()
     {
         $user = $this->identity();
         if (!$user->hasProfile()) {
-            return $this->redirect()->toRoute('profile_edit');
+            return $this->redirect()->toRoute('profile_edit', array('uniquename' => $user->getUniquename()), true);
         }
+        return $this->displayUserProfile($user);
+    }
+
+    public function publicAction()
+    {
+        $user = $this->getParamsUniquenameUser();
+        if (!$user->hasProfile()) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        return $this->displayUserProfile($user);
+    }
+
+    protected function displayUserProfile(\User\Entity\User $user)
+    {
         $profile = $user->getProfile();        
         $media = $profile->getMedia();
-        return new \Zend\View\Model\ViewModel(array(
-            'profile' => $profile, 
-            'media' => $media, 
-            'entity' => $user, 
-        ));
+
+        $messages = $this->messenger()->getMessages();
+
+        $viewVars = array(
+            'profile', 
+            'media', 
+            'user', 
+            'messages',
+        );
+
+        return new \Zend\View\Model\ViewModel(compact($viewVars));
+    }
+
+    public function getParamsUniquename()
+    {
+        if (null === $this->paramsUniquename) {
+            $this->paramsUniquename = $this->params()->fromRoute('uniquename');
+        }
+        return $this->paramsUniquename;
+    }
+
+    public function issetParamsUniquename()
+    {
+        return false !== $this->getParamsUniquename();
+    }
+
+    public function isParamsUniquenameSameAsLoggedInUser()
+    {
+        $loggedInUser = $this->identity();
+        if (false === $loggedInUser) {
+            throw new \Exception('not logged in');
+        }
+        if (!$this->issetParamsUniquename()) {
+            throw new \Exception('no params uniquename');
+        }
+        return false !== $loggedInUser && $this->getParamsUniquename() === $loggedInUser->getUniquename();
+    }
+
+    public function isParamsUniquenameExistingUser()
+    {
+        if (null === $this->paramsUniquenameUser) {
+            $users = $this->em()->getRepository('User\Entity\User')->findByUniquename($this->getParamsUniquename());
+            if (!empty($users)) {
+                 $this->paramsUniquenameUser = current($users);
+            }
+        }
+        return $this->paramsUniquenameUser instanceof \User\Entity\User;
+    }
+
+    public function getParamsUniquenameUser()
+    {
+        $paramsUniquename = $this->getParamsUniquename();
+        if (!$paramsUniquename) {
+            throw new \Exception('uniquename route param not set');
+        }
+
+        if ($paramsUniquename === $this->identity()->getUniquename()) {
+            return $this->identity();
+        }
+        if (!$this->isParamsUniquenameExistingUser()) {
+            throw new \Exception('uniquename route param not exist');
+        }
+        return $this->paramsUniquenameUser;
+    }
+
+    /**
+     * Show the profile available to friends
+     *
+     */
+    public function friendAction()
+    {
+
     }
 
     /**
@@ -49,6 +134,7 @@ class ProfileController extends \Zend\Mvc\Controller\AbstractActionController
             return new \Zend\View\Model\ViewModel(array(
                 'entityId' => $profile->getId(),
                 'form' => $profileForm,
+                'messages' => $this->messenger()->getMessages(),
             ));
         }
 
@@ -73,6 +159,6 @@ class ProfileController extends \Zend\Mvc\Controller\AbstractActionController
         $objectManager->persist($profile);
         $objectManager->flush();
 
-        return $this->redirect()->toRoute('profile_index', array('id' => (string) $user->getId()), true);
+        return $this->redirect()->toRoute('profile_index', array('uniquename' => (string) $user->getUniquename()), true);
     }
 }

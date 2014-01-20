@@ -54,7 +54,7 @@ class AdminController extends \Zend\Mvc\Controller\AbstractActionController
         $objectManager->persist($profile);
         $objectManager->flush();
 
-        return $this->redirect()->toRoute('profile_index', array('id' => (string) $user->getId()));
+        return $this->redirect()->toRoute('profile_private', array('id' => (string) $user->getId()));
     }
 
     public function getProfileByUserId($userId)

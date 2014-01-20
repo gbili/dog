@@ -22,6 +22,7 @@ class Module
     public function onBootstrap(\Zend\Mvc\MvcEvent $e)
     {
         $this->injectLang($e);
+        $this->injectTextDomain($e);
     }
     
     public function injectLang($e)
@@ -29,15 +30,20 @@ class Module
         $eventManager = $e->getApplication()->getEventManager();
         $eventManager->attach(\Zend\Mvc\MvcEvent::EVENT_DISPATCH, function ($e) {
             $sm = $e->getApplication()->getServiceManager();
-            $viewHelperManager = $sm->get('ViewHelperManager');
+            $currentLang = $sm->get('lang')->getLang();
 
-            $lang = $sm->get('lang')->getLang();
-            $viewHelperManager->get('lang')->setLang($lang);
-
-            $translator = $sm->get('translator');
+            $translator = $sm->get('MvcTranslator');
             $translator->setFallbackLocale('en');
-            $translator->setLocale($lang);
-            $viewHelperManager->get('translate')->setTranslator($translator);
+            $translator->setLocale($currentLang);
+        });
+    }
+
+    public function injectTextDomain($e)
+    {
+        $eventManager = $e->getApplication()->getEventManager();
+        $eventManager->attach(\Zend\Mvc\MvcEvent::EVENT_DISPATCH, function ($e) {
+            $sm = $e->getApplication()->getServiceManager();
+            $sm->get('textdomain')->setController($e->getTarget());
         });
     }
 }

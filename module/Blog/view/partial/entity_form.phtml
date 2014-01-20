@@ -12,7 +12,7 @@ $route = array(
     'controller' => $controller,
     'action' => $action
 );
-if (null !== $entityId) {
+if (isset($entityId) && null !== $entityId) {
     $route['id'] = $entityId;
 }
 $form->setAttribute('action', $this->url('blog',$route));

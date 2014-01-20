@@ -19,7 +19,7 @@ class Message extends \Zend\View\Helper\AbstractHelper
      */
     public function __invoke($class, $message)
     {
-        return "<div class=\"alert alert-$class\">"
+        return "<div class=\"alert alert-$class cancel-padding\">"
                . "<p>$message</p>"
              . '</div>';
     }

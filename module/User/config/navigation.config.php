@@ -1,9 +1,9 @@
 <?php
 return array(
         'default' => array(
-            'profile_view' => array(
+            'profile_private' => array(
                 'label' => 'My Profile',
-                'route' => 'profile_index',
+                'route' => 'profile_private',
             ),
             'profile_list' => array(
                 'label' => 'Profiles',

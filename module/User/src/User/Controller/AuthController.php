@@ -6,18 +6,6 @@ use Zend\View\Model\ViewModel;
 
 class AuthController extends \Zend\Mvc\Controller\AbstractActionController
 {
-    protected $messages = array();
-
-    public function addMessage($type, $message)
-    {
-        $this->messages[] = array($type => $message);
-    }
-
-    public function getMessages()
-    {
-        return $this->messages;
-    }
-
     /**
      * Edit action
      *
@@ -25,6 +13,7 @@ class AuthController extends \Zend\Mvc\Controller\AbstractActionController
     public function loginAction()
     {
         if ($this->identity()) {
+            $this->messenger()->addMessage('Woopsy, already logged in', 'warning');
             return $this->logged();
         }
 
@@ -33,7 +22,7 @@ class AuthController extends \Zend\Mvc\Controller\AbstractActionController
         if (!$this->request->isPost()) {
             return new ViewModel(array(
                 'form' => $form,
-                'messages' => $this->getMessages(),
+                'messages' => $this->messenger()->getMessages(),
             ));
         }
         $form->setData($this->request->getPost());
@@ -41,7 +30,7 @@ class AuthController extends \Zend\Mvc\Controller\AbstractActionController
         if (!$form->isValid()) {
             return new ViewModel(array(
                 'form' => $form,
-                'messages' => $this->getMessages(),
+                'messages' => $this->messenger()->getMessages(),
             ));
         }
 
@@ -49,12 +38,14 @@ class AuthController extends \Zend\Mvc\Controller\AbstractActionController
         $userEmail = $this->getUserEmail($formData);
 
         if (!$userEmail || !$this->authenticate($userEmail, $formData['user']['password'])) {
-            $this->addMessage('danger', 'The credential/password combination does not exist, try something else or register');
+            $this->messenger()->addMessage('The credential/password combination does not exist, try something else or register', 'danger');
             return new ViewModel(array(
                 'form' => $form,
-                'messages' => $this->getMessages(),
+                'messages' => $this->messenger()->getMessages(),
             ));
         }
+
+        $this->messenger()->addMessage('Welcome back!', 'success');
         return $this->logged();
     }
 
@@ -85,8 +76,7 @@ class AuthController extends \Zend\Mvc\Controller\AbstractActionController
     public function logged()
     {
         $params = array('uniquename' => $this->identity()->getUniquename());
-        $reuseMatchedParams = true;
-        return $this->redirect()->toRoute('profile_index', $params, $reuseMatchedParams);
+        return $this->redirect()->toRoute('profile_private', $params, true);
     }
 
     public function authenticate($email, $plainPassword)
@@ -99,7 +89,9 @@ class AuthController extends \Zend\Mvc\Controller\AbstractActionController
         if (!$authResult->isValid()) {
             return false;
         }
-        $authService->getStorage()->write($authResult->getIdentity());
+
+        $identity = $authResult->getIdentity();
+        $authService->getStorage()->write($identity);
         return true;
     }
 
@@ -139,26 +131,29 @@ class AuthController extends \Zend\Mvc\Controller\AbstractActionController
         $providedPassword = $validatedUserData['password'];
 
         if ($this->isEmailAlreadyInUse($providedEmail)) {
-            $messages[] = array('danger' => 'A user with this email address is already registered, try to login, or use a different email address');
+            $this->messenger()->addMessage('A user with this email address is already registered, try to login, or use a different email address', 'danger');
             return new ViewModel(array(
                 'form' => $form,
-                'messages' => $messages,
+                'messages' => $this->messenger()->getCurrentMessages(),
             ));
         }
 
         if ($this->isUniquenameAlreadyInUse($providedUniquename)) {
-            $messages[] = array('danger' => 'This username already exists, try to login, or use a different username');
+            $this->messenger()->addMessage('This username already exists, try to login, or use a different username', 'danger');
             return new ViewModel(array(
                 'form' => $form,
-                'messages' => $messages,
+                'messages' => $this->messenger()->getCurrentMessages(),
             ));
         }
 
         $this->persistUser($validatedUserData);
 
-        if ($this->authenticate($providedEmail, $providedPassword)) {
-            return $this->logged();
+        if (!$this->authenticate($providedEmail, $providedPassword)) {
+            throw new \Exception('Authentication failed');
         }
+
+        $this->messenger()->addMessage('Congratulations! Do you want to tell people what breed of dog you have? You can do that here, in the description. Or you can start searching for dogtore cards.', 'success');
+        return $this->logged();
     }
 
     public function persistUser($validatedUserData)
