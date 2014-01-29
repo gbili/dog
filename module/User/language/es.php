@@ -17,4 +17,11 @@ return array (
   'Edit' => 'Modificar',
   'Delete' => 'Eliminar',
   'Edit Profile' => 'Modificar Perfil',
+  'Username' => '',
+  'has one dog' => '',
+  ':firstname' => '',
+  ':phrase' => '',
+  ':firstname :phrase' => '',
+  '. His name is: ' => '',
+  'You have one dog' => '',
 );

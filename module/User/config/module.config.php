@@ -1,14 +1,6 @@
 <?php
 namespace User;
 return array(
-    'controllers' => array(
-        'invokables' => array(
-            'auth' => 'User\Controller\AuthController',
-            'profile' => 'User\Controller\ProfileController',
-            'admin' => 'User\Controller\AdminController',
-        ),
-    ),
-
     'view_manager' => array(
         'template_path_stack' => array(
             'user' => __DIR__ . '/../view',
@@ -16,6 +8,7 @@ return array(
     ),
 
     'controller_plugins' => include __DIR__ . '/controller_plugins.config.php',
+    'controllers'        => include __DIR__ . '/controllers.config.php',
     'doctrine'           => include __DIR__ . '/doctrine.config.php',
     'navigation'         => include __DIR__ . '/navigation.config.php', 
     'router'             => include __DIR__ . '/router.config.php',

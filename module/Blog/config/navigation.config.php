@@ -3,14 +3,14 @@ namespace Blog;
 
 return array(
     'default' => array(
-        'blog' => array(
-            'label' => 'Create',
+        'my_account' => array(
+            'label' => 'My Account',
             'route' => 'blog',
             'controller' => 'post',
             'action' => 'index',
         ),
     ),
-    'side' => array(
+    'side_2' => array(
         'post' => array(
             'label' => 'Posts',
             //contorller
@@ -24,13 +24,6 @@ return array(
             'route' => 'blog',
             'controller' => 'post',
             'action' => 'create',
-        ),
-        'post_link' => array(
-            'label' => 'Link Post',
-            //contorller
-            'route' => 'blog',
-            'controller' => 'post',
-            'action' => 'link',
         ),
         'category' => array(
             'divider' => 'above',

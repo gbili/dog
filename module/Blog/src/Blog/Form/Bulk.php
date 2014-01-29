@@ -42,6 +42,9 @@ class Bulk extends \Zend\Form\Form
             ),
         ));
 
+        //This element represents the posts or categories being marked for
+        //applying the bulk action
+        //
         //Hydrated in self::hydrateValueOptions($entitiesAsArray)
         $this->add(array(
             'name' => $multicheckElementName,

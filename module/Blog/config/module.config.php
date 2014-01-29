@@ -2,13 +2,9 @@
 namespace Blog;
 
 return array(
-    'controllers' => array(
-        'invokables' => array(
-            'post' => 'Blog\Controller\PostController',
-            'category' => 'Blog\Controller\CategoryController',
-            'media' => 'Blog\Controller\MediaController',
-            'file' => 'Blog\Controller\FileController',
-        ),
+    'blog_constants' => array(
+        'uploaded_files_dirpath' => __DIR__ . '/../public/img',
+        'images_src_dirpath' => '/img',
     ),
 
     'view_manager' => array(
@@ -18,6 +14,7 @@ return array(
     ),
 
     'controller_plugins' => include __DIR__ . '/controller_plugins.config.php',
+    'controllers'        => include __DIR__ . '/controllers.config.php',
     'doctrine'           => include __DIR__ . '/doctrine.config.php',
     'navigation'         => include __DIR__ . '/navigation.config.php',
     'router'             => include __DIR__ . '/router.config.php',

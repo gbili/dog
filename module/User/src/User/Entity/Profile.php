@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="profiles")
  * @ORM\Entity
  */
-class Profile 
+class Profile implements ProfileInterface
 {
     /**
      * @ORM\Column(name="id", type="integer")
@@ -41,11 +41,6 @@ class Profile
      * @ORM\JoinColumn(name="media_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $media;
-
-    /**
-     * @ORM\Column(name="content", type="text")
-     */
-    private $content;
 
     /**
      * @var \DateTime
@@ -84,16 +79,6 @@ class Profile
     public function getSurname()
     {
         return $this->surname;
-    }
-
-    public function setContent($content)
-    {
-        $this->content = $content;
-    }
-
-    public function getContent()
-    {
-        return $this->content;
     }
 
     public function setMedia(\Blog\Entity\Media $media = null)

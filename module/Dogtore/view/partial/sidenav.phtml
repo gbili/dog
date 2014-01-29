@@ -1,6 +1,7 @@
 <?php $aclGuard = $this->layout()->aclGuard ?>
 <?php $acl = $aclGuard->getAcl() ?>
 <?php $role = $aclGuard->getRole() ?>
+<div class="list-group">
 <?php foreach ($this->container as $page): ?>
     <?php /* @var $page Zend\Navigation\Page\Mvc */ ?>
     <?php // when using partials we need to manually check for ACL conditions ?>
@@ -13,3 +14,4 @@
             </a>
     <?php endif ?>
 <?php endforeach ?>
+</div><!-- End Side nav -->

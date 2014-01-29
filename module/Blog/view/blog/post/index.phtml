@@ -2,7 +2,7 @@
 $title = $this->translate('Posts', 'blog');
 $this->headTitle($title);
 $form->setAttribute('action', $this->url(null ,array('action' => 'bulk'), true));
-$form->setAttribute('class', 'form-horizontal');
+$form->setAttribute('class', 'form-inline');
 $form->setAttribute('role', 'form');
 $form->prepare();
 ?>
@@ -21,12 +21,10 @@ $form->prepare();
     </div>
 </div>
 <?php echo $this->form()->openTag($form) ?>
-<div class="form-group">
-    <div class="col-sm-4 col-md-4 col-lg-4">
-        <?php echo $this->formElement($form->get('action-top')) ?>
-    </div>
-    <div class="col-sm-4 col-md-4 col-lg-4">
-        <?php echo $this->formElement($form->get('submit')) ?>
+<div class="row">
+    <div class="col-sm-8 col-md-8 col-lg-8">
+        <?php echo $this->renderElement($form->get('action-top')) ?>
+        <?php echo $this->renderElement($form->get('submit')) ?>
     </div>
     <div class="col-sm-4 col-md-4 col-lg-4">
     </div>
@@ -75,12 +73,10 @@ $form->prepare();
 	    </tr>
     <?php endif ?>
 </table>
-<div class="form-group">
-    <div class="col-sm-4 col-md-4 col-lg-4">
-        <?php echo $this->formElement($form->get('action-bottom')) ?>
-    </div>
-    <div class="col-sm-4 col-md-4 col-lg-4">
-        <?php echo $this->formElement($form->get('submit')) ?>
+<div class="row">
+    <div class="col-sm-8 col-md-8 col-lg-8">
+    <?php echo $this->renderElement($form->get('action-top')) ?>
+    <?php echo $this->renderElement($form->get('submit')) ?>
     </div>
     <div class="col-sm-4 col-md-4 col-lg-4">
     </div>

@@ -67,7 +67,7 @@ class ProfileController extends \Zend\Mvc\Controller\AbstractActionController
         if (!$this->issetParamsUniquename()) {
             throw new \Exception('no params uniquename');
         }
-        return false !== $loggedInUser && $this->getParamsUniquename() === $loggedInUser->getUniquename();
+        return $this->getParamsUniquename() === $loggedInUser->getUniquename();
     }
 
     public function isParamsUniquenameExistingUser()
@@ -89,7 +89,7 @@ class ProfileController extends \Zend\Mvc\Controller\AbstractActionController
         }
 
         if ($paramsUniquename === $this->identity()->getUniquename()) {
-            return $this->identity();
+            return $this->paramsUniquenameUser = $this->identity();
         }
         if (!$this->isParamsUniquenameExistingUser()) {
             throw new \Exception('uniquename route param not exist');
@@ -119,10 +119,14 @@ class ProfileController extends \Zend\Mvc\Controller\AbstractActionController
     }
 
     /**
-     * Create a blog post
+     * Create profile 
      */
     public function editAction()
     {
+        if (!$this->isParamsUniquenameSameAsLoggedInUser()) {
+            return $this->redirect()->toRoute($routename, array('uniquename' => $this->identity()->getUniquename()), true);
+        }
+
         $objectManager = $this->em();
         $user          = $this->identity();
         $profile       = $user->getProfile();
@@ -159,6 +163,6 @@ class ProfileController extends \Zend\Mvc\Controller\AbstractActionController
         $objectManager->persist($profile);
         $objectManager->flush();
 
-        return $this->redirect()->toRoute('profile_index', array('uniquename' => (string) $user->getUniquename()), true);
+        return $this->redirect()->toRoute('profile_publicly_available', array('uniquename' => (string) $user->getUniquename()), true);
     }
 }

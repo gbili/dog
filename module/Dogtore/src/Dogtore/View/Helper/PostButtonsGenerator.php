@@ -32,7 +32,7 @@ class PostButtonsGenerator extends \Zend\View\Helper\AbstractHelper
             return '';
         }
         $url = $this->view->url('blog', array('controller' => 'post', 'action' => 'edit', 'id' => $post['post_id']), true);
-        $text = $this->view->translate('Edit', 'dogtore');
+        $text = $this->view->translate('Edit');
         return $this->getButton($url, $text, 'default');
     }
 
@@ -45,20 +45,20 @@ class PostButtonsGenerator extends \Zend\View\Helper\AbstractHelper
     {
         $buttons = '';
         if (null !== $post['parent_post_slug']) {
-            $url = $this->view->url(null, array('post_slug' => $post['post_slug'], 'related' => 'parent'), true);
+            $url = $this->view->url('dogtore_index', array('post_slug' => $post['post_slug'], 'related' => 'parent'), true);
 
             $patterns = array('category');
             $replacements = array($post['parent_lvl1_category_name']);
-            $text = '&lt; ' . $this->view->patternTranslate($patterns, $replacements, "View category", 'dogtore');
+            $text = '&lt; ' . $this->view->patternTranslate($patterns, $replacements, "View category");
 
             $buttons .= $this->getButton($url, $text, $this->view->cssClass($post['parent_lvl1_category_slug']));
         }
         if (null !== $post['child_post_slug']) {
-            $url = $this->view->url(null, array('post_slug' => $post['post_slug'], 'related' => 'children'), true);
+            $url = $this->view->url('dogtore_index', array('post_slug' => $post['post_slug'], 'related' => 'children'), true);
 
             $patterns = array('category');
             $replacements = array($post['child_lvl1_category_name']);
-            $text = $this->view->patternTranslate($patterns, $replacements, "View category", 'dogtore'). ' &gt;';
+            $text = $this->view->patternTranslate($patterns, $replacements, "View category"). ' &gt;';
 
             $buttons .= $this->getButton($url, $text, $this->view->cssClass($post['child_lvl1_category_slug']));
         }

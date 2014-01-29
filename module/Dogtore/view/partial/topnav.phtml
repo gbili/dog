@@ -11,7 +11,9 @@
         <?php $this->lang($page) ?>
 
         <?php if( ! $page->hasPages()): ?>
-            <li class="<?php if ($page->isActive()) echo 'active' ?>">
+        <?php $isPageRouteInSideNavRoutes = $this->conditionalNavigation()->isRouteContainedAndContainerActive($page->getRoute(), array('side_1', 'side_2')) ?>
+        <?php $isActive = ($isPageRouteInSideNavRoutes || $page->isActive()) ?>
+            <li class="<?= (($isActive)? 'active' : '') ?>">
                 <a class="nav-header" href="<?= $page->getHref() ?>">
                     <?= $this->translate($page->getLabel(), 'dogtore') ?>
                 </a>

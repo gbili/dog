@@ -64,10 +64,10 @@ class Media extends \Blog\Entity\Media implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'id', 'user', 'locale', 'translated', 'slug', 'alt', 'description', 'posts', 'file', 'width', 'height', 'csspercent', 'date');
+            return array('__isInitialized__', 'id', 'user', 'locale', 'publicdir', 'translated', 'slug', 'alt', 'description', 'posts', 'file', 'width', 'height', 'csspercent', 'date');
         }
 
-        return array('__isInitialized__', 'id', 'user', 'locale', 'translated', 'slug', 'alt', 'description', 'posts', 'file', 'width', 'height', 'csspercent', 'date');
+        return array('__isInitialized__', 'id', 'user', 'locale', 'publicdir', 'translated', 'slug', 'alt', 'description', 'posts', 'file', 'width', 'height', 'csspercent', 'date');
     }
 
     /**
@@ -461,6 +461,28 @@ class Media extends \Blog\Entity\Media implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getSrc', array());
 
         return parent::getSrc();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setPublicdir($dir)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setPublicdir', array($dir));
+
+        return parent::setPublicdir($dir);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPublicdir()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPublicdir', array());
+
+        return parent::getPublicdir();
     }
 
     /**

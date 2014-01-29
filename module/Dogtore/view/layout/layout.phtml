@@ -12,7 +12,10 @@
         <?= $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
                  ->prependStylesheet($this->basePath() . '/css/style.css')
                  ->prependStylesheet($this->basePath() . '/css/bootstrap-theme.min.css')
-                 ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css') ?>
+                 ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css')
+                 //Only add when in media forms
+                 ->prependStylesheet($this->basePath() . '/css/image-picker.css') ?>
+
 
         <!-- Scripts -->
         <?= $this->headScript()
@@ -34,28 +37,23 @@
                     <a class="navbar-brand" href="<?= $this->url('dogtore_index', array('lang' => $this->lang())) ?>"><?= $this->translate('Dogtore App', 'dogtore') ?></a>
                 </div>
                 <div class="collapse navbar-collapse">
-                    <?php $this->navigation('navigation')->menu()->setPartial(array('partial/topnav.phtml', 'default')) ?>
-                    <?= $this->navigation('navigation')->menu()->render() ?>
+                    <?= $this->renderNavigation(array('navigation' => 'default'), 'partial/topnav.phtml') ?>
                 </div><!--/.nav-collapse -->
             </div>
         </nav>
         <div class="container">
             <div class="row">
-                <?php $sm=12;$md=12;$lg=12;?>
-                <!-- Side nav -->
-                <?php $this->navigation('side_navigation')->menu()->setPartial(array('partial/sidenav.phtml', 'side')) ?>
-                <?php $sidenav = $this->navigation('side_navigation')->menu()->render() ?>
-                <?php if ($aclGuard->hasMatchedRoute() && (0 < preg_match('/^blog/', $aclGuard->getMatchedRouteName())) && false !== strpos($sidenav, '<')) : ?>
-                <div class="col-sm-12 col-md-3 col-lg-2">
-                    <div class="list-group">
-                        <?php echo $sidenav ?>
-                    </div><!-- End Side nav -->
-                </div>
-                <?php $sm=12;$md=9;$lg=9;?>
-                <?php endif ?>
+                    <?php $sm=12;$md=12;$lg=12;?>
+                    <?php $groupedContainers = array('side_1', 'side_2') ?>
+                    <?php if ($this->conditionalNavigation()->isMatchedRouteContained($groupedContainers)) :?>
+                        <!-- Side nav -->
+                        <div class="col-sm-12 col-md-3 col-lg-2">
+                            <?= $this->renderNavigation($groupedContainers, 'partial/sidenav.phtml') ?>
+                        </div>
+                        <?php $sm=12;$md=9;$lg=9;?>
+                    <?php endif ?>
                     <div class="col-sm-<?=$sm?> col-md-<?=$md?> col-lg-<?=$lg?>">
-                    <?php $this->navigation('navigation')->menu()->setPartial(array('partial/breadcrumbs.phtml', 'default'))?>
-                    <?= $this->navigation('navigation')->menu()->render()?>
+                        <?= $this->renderNavigation(array('navigation' => 'default'), 'partial/breadcrumbs.phtml') ?>
                     <?= $this->content; ?>
                 </div> 
             </div><!-- end row -->

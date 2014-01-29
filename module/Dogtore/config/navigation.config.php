@@ -1,22 +1,19 @@
 <?php
 return array(
         // The DefaultNavigationFactory we configured in (1) uses 'default' as the sitemap key
-        'default' => array(
+       'side_1' => array(
             // And finally, here is where we define our page hierarchy
-            'dogtore_symptom' => array(
-                'label' => 'Symptoms',
-                'route' => 'dogtore_index',
-                'params' => array('category' => 'symptoms'),
+            'dog_list_my_dogs' => array(
+                'label' => 'My Pack',
+                'route' => 'dog_list_my_dogs',
+                'order' => 100,
             ),
-            'dogtore_cause' => array(
-                'label' => 'Causes',
-                'route' => 'dogtore_index',
-                'params' => array('category' => 'causes'),
-            ),
-            'dogtore_solution' => array(
-                'label' => 'Solutions',
-                'route' => 'dogtore_index',
-                'params' => array('category' => 'solutions'),
+        ),
+       'side_2' => array(
+            // And finally, here is where we define our page hierarchy
+            'dog_add_my_dog' => array(
+                'label' => 'Add Dog',
+                'route' => 'dog_add_my_dog',
             ),
         ),
 );

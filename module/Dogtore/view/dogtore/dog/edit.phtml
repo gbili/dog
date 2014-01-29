@@ -1,0 +1,26 @@
+<?php 
+$title = $this->translate('Edit your dog\'s profile');
+$this->headTitle($title);
+?>
+<div class="row">
+    <div class="col-sm-1 col-md-2 col-lg-2"></div>
+    <div class="col-sm-10 col-md-8 col-lg-8">
+        <?= $this->notify(((isset($messages))? $messages : array())) ?>
+    </div>
+    <div class="col-sm-1 col-md-2 col-lg-2"></div>
+</div>
+<div class="row">
+    <div class="col-sm-0 col-md-2 col-lg-3"></div>
+    <div class="col-sm-12 col-md-8 col-lg-6">
+        <h1><?= $this->escapeHtml($title) ?></h1>
+    </div>
+    <div class="col-sm-0 col-md-2 col-lg-3"></div>
+</div>
+<div class="row">
+    <div class="col-sm-0 col-md-2 col-lg-3"></div>
+    <div class="col-sm-12 col-md-8 col-lg-6">
+        <?php $this->formSameActionPrepare($form) ?>
+        <?= $this->renderForm($form) ?>
+    </div>
+    <div class="col-sm-0 col-md-2 col-lg-3"></div>
+</div>

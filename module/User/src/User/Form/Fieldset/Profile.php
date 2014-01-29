@@ -41,19 +41,6 @@ implements \Zend\InputFilter\InputFilterProviderInterface
         ));
 
         $this->add(array(
-            'name' => 'content',
-            'type'  => 'Zend\Form\Element\Textarea',
-            'options' => array(
-                'label' => 'Describe yourself',
-            ),
-            'attributes' => array(
-                'class' => 'form-control',
-                'rows' => '8',
-                'placeholder' => 'Write some cool stuff about you or your dog',
-            )
-        ));
-
-        $this->add(array(
             'name' => 'media',
             'type' => 'DoctrineModule\Form\Element\ObjectSelect',
             'options' => array(

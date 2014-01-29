@@ -1,10 +1,6 @@
 <?php
 return array(
         'default' => array(
-            'profile_private' => array(
-                'label' => 'My Profile',
-                'route' => 'profile_private',
-            ),
             'profile_list' => array(
                 'label' => 'Profiles',
                 'route' => 'profile_list',
@@ -20,6 +16,14 @@ return array(
             'auth_register' => array(
                 'label' => 'Register',
                 'route' => 'auth_register',
+            ),
+        ),
+
+        'side_1' => array(
+            'profile_private' => array(
+                'label' => 'My Profile',
+                'route' => 'profile_private',
+                'order' => -1,
             ),
         ),
     );

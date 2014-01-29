@@ -48,4 +48,6 @@ return array (
   'es' => '',
   'Translated Id' => 'Id Traducido',
   'edit' => 'modificar',
+  'My Profile' => '',
+  'Add Dog' => '',
 );

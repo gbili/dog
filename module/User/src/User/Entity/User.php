@@ -2,10 +2,6 @@
 namespace User\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-/**
- * Replace User\Entity\Profile with dogtore's
- */
-use Dogtore\Entity\Profile;
 
 /**
  * @ORM\Table(name="users")
@@ -26,6 +22,13 @@ class User
      * @ORM\OneToMany(targetEntity="\Blog\Entity\Post", mappedBy="user")
      */
     private $posts;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="\Dogtore\Entity\Dog", mappedBy="owner")
+     */
+    private $dogs;
 
     /**
      * @var string
@@ -63,6 +66,8 @@ class User
 
     public function __construct()
     {
+        $this->posts = new \Doctrine\Common\Collections\Collection();
+        $this->dogs  = new \Doctrine\Common\Collections\Collection();
     }
 
     public function isAdmin()
@@ -105,7 +110,7 @@ class User
         return $this->uniquename;
     }
 
-    public function setProfile(Profile $profile)
+    public function setProfile(ProfileInterface $profile)
     {
         $this->profile = $profile;
     }
@@ -120,7 +125,7 @@ class User
 
     public function hasProfile()
     {
-        return $this->profile instanceof Profile;
+        return $this->profile instanceof ProfileInterface;
     }
 
     public function setPassword($clearPassword)
@@ -182,7 +187,7 @@ class User
     public function removePost(\Blog\Entity\Post $post)
     {
         $this->posts->removeElement($post);
-        $post->setCategory(null);
+        $post->setUser(null);
     }
 
     /**
@@ -193,6 +198,66 @@ class User
     {
         foreach ($posts as $post) {
             $this->removePost($post);
+        }
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDogs()
+    {
+        return $this->dogs;
+    }
+
+    /**
+     * @return boolean 
+     */
+    public function hasDogs()
+    {
+        return !$this->dogs->isEmpty();
+    }
+
+    /**
+     * Add dog
+     * @param \Dogtore\Entity\Dog $dogs
+     */
+    public function addDog(\Dogtore\Entity\Dog $dog)
+    {
+        if (!$dog->hasOwner()) {
+            $dog->setOwner($this);
+        }
+        $this->dogs->add($dog);
+    }
+
+    /**
+     * Add dog
+     * @param \Doctrine\Common\Collections\Collection $dogs
+     */
+    public function addDogs(\Doctrine\Common\Collections\Collection $dogs)
+    {
+        foreach ($dogs as $dog) {
+            $this->addDog($dog);
+        }
+    }
+
+    /**
+     * Remove dogs
+     * @param \Dogtore\Entity\Dog $dogs
+     */
+    public function removeDog(\Dogtore\Entity\Dog $dog)
+    {
+        $this->dogs->removeElement($dog);
+        $dog->setOwner(null);
+    }
+
+    /**
+     * Remove dogs
+     * @param \Dogtore\Entity\Dog $dogs
+     */
+    public function removeDogs(\Doctrine\Common\Collections\Collection $dogs)
+    {
+        foreach ($dogs as $dog) {
+            $this->removeDog($dog);
         }
     }
 }

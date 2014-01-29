@@ -64,10 +64,10 @@ class Profile extends \User\Entity\Profile implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'id', 'firstname', 'surname', 'user', 'media', 'content', 'date');
+            return array('__isInitialized__', 'id', 'firstname', 'surname', 'user', 'media', 'date');
         }
 
-        return array('__isInitialized__', 'id', 'firstname', 'surname', 'user', 'media', 'content', 'date');
+        return array('__isInitialized__', 'id', 'firstname', 'surname', 'user', 'media', 'date');
     }
 
     /**
@@ -230,28 +230,6 @@ class Profile extends \User\Entity\Profile implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getSurname', array());
 
         return parent::getSurname();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setContent($content)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setContent', array($content));
-
-        return parent::setContent($content);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getContent()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getContent', array());
-
-        return parent::getContent();
     }
 
     /**

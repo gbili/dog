@@ -3,6 +3,15 @@ body {
     padding-bottom: 40px;
 }
 
+/* Bulk action form */
+/* Adjust margins */
+#bulk-action > .row .form-group {
+    margin: 20px 0;
+}
+#bulk-action table.table {
+    margin: 0;
+}
+
 div.container a.brand {
     background: url("../img/zf2-logo.png") no-repeat scroll 0 10px transparent;
     margin-left: 0;
@@ -62,3 +71,65 @@ div#posts-container .solution {
     margin-left: -15px;
     margin-right: -15px;
 }
+
+/* Image Picker */
+/* Add some padding to well*/
+.media > .well > .form-group {
+    padding-left: 10px;
+}
+/* Restrict images size*/
+.image_picker_selector > li > .thumbnail > img {
+    max-width: 113px;
+}
+/* End Image Picker */
+
+/* SCS */
+/* Arrow */
+/*
+.arrow-left {
+    content: "";
+    height: 0;
+    position: absolute;
+    width: 0;
+    left: 49px;
+    border-bottom: 90px solid #FFFFFF;
+    border-right:  20px  solid #EEEEEE;
+    border-top:    90px solid #FFFFFF;
+    top: 7px;
+    margin: auto 0px;
+}
+.arrow-left.disabled {
+    border-right-color: #EEEEEE;
+}
+.arrow-left.primary {
+    border-right-color:  #428BCA;
+}
+.arrow-left.warning {
+    border-right-color:  #F0AD4E;
+}
+.arrow-left.success {
+    border-right-color:  #5CB85C;
+}
+.arrow-right {
+    content: "";
+    height: 0;
+    position: absolute;
+    width: 0;
+    left: -16px;
+    border-bottom: 50px solid #FFFFFF;
+    border-left: 10px solid #EEEEEE;
+    border-top: 50px solid #FFFFFF;
+}
+.arrow-right.disabled {
+    border-left-color: #EEEEEE;
+}
+.arrow-right.symptom {
+    border-left-color: #428BCA;
+}
+.arrow-right.cause {
+    border-left-color: #F0AD4E;
+}
+.arrow-right.solution {
+    border-left-color: #5CB85C;
+}*/
+/* End Arrow*/

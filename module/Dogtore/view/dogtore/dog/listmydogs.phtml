@@ -1,0 +1,51 @@
+<?php
+$title = $this->translate('My Pack');
+$this->headTitle($title);
+?>
+<div class="row">
+    <div class="col-sm-4 col-md-4 col-4">
+        <h1><?php echo $this->escapeHtml($title); ?></h1>
+    </div>
+    <div class="col-sm-4 col-md-4 col-4">
+    </div>
+    <div class="col-sm-4 col-md-4 col-4">
+        <p><a class="btn btn-success" href="<?php echo $this->url('dog_add_my_dog', array(), true);?>"><?php echo $this->translate('Add Dog') ?></a></p>
+    </div>
+</div>
+<?php $count = count($dogs) ?>
+<?php $itemsPerRow = 4 ?>
+<?php $excess = $count % $itemsPerRow ?>
+<?php $rows = ($count - $excess) / $itemsPerRow ?>
+<?php $isRowOpened = false ?>
+<?php $i = 1 ?>
+    <?php foreach($dogs as $dog) : ?>
+<?php if (1 === $i || 0 === ($i % $itemsPerRow)) : ?> 
+    <div class="row">
+    <?php $isRowOpened = true?>
+<?php endif ?>
+<div class="col-sm-6 col-md-4 col-lg-3">
+    <div class="thumbnail<?= ' ' . (('f' === $dog['dog_gender'])? 'female': 'male') ?>">
+      <img src="<?= $dog['media_src']?>" alt="<?= $dog['media_alt']?>"/>
+      <div class="caption">
+      <h5><?= $dog['dog_name'] ?></h5>
+        <p>
+            <a class="btn btn-primary btn-xs" role="button"href="<?php echo $this->url('dog_view_user_dog', array(
+                'uniquename' => $dog['owner_uniquename'],
+                'dogname' => $dog['dog_name'],
+            ), true); ?>"><?php echo $this->translate('View') ?></a>
+        </p>
+     </div><!-- end caption -->
+   </div><!-- end thumbnail -->
+</div><!-- end col -->
+    <?php $i++ ?>
+    <?php if (0 === ($i % $itemsPerRow)) : ?> 
+             </div><!-- end row -->
+        <?php $isRowOpened = false?>
+    <?php endif ?>
+<?php endforeach ?>
+<?php if (true === $isRowOpened) : ?>
+             </div><!-- end row -->
+<?php endif ?>
+<?php if (empty($dogs)) : ?>
+    <p><?php echo $this->translate('You have no dogs in your pack') ?></p>
+<?php endif ?>

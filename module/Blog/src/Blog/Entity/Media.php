@@ -28,6 +28,11 @@ class Media
     private $locale;
 
     /**
+     * @ORM\Column(name="publicdir", type="string", length=64)
+     */
+    private $publicdir;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TranslatedMedia", inversedBy="translations")
      * @ORM\JoinColumn(name="translatedmedia_id", referencedColumnName="id")
      */
@@ -229,9 +234,28 @@ class Media
         return $this->date;
     }
 
+    /**
+     * Handy method to get the src attribute
+     * @return string
+     */
     public function getSrc()
     {
-        return $this->getFile()->getSrc();
+        return $this->getPublicdir() . '/' . $this->getSlug();
+    }
+
+    /**
+     * Directory from which image is publicly
+     * accessible
+     */
+    public function setPublicdir($dir)
+    {
+        $this->publicdir = $publicdir;
+        return $this;
+    }
+
+    public function getPublicdir()
+    {
+        return $this->publicdir;
     }
 
     public function setFile(File $file)

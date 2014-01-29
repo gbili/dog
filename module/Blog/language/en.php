@@ -62,4 +62,7 @@ return array (
   'cause' => 'cause',
   'solution' => 'solution',
   '' => '',
+  'My Profile' => '',
+  'Add Dog' => '',
+  'My Pack' => '',
 );

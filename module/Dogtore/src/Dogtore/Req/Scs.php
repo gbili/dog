@@ -1,7 +1,7 @@
 <?php
 namespace Dogtore\Req;
 
-class Doggy extends \Gbili\Db\Req\AbstractReq
+class Scs extends \Gbili\Db\Req\AbstractReq
 {
     public function loadKeyedFields()
     {
@@ -50,7 +50,7 @@ class Doggy extends \Gbili\Db\Req\AbstractReq
                 // For child post slug and lvl1 category
                 . ' LEFT JOIN posts AS child_p ON p.root = child_p.root AND p.lvl + 1 = child_p.lvl'
                 . ' LEFT JOIN post_datas AS child_pd ON child_p.data_id = child_pd.id '
-                . ' LEFT JOIN categories AS child_c ON child_p.category_id = child_c.id'
+                . ' LEFT JOIN categories AS child_c ON child_p.category_id = child_c.id '
                 . ' LEFT JOIN categories AS child_pc ON child_pc.lft <= child_c.lft AND child_pc.rgt >= child_c.rgt AND child_pc.lvl = 1 '
                 // For the rest of the post info
                 . ' INNER JOIN users AS u ON p.user_id = u.id '

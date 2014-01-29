@@ -12,13 +12,13 @@ namespace Blog\Service;
 /**
  * Side navigation factory.
  */
-class SideNavigationFactory extends \Zend\Navigation\Service\AbstractNavigationFactory
+class SideNavigation1Factory extends \Zend\Navigation\Service\AbstractNavigationFactory
 {
     /**
      * @return string
      */
     protected function getName()
     {
-        return 'side';
+        return 'side_1';
     }
 }

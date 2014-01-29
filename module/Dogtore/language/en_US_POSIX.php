@@ -23,4 +23,8 @@ return array (
   'Message' => '',
   'Stack trace' => '',
   'Previous exceptions' => '',
+  'The requested controller could not be mapped to an existing controller class.' => '',
+  'Controller' => '',
+  'resolves to %s' => '',
+  'My Account' => '',
 );

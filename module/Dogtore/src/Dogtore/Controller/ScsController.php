@@ -1,7 +1,10 @@
 <?php
 namespace Dogtore\Controller;
 
-class DoggyController extends \Zend\Mvc\Controller\AbstractActionController
+/**
+ * scs : Symptom cause solution
+ */
+class ScsController extends \Zend\Mvc\Controller\AbstractActionController
 {
     protected $terms = array();
 
@@ -101,7 +104,7 @@ class DoggyController extends \Zend\Mvc\Controller\AbstractActionController
 
     protected function getDoggies($categorySlug = null, $termPhrase = null)
     {
-        $req = new \Dogtore\Req\Doggy();
+        $req = new \Dogtore\Req\Scs();
         $conditions = [];
 
         $conditions[] = array('post_locale' => array('=' => $this->locale()));
@@ -119,12 +122,13 @@ class DoggyController extends \Zend\Mvc\Controller\AbstractActionController
             $conditions[] = array('lvl1_category_slug' => array('=' => $categorySlug));
         }
 
-        return $req->getPostsWithLevel1Category(((empty($conditions))? [] : ['and' => $conditions]));
+        $posts = $req->getPostsWithLevel1Category(((empty($conditions))? [] : ['and' => $conditions]));
+        return $posts;
     }
 
     protected function getParentDoggy($postSlug)
     {
-        $req = new \Dogtore\Req\Doggy();
+        $req = new \Dogtore\Req\Scs();
         $conditions = [];
 
         $conditions[] = array('post_locale' => array('=' => $this->locale()));
@@ -135,7 +139,7 @@ class DoggyController extends \Zend\Mvc\Controller\AbstractActionController
 
     protected function getChildrenDoggies($postSlug)
     {
-        $req = new \Dogtore\Req\Doggy();
+        $req = new \Dogtore\Req\Scs();
         $conditions = [];
 
         $conditions[] = array('post_locale' => array('=' => $this->locale()));

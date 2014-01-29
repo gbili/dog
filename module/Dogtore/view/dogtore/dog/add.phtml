@@ -1,0 +1,131 @@
+<?php 
+$title = $this->translate('Add a dog to your pack');
+$this->headTitle($title);
+?>
+<div class="row">
+    <div class="col-sm-1 col-md-2 col-lg-2"></div>
+    <div class="col-sm-10 col-md-8 col-lg-8">
+        <?= $this->notify(((isset($messages))? $messages : array())) ?>
+    </div>
+    <div class="col-sm-1 col-md-2 col-lg-2"></div>
+</div>
+<div class="row">
+    <div class="col-sm-0 col-md-2 col-lg-3"></div>
+    <div class="col-sm-12 col-md-8 col-lg-6">
+        <h1><?= $this->escapeHtml($title) ?></h1>
+    </div>
+    <div class="col-sm-0 col-md-2 col-lg-3"></div>
+</div>
+<?php $this->formSameActionPrepare($form) ?>
+<?= $this->form()->openTag($form)?>
+<div class="row">
+    <div class="col-sm-0 col-md-2 col-lg-3"></div>
+    <div class="col-sm-12 col-md-8 col-lg-6">
+<?php
+    $elements       = $this->elementsFlatArray($form);
+    $restOfElements = array_diff_key($elements, array_flip(array('name', 'birthdate', 'gender', 'breed', 'color', 'weightkg', 'media', 'submit',))); 
+?>
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <?= $this->renderElement($elements['name']) ?>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-6 col-lg-7">
+                <?= $this->renderElement($elements['birthdate']) ?>
+            </div>
+            <div class="col-sm-0 col-md-1 col-lg-1"></div>
+            <div class="col-sm-12 col-md-5 col-lg-4">
+                <?= $this->renderElement($elements['gender']) ?>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <?= $this->renderElement($elements['breed']) ?>
+            </div>
+            <div class="col-sm-0 col-md-1 col-lg-1"></div>
+            <div class="col-sm-5 col-md-1 col-lg-1">
+                <?= $this->renderElement($elements['color']) ?>
+            </div>
+            <div class="col-sm-2 col-md-1 col-lg-1"></div>
+            <div class="col-sm-5 col-md-3 col-lg-3">
+                <?= $this->renderElement($elements['weightkg']) ?>
+            </div>
+        </div>
+        <?php foreach ($restOfElements as $element) : ?>
+            <?= $this->renderElement($element) ?>
+        <?php endforeach ?>
+    </div>
+    <div class="col-sm-0 col-md-2 col-lg-3"></div>
+</div>
+<div class="row media">
+    <div class="col-sm-0 col-md-2 col-lg-3"></div>
+    <div class="well col-sm-12 col-md-8 col-lg-6">
+        <?= $this->renderElement($elements['media']) ?>
+    </div>
+    <div class="col-sm-0 col-md-2 col-lg-3"></div>
+</div>
+<div class="row">
+    <div class="col-sm-0 col-md-2 col-lg-3"></div>
+    <div class="col-sm-12 col-md-8 col-lg-6">
+        <?= $this->renderElement($elements['submit']) ?>
+    </div>
+    <div class="col-sm-0 col-md-2 col-lg-3"></div>
+</div>
+<?= $this->form()->closeTag() ?>
+
+<script src="/js/image-picker.min.js" type="text/javascript"></script>
+<!-- <script src="/js/masonry.pkgd.min.js" type="text/javascript"></script> -->
+
+<script src="/js/modernizr.input.min.js" type="text/javascript"></script>
+<script src="/js/colpick.js" type="text/javascript"></script>
+<script src="/js/jquery.ui.datepicker.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="/css/colpick.css" type="text/css"/>
+<link rel="stylesheet" href="/css/jquery-ui-datepicker.css" type="text/css"/>
+
+<script type="text/javascript">
+//Image Picker
+$("select.image-picker").imagepicker();
+
+//Trying to masonize image picker
+//var container = $(".image_picker_selector").next('ul.thumbnails');
+//container.imagesLoaded(function (){
+//    $container.masonry({
+//    itemSelector : "li",
+//    });
+//});
+// End Image Picker
+
+//Color Picker
+if (!Modernizr.inputtypes.color) {
+    $(document).ready(function (){
+        var colorInput = $('#colpick');
+        var colorInputValue = colorInput.val();
+        if ('' != colorInputValue) {
+            colorInput.css('color', '#' + colorInputValue);
+            colorInput.css('background', '#' + colorInputValue);
+        }
+        colorInput.colpick({
+            layout:'hex',
+            submit:0,
+            colorScheme:'dark',
+            onChange:function(hsb,hex,rgb,el,bySetColor) {
+                $(el).css('background','#'+hex);
+                $(el).css('color','#'+hex);
+                // Fill the text box just if the color was set using the picker, and not the colpickSetColor function.
+                if(!bySetColor) $(el).val(hex);
+            }
+        }).keyup(function(){
+            $(this).colpickSetColor(this.value);
+        });
+    });
+}
+//End Color Picker
+//Date Picker
+if (!Modernizr.inputtypes.date) {
+    $(document).ready(function (){
+        $("#datepicker").datepicker();
+    });
+}
+//End Color Picker
+</script>

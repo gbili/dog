@@ -140,6 +140,8 @@ class MediaController extends \Zend\Mvc\Controller\AbstractActionController
     public function createMedias(array $files)
     {
         $objectManager = $this->em();
+        $config = $this->getServiceLocator()->get('Config');
+        $publicDir = $config['blog_constants']['images_src_dirpath'];
         $locale = $this->locale();
         foreach ($files as $file) {
             $media = new \Blog\Entity\Media();
@@ -147,6 +149,7 @@ class MediaController extends \Zend\Mvc\Controller\AbstractActionController
             $media->setSlug($basename);
             $media->setAlt($basename);
             $media->setFile($file);
+            $media->setPublicdir($publicDir);
             $media->setLocale($locale);
             $media->setDate(new \DateTime());
             $objectManager->persist($media);

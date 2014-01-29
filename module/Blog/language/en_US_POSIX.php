@@ -9,4 +9,7 @@ return array (
   'Add New Media' => '',
   'Files' => '',
   'Upload Files' => '',
+  'Add Dog' => '',
+  'My Profile' => '',
+  'My Pack' => '',
 );

@@ -9,7 +9,6 @@ return array(
             'profile_publicly_available',
             'auth_login',
             'auth_register',
-
         ),
     ),
     'blacklist' => array(

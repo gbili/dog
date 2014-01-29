@@ -64,10 +64,10 @@ class User extends \User\Entity\User implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'id', 'posts', 'uniquename', 'email', 'profile', 'password', 'role');
+            return array('__isInitialized__', 'id', 'posts', 'dogs', 'uniquename', 'email', 'profile', 'password', 'role');
         }
 
-        return array('__isInitialized__', 'id', 'posts', 'uniquename', 'email', 'profile', 'password', 'role');
+        return array('__isInitialized__', 'id', 'posts', 'dogs', 'uniquename', 'email', 'profile', 'password', 'role');
     }
 
     /**
@@ -268,7 +268,7 @@ class User extends \User\Entity\User implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function setProfile(\User\Entity\Profile $profile)
+    public function setProfile(\User\Entity\ProfileInterface $profile)
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setProfile', array($profile));
@@ -395,6 +395,72 @@ class User extends \User\Entity\User implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'removePosts', array($posts));
 
         return parent::removePosts($posts);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDogs()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getDogs', array());
+
+        return parent::getDogs();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function hasDogs()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'hasDogs', array());
+
+        return parent::hasDogs();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addDog(\Dogtore\Entity\Dog $dog)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addDog', array($dog));
+
+        return parent::addDog($dog);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addDogs(\Doctrine\Common\Collections\Collection $dogs)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addDogs', array($dogs));
+
+        return parent::addDogs($dogs);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeDog(\Dogtore\Entity\Dog $dog)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeDog', array($dog));
+
+        return parent::removeDog($dog);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeDogs(\Doctrine\Common\Collections\Collection $dogs)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeDogs', array($dogs));
+
+        return parent::removeDogs($dogs);
     }
 
 }
