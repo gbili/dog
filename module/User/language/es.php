@@ -24,4 +24,7 @@ return array (
   ':firstname :phrase' => '',
   '. His name is: ' => '',
   'You have one dog' => '',
+  'You have two dogs' => '',
+  'and' => '',
+  '. Their names are: ' => '',
 );

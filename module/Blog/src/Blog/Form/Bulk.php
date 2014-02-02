@@ -101,14 +101,24 @@ class Bulk extends \Zend\Form\Form
             'action-top' => array(
                 'required' => false,
                 'validators' => array(
-                    array('type' => 'Alnum'),
+                    array(
+                        'type' => 'Regex',
+                        'options' => array(
+                            'pattern' => '/[a-z][a-zA-Z]+/'
+                        ),
+                    )
                 ),
             ),
 
             'action-bottom' => array(
                 'required' => false,
                 'validators' => array(
-                    array('type' => 'Alnum'),
+                    array(
+                        'type' => 'Regex',
+                        'options' => array(
+                            'pattern' => '/[a-z][a-zA-Z]+/'
+                        ),
+                    )
                 ),
             ),
 

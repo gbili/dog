@@ -23,7 +23,8 @@ class FileEntityUploader extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
         if (!isset($config['file_hydrator'])) {
             throw new \Exception('You must set a file hydrator to allow the fileEntityUploader to save entities');
         }
-        $fileHydrator       = $config['file_hydrator'];
+        $fileHydratorFQCN = $config['file_hydrator'];
+        $fileHydrator       = new $fileHydratorFQCN;
 
         $routeSuccess       = ((isset($config['route_success']))?$config['route_success']:null);
         $routeSuccessParams = ((isset($config['route_success_params']))?$config['route_success_params'] : array());
@@ -42,6 +43,10 @@ class FileEntityUploader extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
         $fileUploader->setFileHydrator($fileHydrator)
                      ->setFormName('file_form')
                      ->setFileInputName('file_input');
+
+        if (isset($config['include_js_script'])) {
+            $fileUploader->setIncludeScriptFilePath($config['include_js_script']);
+        }
 
         if ($controller->getRequest()->isPost()) {
             $fileUploader->setRequest($controller->getRequest())

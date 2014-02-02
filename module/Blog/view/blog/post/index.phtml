@@ -1,5 +1,5 @@
 <?php
-$title = $this->translate('Posts', 'blog');
+$title = $this->translate('Posts');
 $this->headTitle($title);
 $form->setAttribute('action', $this->url(null ,array('action' => 'bulk'), true));
 $form->setAttribute('class', 'form-inline');
@@ -13,11 +13,10 @@ $form->prepare();
     <div class="col-sm-4 col-md-4 col-4">
     </div>
     <div class="col-sm-4 col-md-4 col-4">
-        <p><a class="btn btn-success" href="<?php echo $this->url('blog', array(
+        <p><a class="btn btn-success" href="<?php echo $this->url(null, array(
             'lang' => $this->lang(),
-            'controller' => 'post', 
             'action'=>'create',
-        ), true);?>"><?php echo $this->translate('Add New Post', 'blog')?></a></p>
+        ), true);?>"><?php echo $this->translate('Add New Post')?></a></p>
     </div>
 </div>
 <?php echo $this->form()->openTag($form) ?>
@@ -31,12 +30,12 @@ $form->prepare();
 </div>
 <table class="table table-bordered table-hover">
     <tr>
-        <th><?php echo $this->translate('Bulk', 'blog')?></th>
-        <th><?php echo $this->translate('Id', 'blog')?></th>
-        <th><?php echo $this->translate('Title', 'blog')?></th>
-        <th><?php echo $this->translate('Slug', 'blog')?></th>
-        <th><?php echo $this->translate('Category', 'blog')?></th>
-        <th><?php echo $this->translate('Locale', 'blog')?></th>
+        <th><?php echo $this->translate('Bulk')?></th>
+        <th><?php echo $this->translate('Id')?></th>
+        <th><?php echo $this->translate('Title')?></th>
+        <th><?php echo $this->translate('Slug')?></th>
+        <th><?php echo $this->translate('Category')?></th>
+        <th><?php echo $this->translate('Locale')?></th>
         <th>&nbsp;</th>
         <th>&nbsp;</th>
     </tr>
@@ -49,33 +48,31 @@ $form->prepare();
 	        <td><?php echo $this->escapeHtml($post->getCategory()->getName());?></td>
 	        <td><?php echo $this->escapeHtml($post->getLocale());?></td>
 	        <td>
-                <a href="<?php echo $this->url('blog', array(
+                <a href="<?php echo $this->url(null , array(
                     'lang' => $post->getLocale(),
-                    'controller' => 'post', 
                     'action' => 'edit', 
                     'id' => $post->getId(),
-                )); ?>"><?php echo $this->translate('Edit', 'blog')?></a>
+                )); ?>"><?php echo $this->translate('Edit')?></a>
 
 	        </td>
 	        <td>
-                <a href="<?php echo $this->url('blog', array(
+                <a href="<?php echo $this->url(null, array(
                     'lang' => $this->lang(),
-                    'controller' => 'post', 
                     'action' => 'delete',
                     'id' => $post->getId()
-                )); ?>" onclick="return confirm('Are you sure?')"><?php echo $this->translate('Delete', 'blog')?></a>
+                )); ?>" onclick="return confirm('Are you sure?')"><?php echo $this->translate('Delete')?></a>
 	        </td>
 	    </tr>
     <?php endforeach; ?>
     <?php if (empty($posts)) : ?>
 	    <tr>
-            <td><?php echo $this->translate('You have not written any posts for the moment...', 'blog')?></td>
+            <td><?php echo $this->translate('You have not written any posts for the moment...')?></td>
 	    </tr>
     <?php endif ?>
 </table>
 <div class="row">
     <div class="col-sm-8 col-md-8 col-lg-8">
-    <?php echo $this->renderElement($form->get('action-top')) ?>
+    <?php echo $this->renderElement($form->get('action-bottom')) ?>
     <?php echo $this->renderElement($form->get('submit')) ?>
     </div>
     <div class="col-sm-4 col-md-4 col-lg-4">

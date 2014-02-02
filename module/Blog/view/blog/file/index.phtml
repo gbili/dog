@@ -7,11 +7,11 @@ $form->setAttribute('role', 'form');
 $this->formActionPrepare($form, 'form-inline', true);
 ?>
 <h1><?php echo $this->escapeHtml($title); ?></h1>
-<p><a href="<?php echo $this->url('blog', array(
+<p><a href="<?php echo $this->url(null , array(
     'lang' => $this->lang(),
-    'controller' => 'file', 
+    'controller' => 'file_controller', 
     'action'=>'upload',
-));?>"><?php echo $this->translate('Add new File', 'blog') ?></a></p>
+));?>"><?php echo $this->translate('Add new File') ?></a></p>
 <?php echo $this->form()->openTag($form) ?>
 <div class="row">
     <div class="col-sm-8 col-md-8 col-lg-8">
@@ -26,12 +26,12 @@ $this->formActionPrepare($form, 'form-inline', true);
 </div><!-- ENDOF Form action dropdown and submit Row -->
 <table class="table table-bordered table-hover">
     <tr>
-        <th><?php echo $this->translate('Bulk','blog')?></th>
-        <th><?php echo $this->translate('Name','blog')?></th>
-        <th><?php echo $this->translate('Dirpath','blog')?></th>
-        <th><?php echo $this->translate('Basename','blog')?></th>
-        <th><?php echo $this->translate('Type','blog')?></th>
-        <th><?php echo $this->translate('Size','blog')?></th>
+        <th><?php echo $this->translate('Bulk')?></th>
+        <th><?php echo $this->translate('Name')?></th>
+        <th><?php echo $this->translate('Dirpath')?></th>
+        <th><?php echo $this->translate('Basename')?></th>
+        <th><?php echo $this->translate('Type')?></th>
+        <th><?php echo $this->translate('Size')?></th>
         <th>&nbsp;</th>
         <th>&nbsp;</th>
         <th>&nbsp;</th>
@@ -45,36 +45,36 @@ $this->formActionPrepare($form, 'form-inline', true);
 	        <td><?php echo $this->escapeHtml($file->getType());?></td>
 	        <td><?php echo $this->escapeHtml($file->getSize());?></td>
 	        <td>
-                <a href="<?php echo $this->url('blog', array(
+                <a href="<?php echo $this->url(null, array(
                     'lang' => $this->lang(),
-                    'controller' => 'media', 
+                    'controller' => 'media_controller', 
                     'action' => 'create',
                     'id' => $file->getId()
-                )); ?>"><?php echo $this->translate('Link', 'blog')?></a>
+                )); ?>"><?php echo $this->translate('Link')?></a>
 	        </td>
 	        <td>
-                <a href="<?php echo $this->url('blog', array(
+                <a href="<?php echo $this->url(null, array(
                     'lang' => $this->lang(),
-                    'controller' => 'file', 
+                    'controller' => 'file_controller', 
                     'action' => 'edit', 
                     'id' => $file->getId(),
-                )); ?>"><?php echo $this->translate('Edit', 'blog')?></a>
+                )); ?>"><?php echo $this->translate('Edit')?></a>
 
 	        </td>
 	        <td>
-                <a href="<?php echo $this->url('blog', array(
+                <a href="<?php echo $this->url(null, array(
                     'lang' => $this->lang(),
-                    'controller' => 'file', 
+                    'controller' => 'file_controller', 
                     'action' => 'delete',
                     'id' => $file->getId()
-                )); ?>" onclick="return confirm('Are you sure?')"><?php echo $this->translate('Delete', 'blog')?></a>
+                )); ?>" onclick="return confirm('Are you sure?')"><?php echo $this->translate('Delete')?></a>
 	        </td>
 	    </tr>
     <?php endforeach; ?>
 </table>
 <div class="row">
     <div class="col-sm-8 col-md-8 col-lg-8">
-        <?php echo $this->renderElement($form->get('action-top')) ?>
+        <?php echo $this->renderElement($form->get('action-bottom')) ?>
         <?php echo $this->renderElement($form->get('submit')) ?>
     </div>
     <div class="col-sm-4 col-md-4 col-lg-4">

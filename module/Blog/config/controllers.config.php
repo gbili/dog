@@ -2,9 +2,9 @@
 namespace Blog;
 return array(
         'invokables' => array(
-            'post' => 'Blog\Controller\PostController',
-            'category' => 'Blog\Controller\CategoryController',
-            'media' => 'Blog\Controller\MediaController',
-            'file' => 'Blog\Controller\FileController',
+            'post_controller'     => 'Blog\Controller\PostController',
+            'category_controller' => 'Blog\Controller\CategoryController',
+            'media_controller'    => 'Blog\Controller\MediaController',
+            'file_controller'     => 'Blog\Controller\FileController',
         ),
     );

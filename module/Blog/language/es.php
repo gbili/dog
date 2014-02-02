@@ -50,4 +50,9 @@ return array (
   'edit' => 'modificar',
   'My Profile' => '',
   'Add Dog' => '',
+  'My Pack' => '',
+  'upload' => '',
+  'media' => '',
+  '<label for="file_input">Select</label>' => '',
+  'unlink' => '',
 );

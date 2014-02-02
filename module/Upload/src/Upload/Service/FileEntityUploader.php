@@ -3,14 +3,30 @@ namespace Upload\Service;
 
 class FileEntityUploader
 {
-    private $hydrator;
-    private $request;
-    private $postData;
-    private $fileInputName;
-    private $formName;
-    private $messages;
-    private $files = array();
-    private $form = null;
+    /**
+     * Points to a php file containing
+     * javascript code to override ajax.file_upload.js.phtml
+     * TODO Weird
+     *
+     * @var string
+     */
+    protected $includeScriptFilePath;
+
+    protected $hydrator;
+
+    protected $request;
+
+    protected $postData;
+
+    protected $fileInputName;
+
+    protected $formName;
+
+    protected $messages;
+
+    protected $files = array();
+
+    protected $form = null;
 
     public function getFormCopy()
     {
@@ -36,6 +52,32 @@ class FileEntityUploader
         $this->setForm($form);
 
         return $form;
+    }
+
+    /**
+     * This is very weird but... It allows overriding the
+     * ajax.file_upload.js.phtml script vars: uploadSuccess
+     * uploadFail. You can use this to set different  
+     * behaviors on success or on fail
+     * TODO Change this to javascript only solution? 
+     */
+    public function setIncludeScriptFilePath($filePath)
+    {
+        if (!is_file($filePath)) {
+            throw new \Exception('File is not reachable: ' . print_r($filePath, true));
+        }
+        $this->includeScriptFilePath = $filePath;
+        return $this;
+    }
+
+    public function hasIncludeScriptFilePath()
+    {
+        return null !== $this->includeScriptFilePath;
+    }
+
+    public function getIncludeScriptFilePath()
+    {
+        return $this->includeScriptFilePath;
     }
 
     public function setForm($form)

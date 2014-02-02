@@ -1,5 +1,5 @@
 <?php
-$title = $this->translate('Categories', 'blog');
+$title = $this->translate('Categories');
 $this->headTitle($title);
 $form->setAttribute('action', $this->url(null ,array('action' => 'bulk'), true));
 $form->setAttribute('role', 'form');
@@ -14,13 +14,12 @@ $this->formActionPrepare($form, 'form-inline', true);
     </div>
     <div class="col-sm-4 col-md-4 col-4">
         <p><a class="btn btn-success" href="<?php echo $this->url(
-            'blog', 
+            null, 
             array(
-                'controller' => 'category', 
                 'action'=>'create',
             ),
             true
-        )?>"><?php echo $this->translate('Add New Category', 'blog') ?></a></p>
+        )?>"><?php echo $this->translate('Add New Category') ?></a></p>
     </div>
 </div><!-- ENDOF Add New Category Button Row-->
 
@@ -53,9 +52,9 @@ $this->formActionPrepare($form, 'form-inline', true);
 	    <tr>
             <td><input type="checkbox" name="categories[]" value="<?php echo $this->escapeHtml($category['id']) ?>"></td>
             <td style="padding-left:<?php echo ($category['lvl'] * 2) + 1?>em;"><?php echo $category['name'];?></td>
-	        <td><?php echo $this->translate($category['locale'], 'blog') ?></td>
+	        <td><?php echo $this->translate($category['locale']) ?></td>
 <?php if ($user->isAdmin()) : ?>
-            <td><?php echo ((isset($category['translated_category_id']))? $category['translated_category_id'] : $this->translate('N/A', 'blog')) ?></td>
+            <td><?php echo ((isset($category['translated_category_id']))? $category['translated_category_id'] : $this->translate('N/A')) ?></td>
 <?php endif ?>
 	        <td>
                 <a href="<?php echo $this->url(null, array('action'=>'edit', 'id' => $category['id']), true); ?>"><?php echo $this->translate('Edit') ?></a>
@@ -69,19 +68,19 @@ $this->formActionPrepare($form, 'form-inline', true);
                         'fourthparam' => $nonce,
                     ),
                     true
-                ); ?>" onclick="return confirm('Are you sure?')"><?php echo $this->translate('Delete', 'blog') ?></a>
+                ); ?>" onclick="return confirm('Are you sure?')"><?php echo $this->translate('Delete') ?></a>
 	        </td>
 	    </tr>
     <?php endforeach; ?>
     <?php if (empty($categories)) : ?>
 	    <tr>
-            <td><?php echo $this->translate('You have not added any category for the moment...', 'blog')?></td>
+            <td><?php echo $this->translate('You have not added any category for the moment...')?></td>
 	    </tr>
     <?php endif ?>
 </table>
 <div class="row listing">
     <div class="col-sm-8 col-md-8 col-lg-8">
-        <?php echo $this->renderElement($form->get('action-top')) ?>
+        <?php echo $this->renderElement($form->get('action-bottom')) ?>
         <?php echo $this->renderElement($form->get('submit')) ?>
     </div>
     <div class="col-sm-4 col-md-4 col-lg-4">

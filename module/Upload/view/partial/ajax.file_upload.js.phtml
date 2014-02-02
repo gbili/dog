@@ -50,6 +50,21 @@ function showMessages(messages) {
     }
 }
 
+var uploadSuccess = function (response) {
+    showMessages(response.messages);
+};
+
+var uploadFail = function (response) {
+    showMessages(response.messages);
+};
+
+<?php /* Allow script inclusion to override existing behaviour */ ?>
+<?php if ($fileUploader->hasIncludeScriptFilePath()) : ?>
+</script>
+    <?php include $fileUploader->getIncludeScriptFilePath() ?>    
+<script type="text/javascript">
+<?php endif ?>
+
 $(function() {
     // Register a 'submit' event listener on the form to perform the AJAX POST
     $('#<?= $fileUploader->getFormName() ?>').on('submit', function(e) {
@@ -76,7 +91,7 @@ $(function() {
                 if (response.status) {
                     // TODO: Do something with a successful form post, like redirect
                     // window.location.replace(response.redirect);
-                    showMessages(response.messages);
+                    uploadSuccess(response)
                 } else {
                     // Clear the file input, otherwise the same file gets re-uploaded
                     // http://stackoverflow.com/a/1043969
@@ -84,7 +99,7 @@ $(function() {
                     fileInput.replaceWith( fileInput.val('').clone( true ) );
 
                     // TODO: Do something with these errors
-                    showMessages(response.messages);
+                    uploadFail(response);
                 }
             },
             error: function(a, b, c) {

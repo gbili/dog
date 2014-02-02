@@ -10,7 +10,7 @@ $textDomain = prev($fileparts);
 
 $plural   = 'Categories';
 
-$title = $this->translate($plural, 'blog');
+$title = $this->translate($plural);
 $this->headTitle($title);
 $form->setAttribute('action', $this->url(null ,array('action' => 'bulk'), true));
 $form->setAttribute('class', 'form-horizontal');
@@ -26,13 +26,12 @@ $form->prepare();
     </div>
     <div class="col-sm-4 col-md-4 col-4">
         <p><a class="btn btn-success" href="<?php echo $this->url(
-            'blog', 
+            null, 
             array(
-                'controller' => $controller,
                 'action'=>'create',
             ),
             true
-        )?>"><?php echo $this->translate('Add New ' . ucfirst($singular) , 'blog') ?></a></p>
+        )?>"><?php echo $this->translate('Add New ' . ucfirst($singular)) ?></a></p>
     </div>
 </div><!-- ENDOF Add New Category Button Row-->
 
@@ -54,11 +53,11 @@ $form->prepare();
 
 <table class="table table-bordered table-hover">
     <tr>
-        <th><?php echo $this->translate('Bulk', 'blog')?></th>
-        <th><?php echo $this->translate('Category', 'blog')?></th>
-        <th><?php echo $this->translate('Lang', 'blog')?></th>
+        <th><?php echo $this->translate('Bulk')?></th>
+        <th><?php echo $this->translate('Category')?></th>
+        <th><?php echo $this->translate('Lang')?></th>
 <?php if ($user->isAdmin()) : ?>
-        <th><?php echo $this->translate('Translated Id', 'blog')?></th>
+        <th><?php echo $this->translate('Translated Id')?></th>
 <?php endif ?>
         <th>&nbsp;</th>
         <th>&nbsp;</th>
@@ -67,38 +66,36 @@ $form->prepare();
 	    <tr>
             <td><input type="checkbox" name="categories[]" value="<?php echo $this->escapeHtml($category['id']) ?>"></td>
             <td style="padding-left:<?php echo ($category['lvl'] * 2) + 1?>em;"><?php echo $category['name'];?></td>
-	        <td><?php echo $this->translate($category['locale'], 'blog') ?></td>
+	        <td><?php echo $this->translate($category['locale']) ?></td>
 <?php if ($user->isAdmin()) : ?>
-            <td><?php echo ((isset($category['translated_category_id']))? $category['translated_category_id'] : $this->translate('N/A', 'blog')) ?></td>
+            <td><?php echo ((isset($category['translated_category_id']))? $category['translated_category_id'] : $this->translate('N/A')) ?></td>
 <?php endif ?>
 	        <td>
                 <a href="<?php echo $this->url(
-                    'blog', 
+                    null, 
                     array(
-                        'controller' => 'category', 
                         'action'=>'edit', 
                         'id' => $category['id']
                     ),
                     true
-                ); ?>"><?php echo $this->translate('Edit', 'blog') ?></a>
+                ); ?>"><?php echo $this->translate('Edit') ?></a>
 	        </td>
 	        <td>
                 <a href="<?php echo $this->url(
-                    'blog', 
+                    null, 
                     array(
-                        'controller' => 'category', 
                         'action'=>'delete', 
                         'id' => $category['id'],
                         'fourthparam' => $nonce,
                     ),
                     true
-                ); ?>" onclick="return confirm('Are you sure?')"><?php echo $this->translate('Delete', 'blog') ?></a>
+                ); ?>" onclick="return confirm('Are you sure?')"><?php echo $this->translate('Delete') ?></a>
 	        </td>
 	    </tr>
     <?php endforeach; ?>
     <?php if (empty($categories)) : ?>
 	    <tr>
-            <td><?php echo $this->translate('You have not added any category for the moment...', 'blog')?></td>
+            <td><?php echo $this->translate('You have not added any category for the moment...')?></td>
 	    </tr>
     <?php endif ?>
 </table>

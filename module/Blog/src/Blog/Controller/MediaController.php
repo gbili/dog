@@ -103,51 +103,11 @@ class MediaController extends \Zend\Mvc\Controller\AbstractActionController
         return $this->redirectToMediaLibrary();
     }
 
-    public function uploadAction2()
-    {
-        $fileUploader = new \Blog\Service\FileEntityUploader();
-
-        if (!$this->getRequest()->isPost()) {
-            return new \Zend\View\Model\ViewModel(array(
-                'messages' => array(),
-                'form' => $fileUploader->getFormCopy(),
-            ));
-        }
-
-        $fileUploader->setEntityManager($this->em())
-                     ->setRequest($this->getRequest());
-
-        if (!$fileUploader->uploadFiles()) {
-            if ($fileUploader->hasFiles()) {
-                $this->mediaEntityCreator($fileUploader->getFiles());
-            }
-            return new \Zend\View\Model\ViewModel(array(
-                'messages' => $fileUploader->getMessages(),
-                'form' => $fileUploader->getFormCopy(),
-            ));
-        }
-
-        $this->mediaEntityCreator($fileUploader->getFiles());
-
-        return $this->redirectToMediaLibrary();
-    }
-
     public function uploadAction()
     {
-        return $this->fileUploader(array(
-            'file_hydrator' => $this->getServiceLocator()->get('uploadFileHydrator'),
-            'route_success' => 'blog',
-            'route_success_params' => array('action' => 'index'),
-            'route_success_reuse' => true,
-            /**
-             * Create medias with the uploaded files
-             */
-            'post_upload_callback' => function ($fileUploader, $controller) {
-                if ($fileUploader->hasFiles()) {
-                    $controller->mediaEntityCreator($fileUploader->getFiles());
-                }
-            },
-        ));
+        $config = $this->getServiceLocator()->get('Config');
+        $fileUploaderConfig = $config['file_uploader']['media_controller'];
+        return $this->fileUploader($fileUploaderConfig);
     }
 
     /**
@@ -167,20 +127,15 @@ class MediaController extends \Zend\Mvc\Controller\AbstractActionController
     public function redirectToMediaView(\Blog\Entity\Media $media)
     {
         return $this->redirect()->toRoute('blog_media_view', array(
-            'controller' => 'media',
             'action' => 'view',
-            'slug' => $media->getSlug(),
-            'lang' => $this->locale(),
-        ));
+        ), true);
     }
 
     public function redirectToMediaLibrary()
     {
-        return $this->redirect()->toRoute('blog', array(
-            'controller' => 'media', 
+        return $this->redirect()->toRoute(null, array(
             'action'     => 'index', 
-            'lang' => $this->locale(),
-        ));
+        ), true);
     }
 
     /**

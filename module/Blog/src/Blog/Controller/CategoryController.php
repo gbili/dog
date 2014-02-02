@@ -174,12 +174,11 @@ class CategoryController extends \Zend\Mvc\Controller\AbstractActionController
     public function redirectToCategoriesList(array $overrideParams=array())
     {
         $params = array(
-            'controller' => 'category', 
             'action' => 'index', 
         );
         if (!empty($overrideParams)) {
             $params = array_merge($params, $overrideParams);
         }
-        return $this->redirect()->toRoute('blog', $params, true);
+        return $this->redirect()->toRoute(null, $params, true);
     }
 }

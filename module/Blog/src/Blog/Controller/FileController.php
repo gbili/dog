@@ -21,7 +21,7 @@ class FileController extends \Zend\Mvc\Controller\AbstractActionController
     public function bulkAction()
     {
         if (!$this->request->isPost()) {
-            return $this->redirect()->toRoute('blog', array('controller' => 'file', 'action' => 'index'));
+            return $this->redirect()->toRoute('blog_file', array('controller' => 'file_controller', 'action' => 'index'));
         }
 
         $form = new \Blog\Form\FileBulk('bulk-action');
@@ -34,7 +34,7 @@ class FileController extends \Zend\Mvc\Controller\AbstractActionController
         $form->setData($formData = $this->request->getPost());
 
         if (!$form->isValid()) {
-            return $this->redirect()->toRoute('blog', array('controller' => 'file', 'action' => 'index'));
+            return $this->redirect()->toRoute('blog_file', array('controller' => 'file_controller', 'action' => 'index'));
         }
 
         $formValidData = $form->getData();
@@ -50,7 +50,7 @@ class FileController extends \Zend\Mvc\Controller\AbstractActionController
     {
         //translations is limited to admin
         if (!$this->identity()->isAdmin()) {
-            return $this->redirect()->toRoute('blog', array('controller' => 'file', 'action' => 'index'));
+            return $this->redirect()->toRoute('blog_file', array('controller' => 'file_controller', 'action' => 'index'));
         }
 
         $em = $this->em();
@@ -63,7 +63,7 @@ class FileController extends \Zend\Mvc\Controller\AbstractActionController
             }
         }
         $this->flashMessenger()->addSuccessMessage('Files Deleted');
-        return $this->redirect()->toRoute('blog', array('controller' => 'file', 'action' => 'index'));
+        return $this->redirect()->toRoute('blog_file', array('controller' => 'file_controller', 'action' => 'index'));
     }
 
     /**
@@ -100,11 +100,9 @@ class FileController extends \Zend\Mvc\Controller\AbstractActionController
 
     public function uploadAction()
     {
+        $config = $this->getServiceLocator()->get('Config');
+        $fileUploaderConfig = $config['file_uploader']['file_controller'];
         return $this->fileUploader(array(
-            'file_hydrator' => $this->getServiceLocator()->get('uploadFileHydrator'),
-            'route_success' => 'blog',
-            'route_success_params' => array('action' => 'index'),
-            'route_success_reuse' => true,
         ));
     }
 

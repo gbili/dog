@@ -5,13 +5,12 @@ if (!isset($__VIEWFILE__)) {
 $fileparts = explode('/', $__VIEWFILE__);
 $action = substr(end($fileparts), 0, -6);
 $controller = prev($fileparts); 
-$title = ucfirst($this->translate($action, 'blog')) . ' ' . ucfirst($this->translate($controller, 'blog'));
+$title = ucfirst($this->translate($action)) . ' ' . ucfirst($this->translate($controller));
 $route = array(
     'lang' => $this->lang(),
-    'controller' => $controller,
     'action' => $action
 );
-$form->setAttribute('action', $this->url('blog',$route));
+$form->setAttribute('action', $this->url(null ,$route));
 $this->headTitle($title);
 $form->prepare();
 ?>

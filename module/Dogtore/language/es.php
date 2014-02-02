@@ -41,4 +41,7 @@ return array (
   'Tell people why you chose your dog. Was it the breed? Was it because of a great story?' => '',
   'Why this dog?' => '',
   'Picture' => '',
+  'My Pack' => '',
+  'Add Dog' => '',
+  'View' => '',
 );

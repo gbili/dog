@@ -2,20 +2,53 @@
 namespace Blog;
 return array(
         'routes' => array(
-            'blog' => array(
+            'blog_post' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '[/:lang]/:controller[/:action][/:id][/:fourthparam]',
+                    'route' => '[/:lang]/post[/:action][/:id][/:fourthparam]',
                     'constraints' => array(
                         'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
-                        'controller' => '(?:post)|(?:category)|(?:media)',
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id' => '[0-9]+',
                         'fourthparam' => '[a-zA-Z0-9_-]+',
                     ),
                     'defaults' => array(
                         'lang' => 'en',
-                        'controller' => 'post',
+                        'controller' => 'post_controller',
+                        'action' => 'index',
+                    ),
+                ),
+            ),
+            'blog_category' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '[/:lang]/category[/:action][/:id][/:fourthparam]',
+                    'constraints' => array(
+                        'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]+',
+                        'fourthparam' => '[a-zA-Z0-9_-]+',
+                    ),
+                    'defaults' => array(
+                        'lang' => 'en',
+                        'controller' => 'category_controller',
+                        'action' => 'index',
+                    ),
+                ),
+            ),
+            'blog_media' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '[/:lang]/media[/:action][/:id][/:fourthparam]',
+                    'constraints' => array(
+                        'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]+',
+                        'fourthparam' => '[a-zA-Z0-9_-]+',
+                    ),
+                    'defaults' => array(
+                        'lang' => 'en',
+                        'controller' => 'media_controller',
                         'action' => 'index',
                     ),
                 ),
@@ -30,7 +63,7 @@ return array(
                     ),
                     'defaults' => array(
                         'lang' => 'en',
-                        'controller' => 'media',
+                        'controller' => 'media_controller',
                         'action' => 'view',
                     ),
                 ),
@@ -47,7 +80,7 @@ return array(
                     ),
                     'defaults' => array(
                         'lang' => 'en',
-                        'controller' => 'file',
+                        'controller' => 'file_controller',
                         'action' => 'index',
                     ),
                 ),

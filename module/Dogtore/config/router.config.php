@@ -2,18 +2,17 @@
 namespace Dogtore;
 return array(
     'routes' => array(
-
         'dogtore_index' => array(
             'type' => 'Zend\Mvc\Router\Http\Segment',
             'options' => array(
-                'route'    => '/[:lang][/][:post_slug][/:related]',
+                'route'    => '/[:lang/][:post_slug/][:related/]',
                 'constraints' => array(
                     'lang' => $preConfig['regex_patterns']['lang'],
                     'post_slug' => '[a-z0-9]+[a-z0-9-]+[a-z0-9]+',
                     'related' => '(?:children)|(?:parent)',
                 ),
                 'defaults' => array(
-                    'lang' => 'en',
+                    'lang'          => 'en',
                     'controller'    => 'scs',
                     'action'        => 'index',
                 ),
