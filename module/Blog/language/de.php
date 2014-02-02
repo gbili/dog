@@ -47,4 +47,10 @@ return array (
   'Bulk' => '',
   'Lang' => '',
   'You have not added any category for the moment...' => '',
+  'My Profile' => '',
+  'My Pack' => '',
+  'Add Dog' => '',
+  'Locale' => '',
+  'file' => '',
+  '<label for="file_input">Select</label>' => '',
 );

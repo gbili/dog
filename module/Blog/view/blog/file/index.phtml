@@ -1,6 +1,10 @@
 <?php
 $title = 'Files Library';
 $this->headTitle($title);
+
+$form->setAttribute('action', $this->url(null ,array('action' => 'bulk'), true));
+$form->setAttribute('role', 'form');
+$this->formActionPrepare($form, 'form-inline', true);
 ?>
 <h1><?php echo $this->escapeHtml($title); ?></h1>
 <p><a href="<?php echo $this->url('blog', array(
@@ -8,9 +12,22 @@ $this->headTitle($title);
     'controller' => 'file', 
     'action'=>'upload',
 ));?>"><?php echo $this->translate('Add new File', 'blog') ?></a></p>
+<?php echo $this->form()->openTag($form) ?>
+<div class="row">
+    <div class="col-sm-8 col-md-8 col-lg-8">
+        <?php echo $this->renderElement($form->get('action-top')) ?>
+        <?php echo $this->renderElement($form->get('submit')) ?>
+    </div>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+<!-- Page selector -->
+<!--    <?php //echo $this->paginator($paginator) ?> -->
+<!-- ENDOF Page selector -->
+    </div>
+</div><!-- ENDOF Form action dropdown and submit Row -->
 <table class="table table-bordered table-hover">
     <tr>
-    <th><?php echo $this->translate('Name','blog')?></th>
+        <th><?php echo $this->translate('Bulk','blog')?></th>
+        <th><?php echo $this->translate('Name','blog')?></th>
         <th><?php echo $this->translate('Dirpath','blog')?></th>
         <th><?php echo $this->translate('Basename','blog')?></th>
         <th><?php echo $this->translate('Type','blog')?></th>
@@ -21,6 +38,7 @@ $this->headTitle($title);
     </tr>
     <?php foreach($files as $file) : ?>
 	    <tr>
+            <td><input type="checkbox" name="files[]" value="<?php echo $this->escapeHtml($file->getId()) ?>"></td>
 	        <td><?php echo $this->escapeHtml($file->getName());?></td>
 	        <td><?php echo $this->escapeHtml($file->getDirpath());?></td>
 	        <td><?php echo $this->escapeHtml($file->getBasename());?></td>
@@ -54,3 +72,15 @@ $this->headTitle($title);
 	    </tr>
     <?php endforeach; ?>
 </table>
+<div class="row">
+    <div class="col-sm-8 col-md-8 col-lg-8">
+        <?php echo $this->renderElement($form->get('action-top')) ?>
+        <?php echo $this->renderElement($form->get('submit')) ?>
+    </div>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+<!-- Page selector -->
+<!--    <?php //echo $this->paginator($paginator) ?> -->
+<!-- ENDOF Page selector -->
+    </div>
+</div><!-- ENDOF Form action dropdown and submit Row -->
+<?php echo $this->form()->closeTag() ?>

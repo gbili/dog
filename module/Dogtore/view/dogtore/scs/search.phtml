@@ -1,5 +1,5 @@
 <?php require_once __DIR__ . '/../../partial/search.phtml' ?> 
 
-<?= $this->notify(((isset($messages))? $messages : array())) ?>
+<?php $this->notify(((isset($messages))? $messages : array())) ?>
 
 <?php require_once __DIR__ . '/../../partial/post_listing.phtml' ?> 

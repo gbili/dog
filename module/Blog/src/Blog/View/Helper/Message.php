@@ -17,9 +17,14 @@ class Message extends \Zend\View\Helper\AbstractHelper
      * Translate a message
      * @return string
      */
-    public function __invoke($class, $message)
+    public function __invoke($class, $message, $former = null)
     {
-        return "<div class=\"alert alert-$class cancel-padding\">"
+        if (null !== $former) {
+            $message = "<strong>$former</strong>, $message";
+        }
+
+        return "<div class=\"alert alert-dismiss alert-$class cancel-padding\">"
+               . '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>' 
                . "<p>$message</p>"
              . '</div>';
     }

@@ -466,12 +466,12 @@ class Media extends \Blog\Entity\Media implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function setPublicdir($dir)
+    public function setPublicdir($publicdir)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setPublicdir', array($dir));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setPublicdir', array($publicdir));
 
-        return parent::setPublicdir($dir);
+        return parent::setPublicdir($publicdir);
     }
 
     /**

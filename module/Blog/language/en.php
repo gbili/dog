@@ -65,4 +65,7 @@ return array (
   'My Profile' => '',
   'Add Dog' => '',
   'My Pack' => '',
+  '<label for="file-input">Select</label>' => '',
+  '<label for="file_input">Select</label>' => '',
+  'fileUploadMessage' => '',
 );

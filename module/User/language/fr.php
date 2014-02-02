@@ -60,6 +60,10 @@ return array (
   '. His name is: ' => '. Il s\'appelle: ',
   'has four dogs' => 'a quatre chiens',
   'You have one dog' => 'Vous avez un chien',
+  'You have two dogs' => 'Vous avez deux chiens',
+  'You have three dogs' => 'Vous avez trois chiens',
   'You have four dogs' => 'Vous avez quatre chiens',
-  'You have two dogs' => '',
+  'You have five dogs' => 'Vous avez cinq chiens',
+  'You have six dogs' => 'Vous avez six chiens',
+  'You have seven dogs' => 'Vous avez sept chiens',
 );

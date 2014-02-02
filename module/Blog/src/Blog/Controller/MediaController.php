@@ -103,7 +103,7 @@ class MediaController extends \Zend\Mvc\Controller\AbstractActionController
         return $this->redirectToMediaLibrary();
     }
 
-    public function uploadAction()
+    public function uploadAction2()
     {
         $fileUploader = new \Blog\Service\FileEntityUploader();
 
@@ -114,47 +114,40 @@ class MediaController extends \Zend\Mvc\Controller\AbstractActionController
             ));
         }
 
-        $fileUploader->setFileInputName('file')
-                     ->setEntityManager($this->em())
+        $fileUploader->setEntityManager($this->em())
                      ->setRequest($this->getRequest());
 
         if (!$fileUploader->uploadFiles()) {
             if ($fileUploader->hasFiles()) {
-                $this->createMedias($fileUploader->getFiles());
+                $this->mediaEntityCreator($fileUploader->getFiles());
             }
             return new \Zend\View\Model\ViewModel(array(
                 'messages' => $fileUploader->getMessages(),
                 'form' => $fileUploader->getFormCopy(),
             ));
         }
-        $this->createMedias($fileUploader->getFiles());
+
+        $this->mediaEntityCreator($fileUploader->getFiles());
 
         return $this->redirectToMediaLibrary();
     }
 
-
-    /**
-     * Create medias from array of Blog\Entity\File 
-     * @param array $files instances of Blog\Entity\File 
-     */
-    public function createMedias(array $files)
+    public function uploadAction()
     {
-        $objectManager = $this->em();
-        $config = $this->getServiceLocator()->get('Config');
-        $publicDir = $config['blog_constants']['images_src_dirpath'];
-        $locale = $this->locale();
-        foreach ($files as $file) {
-            $media = new \Blog\Entity\Media();
-            $basename = $file->getBasename();
-            $media->setSlug($basename);
-            $media->setAlt($basename);
-            $media->setFile($file);
-            $media->setPublicdir($publicDir);
-            $media->setLocale($locale);
-            $media->setDate(new \DateTime());
-            $objectManager->persist($media);
-            $objectManager->flush();
-        }
+        return $this->fileUploader(array(
+            'file_hydrator' => $this->getServiceLocator()->get('uploadFileHydrator'),
+            'route_success' => 'blog',
+            'route_success_params' => array('action' => 'index'),
+            'route_success_reuse' => true,
+            /**
+             * Create medias with the uploaded files
+             */
+            'post_upload_callback' => function ($fileUploader, $controller) {
+                if ($fileUploader->hasFiles()) {
+                    $controller->mediaEntityCreator($fileUploader->getFiles());
+                }
+            },
+        ));
     }
 
     /**
@@ -166,7 +159,7 @@ class MediaController extends \Zend\Mvc\Controller\AbstractActionController
         if (null === $id) {
             throw new \Exception('Need to create a media form where files can be selected as ids and send it to this action');
         }
-        $this->createMedias($this->em()->getRepository('Blog\Entity\File')->findById( (integer) $id));
+        $this->mediaEntityCreator($this->em()->getRepository('Blog\Entity\File')->findById( (integer) $id));
 
         return $this->redirectToMediaLibrary();
     }

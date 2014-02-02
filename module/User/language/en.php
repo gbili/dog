@@ -72,4 +72,6 @@ return array (
   'names' => '',
   'are' => '',
   'three' => '',
+  'You have two dogs' => '',
+  '. Their names are: ' => '',
 );

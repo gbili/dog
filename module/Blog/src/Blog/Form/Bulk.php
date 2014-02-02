@@ -11,16 +11,18 @@ class Bulk extends \Zend\Form\Form
         if (null === $multicheckElementName || !is_string($multicheckElementName)) {
             throw new \Exception('In order to extend Blog\Form\Bulk, you must pass an multicheck_element_name in the options constructor param');
         }
+
+        $bulkActionValueOptions = $this->getOption('bulk_action_value_options');
+        if (null === $bulkActionValueOptions || !is_array($bulkActionValueOptions)) {
+            throw new \Exception('In order to extend Blog\Form\Bulk, you must pass an bulk_action_value_options in the options constructor param');
+        }
         
         $this->add(array(
             'name' => 'action-top',
             'type'  => 'Blog\Form\Element\Select',
             'options' => array(
                 'empty_option' => 'Bulk Actions',
-                'value_options' => array(
-                    'linkTranslations' => 'Link Translations',
-                    'deletePosts' => 'Delete',
-                ),
+                'value_options' => $bulkActionValueOptions,
             ),
             'attributes' => array(
                 'class' => 'form-control',
@@ -32,19 +34,15 @@ class Bulk extends \Zend\Form\Form
             'type'  => 'Blog\Form\Element\Select',
             'options' => array(
                 'empty_option' => 'Bulk Actions',
-                'value_options' => array(
-                    'linkTranslations' => 'Link Translations',
-                    'deletePosts' => 'Delete',
-                ),
+                'value_options' => $bulkActionValueOptions,
             ),
             'attributes' => array(
                 'class' => 'form-control',
             ),
         ));
 
-        //This element represents the posts or categories being marked for
-        //applying the bulk action
-        //
+        //This element represents the posts or categories or files etc. 
+        //being marked to apply the bulk action on
         //Hydrated in self::hydrateValueOptions($entitiesAsArray)
         $this->add(array(
             'name' => $multicheckElementName,
@@ -85,11 +83,12 @@ class Bulk extends \Zend\Form\Form
         throw new \Exception('No Action was selected');
     }
 
-    public function hydrateValueOptions(array $entitiesAsArray)
+    public function hydrateValueOptions(array $entities)
     {
         $valueOptions = array();
-        foreach ($entitiesAsArray as $entitiyAsArray) {
-            $valueOptions[] = array('label' => '', 'value' => $entitiyAsArray['id']);
+        foreach ($entities as $entity) {
+            $id = ((!is_array($entity))? $entity->getId() : $entity['id']);
+            $valueOptions[] = array('label' => '', 'value' => $id);
         }
         $this->get($this->getOption('multicheck_element_name'))->setValueOptions($valueOptions);
         return $this;

@@ -14,7 +14,56 @@ class FileController extends \Zend\Mvc\Controller\AbstractActionController
 
         return new \Zend\View\Model\ViewModel(array(
             'files' => $files,
+            'form'       => new \Blog\Form\FileBulk('bulk-action'),
         ));
+    }
+
+    public function bulkAction()
+    {
+        if (!$this->request->isPost()) {
+            return $this->redirect()->toRoute('blog', array('controller' => 'file', 'action' => 'index'));
+        }
+
+        $form = new \Blog\Form\FileBulk('bulk-action');
+
+        $em = $this->em();
+        $files = $em->getRepository('Blog\Entity\File')->findBy(array(), array('date' => 'DESC'));
+
+        $form->hydrateValueOptions($files);
+
+        $form->setData($formData = $this->request->getPost());
+
+        if (!$form->isValid()) {
+            return $this->redirect()->toRoute('blog', array('controller' => 'file', 'action' => 'index'));
+        }
+
+        $formValidData = $form->getData();
+        $action = $form->getSelectedAction();
+
+        $this->$action($formValidData['files']);
+
+        $this->flashMessenger()->addMessage($action . ' succeed');
+        return $this->redirectToCategoriesList();
+    }
+
+    public function deleteFiles(array $filesIds)
+    {
+        //translations is limited to admin
+        if (!$this->identity()->isAdmin()) {
+            return $this->redirect()->toRoute('blog', array('controller' => 'file', 'action' => 'index'));
+        }
+
+        $em = $this->em();
+        foreach ($filesIds as $id) {
+            $file = $this->em()->getRepository('Blog\Entity\File')->find($id);
+            if ($file && $file->delete()) {
+                $em = $this->em();
+                $em->remove($file);
+                $em->flush();
+            }
+        }
+        $this->flashMessenger()->addSuccessMessage('Files Deleted');
+        return $this->redirect()->toRoute('blog', array('controller' => 'file', 'action' => 'index'));
     }
 
     /**
@@ -51,21 +100,11 @@ class FileController extends \Zend\Mvc\Controller\AbstractActionController
 
     public function uploadAction()
     {
-        $fileUploader = new \Blog\Service\FileEntityUploader();
-
-        if ($this->getRequest()->isPost()) {
-            $fileUploader->setFileInputName('file')
-                         ->setEntityManager($this->em())
-                         ->setRequest($this->getRequest());
-
-            if ($fileUploader->uploadFiles()) {
-                return $this->redirect()->toRoute('blog', array('controller' => 'file', 'action' => 'index'));
-            }
-            $messages = $fileUploader->getMessages();
-        }
-        return new \Zend\View\Model\ViewModel(array(
-            'messages' => ((isset($messages))? $messages : array()),
-            'form' => $fileUploader->getFormCopy(),
+        return $this->fileUploader(array(
+            'file_hydrator' => $this->getServiceLocator()->get('uploadFileHydrator'),
+            'route_success' => 'blog',
+            'route_success_params' => array('action' => 'index'),
+            'route_success_reuse' => true,
         ));
     }
 
@@ -76,13 +115,6 @@ class FileController extends \Zend\Mvc\Controller\AbstractActionController
     public function deleteAction()
     {
         $file = $this->em()->getRepository('Blog\Entity\File')->find($this->params('id'));
-        if ($file && $file->delete()) {
-            $em = $this->em();
-            $em->remove($file);
-            $em->flush();
-            $this->flashMessenger()->addSuccessMessage('File Deleted');
-        }
-
-        return $this->redirect()->toRoute('blog', array('controller' => 'file', 'action' => 'index'));
+        return $this->deleteFiles(array($id));
     }
 }

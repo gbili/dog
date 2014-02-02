@@ -2,9 +2,8 @@
 $title = $this->translate('Categories', 'blog');
 $this->headTitle($title);
 $form->setAttribute('action', $this->url(null ,array('action' => 'bulk'), true));
-$form->setAttribute('class', 'form-inline');
 $form->setAttribute('role', 'form');
-$form->prepare();
+$this->formActionPrepare($form, 'form-inline', true);
 ?>
 <!-- Add New Category Button Row -->
 <div class="row">
@@ -41,11 +40,11 @@ $form->prepare();
 
 <table class="table table-bordered table-hover">
     <tr>
-        <th><?php echo $this->translate('Bulk', 'blog')?></th>
-        <th><?php echo $this->translate('Category', 'blog')?></th>
-        <th><?php echo $this->translate('Lang', 'blog')?></th>
+        <th><?php echo $this->translate('Bulk')?></th>
+        <th><?php echo $this->translate('Category')?></th>
+        <th><?php echo $this->translate('Lang')?></th>
 <?php if ($user->isAdmin()) : ?>
-        <th><?php echo $this->translate('Translated Id', 'blog')?></th>
+        <th><?php echo $this->translate('Translated Id')?></th>
 <?php endif ?>
         <th>&nbsp;</th>
         <th>&nbsp;</th>
@@ -59,24 +58,14 @@ $form->prepare();
             <td><?php echo ((isset($category['translated_category_id']))? $category['translated_category_id'] : $this->translate('N/A', 'blog')) ?></td>
 <?php endif ?>
 	        <td>
-                <a href="<?php echo $this->url(
-                    'blog', 
-                    array(
-                        'controller' => 'category', 
-                        'action'=>'edit', 
-                        'id' => $category['id'],
-                        'lang' => $category['locale'],
-                    ),
-                    true
-                ); ?>"><?php echo $this->translate('Edit', 'blog') ?></a>
+                <a href="<?php echo $this->url(null, array('action'=>'edit', 'id' => $category['id']), true); ?>"><?php echo $this->translate('Edit') ?></a>
 	        </td>
 	        <td>
                 <a href="<?php echo $this->url(
-                    'blog', 
+                    null, 
                     array(
-                        'controller' => 'category', 
-                        'action'=>'delete', 
-                        'id' => $category['id'],
+                        'action'      =>'delete', 
+                        'id'          => $category['id'],
                         'fourthparam' => $nonce,
                     ),
                     true

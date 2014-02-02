@@ -14,30 +14,72 @@ namespace Blog\View\Helper;
 class Notify extends \Zend\View\Helper\AbstractHelper
 {
     /**
-     * Translate a message
+     * Because we want to support the helper_name
+     * feature on a message list level we will
+     * have to store each list separatedly
+     * array(messageList1, messageList2 etc.)
+     */
+    protected $messagesListList = array();
+
+    /**
+     * Queue messages for later rendering
+     * If no parameter is passed, the helper will be returned
+     * you can then call, notifyMesages($messages) directly
+     * or you can call renderAll() to get all the stacked
+     * messages
+     *
+     * To stack a message list to be rendered, use
+     * the invoke method with the list as param
+     *
      * @return string
      */
-    public function __invoke(array $messages)
+    public function __invoke($messages = null)
     {
-        if (empty($messages)) {
-            return '';
+        if (null === $messages) {
+            return $this;
         }
 
-        $messageTextOrMessageArray = current($messages);
-        if (is_string($messageTextOrMessageArray)) {
+        if (!is_array($messages)) {
+            throw new \Exception('$messages param should be an array of messages');
+        }
+
+        if (empty($messages)) {
+            return;
+        }
+
+        if ($this->isMessageAndNotMessageList($messages)) {
             $messages = array($messages);
         }
 
-        return $this->notifyMessages($messages);
+        $this->messagesListList[] = $messages;
+    }
+
+    public function renderAll()
+    {
+        $html = '';
+        foreach ($this->messagesListList as $messages) {
+            $html .= $this->notifyMessages($messages);
+        }
+        return $html;
+    }
+
+    public function isMessageAndNotMessageList(array $messages)
+    {
+        $messageTextOrMessageArray = current($messages);
+        return is_string($messageTextOrMessageArray);
     }
 
     public function notifyMessages(array $messages)
     {
+        $helperName = 'simpleMessage';
+        if (isset($messages['helper_name'])) {
+            $helperName = $messages['helper_name'];
+            unset($messages['helper_name']);
+        }
+
         $html = '';
         foreach ($messages as $message) {
-           $class = key($message);
-           $text = current($message);
-           $html .= $this->view->message($class, $this->view->translate($text));
+           $html .= $this->view->{$helperName}($message);
         } 
         return $html;
     }

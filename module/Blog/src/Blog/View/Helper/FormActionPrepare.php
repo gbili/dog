@@ -25,9 +25,16 @@ class FormActionPrepare extends \Zend\View\Helper\AbstractHelper
      * @param boolean         $replace  change the behavior of classes addition
      * @return string
      */
-    public function __invoke(\Zend\Form\Form $form, array $classes = array(), $replace = false)
+    public function __invoke(\Zend\Form\Form $form, $classes = null, $replace = false)
     {
-        $this->addAction($form);
+        if (!$form->hasAttribute('action')) {
+            $this->addAction($form);
+        }
+
+        if (is_string($classes)) {
+            $classes = array($classes);
+        }
+
         if (!empty($classes)) {
             if ($replace) {
                 $this->addClasses($form, $classes);

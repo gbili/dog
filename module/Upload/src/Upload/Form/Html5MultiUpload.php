@@ -1,14 +1,19 @@
 <?php
-namespace Blog\Form;
+namespace Upload\Form;
 
 use Zend\InputFilter;
 use Zend\Form\Element;
 
 class Html5MultiUpload extends \Zend\Form\Form
 {
+    protected $fileInputName;
+
     public function __construct($name = null, $options = array())
     {
         parent::__construct($name, $options);
+
+        $this->fileInputName = ((isset($options['file_input_name']))? $options['file_input_name'] : 'file');
+
         $this->addElements();
         $this->setInputFilter($this->createInputFilter());
     }
@@ -16,10 +21,11 @@ class Html5MultiUpload extends \Zend\Form\Form
     public function addElements()
     {
         //File Input
-        $file = new Element\File('file');
+        $file = new Element\File($this->fileInputName);
         $file->setLabel('Select')
             ->setAttributes(array(
                 'multiple' => true,
+                'id' => $this->fileInputName, 
             )
         );
         $this->add($file);
@@ -45,7 +51,7 @@ class Html5MultiUpload extends \Zend\Form\Form
     {
         $inputFilter = new InputFilter\InputFilter();
         // File Input
-        $file = new InputFilter\FileInput('file');
+        $file = new InputFilter\FileInput($this->fileInputName);
         $file->setRequired(true);
         $file->getFilterChain()->attachByName(
             'filerenameupload',

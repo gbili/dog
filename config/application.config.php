@@ -12,6 +12,7 @@ return array(
         'User',
         'Lang',
         'Req',
+        'Upload',
     ),
 
     // These are various options for the listeners attached to the ModuleManager

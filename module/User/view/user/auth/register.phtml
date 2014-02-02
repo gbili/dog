@@ -24,15 +24,15 @@ $form->prepare();
 $title = ucfirst($this->translate($action, $textDomain)) . ' ' . ucfirst($this->translate($controller, $textDomain));
 $this->headTitle($title);
 ?>
+<?php $this->notify(((isset($messages))? $messages : array())) ?>
+
 <div class="row">
     <div class="col-sm-0 col-md-2 col-lg-2"></div>
     <div class="col-sm-12 col-md-8 col-lg-8">
         <h1><?php echo $this->escapeHtml($title); ?></h1> 
-        <?php echo $this->notify($messages)?>
     </div>
     <div class="col-sm-0 col-md-2 col-lg-2"></div>
 </div>
-
 <div class="row">
     <div class="col-sm-1 col-md-4 col-lg-4"></div>
     <div class="col-sm-10 col-md-6 col-lg-4">

@@ -11,6 +11,9 @@ return array(
         'template_path_stack' => array(
             'blog' => __DIR__ . '/../view',
         ),
+        'strategies' => array(
+            'ViewJsonStrategy',
+        ),
     ),
 
     'controller_plugins' => include __DIR__ . '/controller_plugins.config.php',

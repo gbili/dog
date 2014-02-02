@@ -1,12 +1,13 @@
 <?php
-namespace Blog\Service;
+namespace Upload\Service;
 
 class FileEntityUploader
 {
-
+    private $hydrator;
+    private $request;
     private $postData;
     private $fileInputName;
-    private $formName = 'file-form';
+    private $formName;
     private $messages;
     private $files = array();
     private $form = null;
@@ -16,12 +17,30 @@ class FileEntityUploader
         if (null !== $this->form) {
             return clone $this->form;
         }
-        return new \Blog\Form\Html5MultiUpload($this->getFormName());
+
+        $options = array();
+
+        if (!$this->hasFileInputName()) {
+            //using default throw new \Exception('File input name must be set with : $fu->setFileInputName("file_input")');
+            $this->setFileInputName('file_input');
+        }
+        $options['file_input_name'] = $this->getFileInputName();
+
+        if (!$this->hasFormName()) {
+            //using default throw new \Exception('File form name must be set with : $fu->setFormName("file_form")');
+            $this->setFormName('file_form');
+        }
+        $name = $this->getFormName();
+
+        $form = new \Upload\Form\Html5MultiUpload($name, $options);
+        $this->setForm($form);
+
+        return $form;
     }
 
     public function setForm($form)
     {
-        if (!($from instanceof \Blog\Form\Html5MultiUpload)) {
+        if (!($form instanceof \Upload\Form\Html5MultiUpload)) {
             throw new \Exception('Form type not supported, must extend Html5MultiUpload');
         }
         $this->form = $form;
@@ -54,6 +73,11 @@ class FileEntityUploader
     {
         $this->formName = $name;
         return $this;
+    }
+
+    public function hasFormName()
+    {
+        return null !== $this->formName;
     }
 
     public function getFormName()
@@ -100,9 +124,14 @@ class FileEntityUploader
         return $this;
     }
 
+    public function hasFileInputName()
+    {
+        return (null !== $this->fileInputName);
+    }
+
     public function getFileInputName()
     {
-        if (null === $this->fileInputName) {
+        if (!$this->hasFileInputName()) {
             throw new \Exception('File input name not set');
         }
         return $this->fileInputName;
@@ -140,6 +169,17 @@ class FileEntityUploader
         return true;
     }
 
+    /**
+     * If request is ajax the Js Script will send a
+     * request with a isAjax variable set to 1
+     * You should find the Js Script in partial/file_upload.phtml
+     */
+    public function isAjax()
+    {
+        $postData = $this->getPostData();
+        return !empty($postData['isAjax']);
+    } 
+
     public function isFileUploaded($message)
     {
         return isset($message['success']);
@@ -147,20 +187,25 @@ class FileEntityUploader
 
     public function uploadFiles()
     {
-        $formName = $this->getFormName();
+        $formName      = $this->getFormName();
         $fileInputName = $this->getFileInputName();
-        $data = $this->getPostData();
+        $data          = $this->getPostData();
 
         $messages = array();
         foreach ($data[$fileInputName] as $fileData) {
+            $message = array();
             $singleData = array($fileInputName => $fileData);
             $fileName = $fileData['name'];
             $singleFileFormData = $data;
             $singleFileFormData[$fileInputName] = $fileData;
-            $messages[$fileName] = $this->uploadOneFile($singleFileFormData);
+
+            $message = $this->uploadOneFile($singleFileFormData);
+            $message['fileName'] = $fileName;
+
+            $messages[] = $message;
         }
         $this->setMessages($messages);
-        return $this->areAllFilesUploaded();
+        return $this;
     }
 
     public function uploadOneFile(array $singleFileFormData)
@@ -168,7 +213,12 @@ class FileEntityUploader
         $form = $this->getFormCopy();
         $form->setData($singleFileFormData);
         if (!$form->isValid()) {
-            return $form->getMessages();
+            $messages = $form->getMessages();
+            $message = implode('. ', $messages[$this->getFileInputName()]);
+            return array(
+                'class' => 'danger',
+                'message' => $message,
+            );
         }
         //array('otherinput'=>'inputval', 
         //      'file' => array(
@@ -187,32 +237,40 @@ class FileEntityUploader
         // );
         $fileData = $formData[$this->getFileInputName()];
         $this->saveFile($fileData);
-        return array('success' => 'File Uploaded');
+        return array(
+            'class' => 'success', 
+            'message' => 'File Uploaded',
+        );
     }
 
     public function saveFile(array $fileData)
     {
-        $file = $this->getHydratedFile($fileData);
+        $file = $this->getFileHydrator()->getHydratedFile($fileData);
 
         $this->persistFile($file);
 
         $this->addFile($file);
     }
 
-    public function getHydratedFile($fileData)
+    /**
+     * Form data is passed to $hydrater->getHydratedFile($formData)
+     * the method needs to return a doctrine file entity
+     */
+    public function setFileHydrator(\Upload\FileHydratorInterface $hydrator)
     {
-        $persistableData = array_intersect_key($fileData, array_flip(array('name', 'type', 'date', 'tmp_name', 'size')));
-        $persistableData['date'] = new \DateTime();
-
-        $file = new \Blog\Entity\File();
-        $file->hydrateWithFormData($persistableData);
-        if ($file->getName() !== $file->getBasename()) {
-            $file->move($file->getName());
-        }
-        return $file;
+        $this->hydrator = $hydrator;
+        return $this;
     }
 
-    public function persistFile(\Blog\Entity\File $file)
+    public function getFileHydrator()
+    {
+        if (null === $this->hydrator) {
+            throw new \Exception('Call setFileHydrator($hydrator), before starting to upload');
+        }
+        return $this->hydrator;
+    }
+
+    public function persistFile($file)
     {
         $this->getEntityManager()->persist($file);
         $this->getEntityManager()->flush();

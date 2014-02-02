@@ -68,7 +68,7 @@ return array (
   'Female' => 'Femelle',
   'My Account' => 'Mon Compte',
   'Add a dog to your pack' => 'Ajoutez un chien à votre meute',
-  'My Pack' => '',
-  'Add Dog' => '',
-  'View' => '',
+  'My Pack' => 'Ma Meute',
+  'Add Dog' => 'Ajouter Chien',
+  'View' => 'Visualiser',
 );

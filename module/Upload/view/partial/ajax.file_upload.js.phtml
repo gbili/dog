@@ -1,0 +1,101 @@
+<script src="/js/jquery-ui-1.10.4.custom.min.js" type="text/javascript"></script>
+<script src="/js/jquery.form.js"></script>
+
+<script type="text/javascript">
+var progressInterval;
+
+function getProgress() {
+    // Poll our controller action with the progress id
+    var url = '/upload_progress.php?id=' + $('#progress_key').val();
+    $.getJSON(url, function(data) {
+        if (data.status && !data.status.done) {
+            var value = Math.floor((data.status.current / data.status.total) * 100);
+            showProgress(value, 'Uploading...');
+        } else {
+            showProgress(100, 'Complete!');
+            clearInterval(progressInterval);
+        }
+    });
+}
+
+function startProgress() {
+    showProgress(0, 'Starting upload...');
+    progressInterval = setInterval(getProgress, 900);
+}
+
+function showProgress(amount, message) {
+    $('#progress').show();
+    $('#progress .bar').width(amount + '%');
+    $('#progress > p').html(message);
+    if (amount < 100) {
+        $('#progress .progress')
+            .addClass('progress-info active')
+            .removeClass('progress-success');
+    } else {
+        $('#progress .progress')
+            .removeClass('progress-info active')
+            .addClass('progress-success');
+    }
+}
+
+// TODO XSS 
+function showMessages(messages) {
+    var message = '';
+    var container = $('#messages');
+
+    for( key in messages ) {
+        dismissButton = '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>';
+        message = '<div class="alert alert-dismissable alert-' + messages[key].class + '">' + dismissButton + '<p><strong>' + messages[key].fileName + '</strong>: ' + messages[key].message + '</p></div>';
+        container.html(container.html() + message);
+    }
+}
+
+$(function() {
+    // Register a 'submit' event listener on the form to perform the AJAX POST
+    $('#<?= $fileUploader->getFormName() ?>').on('submit', function(e) {
+        e.preventDefault();
+
+        if ($('#<?= $fileUploader->getFileInputName() ?>').val() == '') {
+            // No files selected, abort
+            return;
+        }
+
+        // Perform the submit
+        //$.fn.ajaxSubmit.debug = true;
+        $(this).ajaxSubmit({
+            beforeSubmit: function(arr, $form, options) {
+                // Notify backend that submit is via ajax
+                arr.push({ name: "isAjax", value: "1" });
+            },
+            success: function (response, statusText, xhr, $form) {
+                clearInterval(progressInterval);
+                showProgress(100, 'Complete!');
+
+                // TODO: You'll need to do some custom logic here to handle a successful
+                // form post, and when the form is invalid with validation errors.
+                if (response.status) {
+                    // TODO: Do something with a successful form post, like redirect
+                    // window.location.replace(response.redirect);
+                    showMessages(response.messages);
+                } else {
+                    // Clear the file input, otherwise the same file gets re-uploaded
+                    // http://stackoverflow.com/a/1043969
+                    var fileInput = $('#<?= $fileUploader->getFileInputName() ?>');
+                    fileInput.replaceWith( fileInput.val('').clone( true ) );
+
+                    // TODO: Do something with these errors
+                    showMessages(response.messages);
+                }
+            },
+            error: function(a, b, c) {
+                // NOTE: This callback is *not* called when the form is invalid.
+                // It is called when the browser is unable to initiate or complete the ajax submit.
+                // You will need to handle validation errors in the 'success' callback.
+                console.log(a, b, c);
+            }
+        });
+        // Start the progress polling
+        startProgress();
+    });
+});
+</script>

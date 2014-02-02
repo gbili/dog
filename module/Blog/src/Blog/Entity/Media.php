@@ -247,7 +247,7 @@ class Media
      * Directory from which image is publicly
      * accessible
      */
-    public function setPublicdir($dir)
+    public function setPublicdir($publicdir)
     {
         $this->publicdir = $publicdir;
         return $this;
