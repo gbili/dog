@@ -119,8 +119,9 @@ implements \Zend\InputFilter\InputFilterProviderInterface
                 'label' => 'Picture',
                 'property' => 'slug',
                 'attributes' => array(
-                    'data-img-src' => 'src'
+                    'data-img-src' => 'src',
                 ),
+                'form_group_class' => 'well',
                 'is_method' => true,
                 'target_class' => 'Blog\Entity\Media',
                 'object_manager' => $objectManager,

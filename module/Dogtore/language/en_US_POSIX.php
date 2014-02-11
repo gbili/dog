@@ -27,4 +27,5 @@ return array (
   'Controller' => '',
   'resolves to %s' => '',
   'My Account' => '',
+  'The requested controller was not dispatchable.' => '',
 );

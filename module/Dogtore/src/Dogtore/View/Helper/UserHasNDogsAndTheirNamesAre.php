@@ -13,16 +13,20 @@ namespace Dogtore\View\Helper;
  */
 class UserHasNDogsAndTheirNamesAre extends \Zend\View\Helper\AbstractHelper
 {
+    protected $optionsParam;
+
     /**
      * Translate a message
      * @return string
      */
-    public function __invoke(\User\Entity\User $user, $referAsYou = false)
+    public function __invoke(\User\Entity\User $user, $options = array())
     {
-        $view = $this->view;
+        $this->optionsParam = $options;
 
-        $dogs = $user->getDogs()->toArray();
-        $dogsCount = count($dogs);
+        $referAsYou = (boolean) ((isset($options['refer_as_you']))? $options['refer_as_you'] : false);
+        $view       = $this->view;
+        $dogs       = $user->getDogs()->toArray();
+        $dogsCount  = count($dogs);
 
         $patterns = array(
             '/:has_or_You_have/',
@@ -47,7 +51,6 @@ class UserHasNDogsAndTheirNamesAre extends \Zend\View\Helper\AbstractHelper
                 $user->getProfile()->getFirstname(), 
                 $hasNDogsPhrase,
             );
-
             $hasNDogsPhrase = $view->patternTranslate($patterns, $replacements, ':firstname :phrase');
         }
 
@@ -60,10 +63,13 @@ class UserHasNDogsAndTheirNamesAre extends \Zend\View\Helper\AbstractHelper
 
     protected function getDogNamesPhrase($dogs)
     {
+        $options = $this->optionsParam;
+        $boldDogNames = (boolean) ((isset($options['bold_dog_names']))? $options['bold_dog_names'] : true);
+
         $view = $this->view;
         $dogsCount = count($dogs);
-        $dogNames = array_map(function ($dog) {
-            return $dog->getName();
+        $dogNames = array_map(function ($dog) use ($boldDogNames){
+            return (($boldDogNames)? '<strong class="dog-names-enum">' . $dog->getName() . '</strong>' : $dog->getName());
         }, $dogs);
 
         $lastDog = array_pop($dogNames);

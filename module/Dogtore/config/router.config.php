@@ -13,7 +13,7 @@ return array(
                 ),
                 'defaults' => array(
                     'lang'          => 'en',
-                    'controller'    => 'scs',
+                    'controller'    => 'dogtore_scs_controller',
                     'action'        => 'index',
                 ),
             ),
@@ -31,7 +31,7 @@ return array(
                 ),
                 'defaults' => array(
                     'lang'       => 'en',
-                    'controller' => 'scs',
+                    'controller' => 'dogtore_scs_controller',
                     'action'     => 'search',
                 ),
             ),
@@ -47,7 +47,7 @@ return array(
                 ),
                 'defaults' => array(
                     'lang'       => 'en',
-                    'controller' => 'scs',
+                    'controller' => 'dogtore_scs_controller',
                     'action'     => 'search',
                 ),
             ),
@@ -57,15 +57,15 @@ return array(
         'dog_view_user_dog' => array(
             'type' => 'Zend\Mvc\Router\Http\Segment',
             'options' => array(
-                'route'    => '[/:lang]/dog/:uniquename[/[:dogname]]',
+                'route'    => '[/:lang]/dog/:uniquename[/[:dogname_underscored]]',
                 'constraints' => array(
                     'lang' => $preConfig['regex_patterns']['lang'],
                     'uniquename' => $preConfig['regex_patterns']['uniquename'],
-                    'dogname' => $preConfig['regex_patterns']['dogname'],
+                    'dogname_underscored' => $preConfig['regex_patterns']['dogname_underscored'],
                 ),
                 'defaults' => array(
                     'lang' => 'en',
-                    'controller'    => 'dog',
+                    'controller'    => 'dogtore_dog_controller',
                     'action'        => 'view',
                 ),
             ),
@@ -75,32 +75,47 @@ return array(
         'dog_user_dog_edit' => array(
             'type' => 'Zend\Mvc\Router\Http\Segment',
             'options' => array(
-                'route'    => '[/:lang]/dog/:dogname/edit',
+                'route'    => '[/:lang]/dog/:dogname_underscored/edit',
                 'constraints' => array(
                     'lang' => $preConfig['regex_patterns']['lang'],
-                    'dogname' => $preConfig['regex_patterns']['dogname'],
+                    'dogname_underscored' => $preConfig['regex_patterns']['dogname_underscored'],
                 ),
                 'defaults' => array(
                     'lang' => 'en',
-                    'controller'    => 'dog',
+                    'controller'    => 'dogtore_dog_controller',
                     'action'        => 'edit',
                 ),
             ),
             'may_terminate' => true,
         ),
 
-        'dog_add_my_dog' => array(
+        'dogtore_dog_add_route' => array(
             'type' => 'Zend\Mvc\Router\Http\Segment',
             'options' => array(
                 'route'    => '[/:lang]/dog/add',
                 'constraints' => array(
                     'lang' => $preConfig['regex_patterns']['lang'],
-                    'dogname' => $preConfig['regex_patterns']['dogname'],
                 ),
                 'defaults' => array(
                     'lang' => 'en',
-                    'controller'    => 'dog',
+                    'controller'    => 'dogtore_dog_controller',
                     'action'        => 'add',
+                ),
+            ),
+            'may_terminate' => true,
+        ),
+
+        'dogtore_dog_upload_route' => array(
+            'type' => 'Zend\Mvc\Router\Http\Segment',
+            'options' => array(
+                'route'    => '[/:lang]/dog/upload',
+                'constraints' => array(
+                    'lang' => $preConfig['regex_patterns']['lang'],
+                ),
+                'defaults' => array(
+                    'lang' => 'en',
+                    'controller'    => 'dogtore_dog_controller',
+                    'action'        => 'upload',
                 ),
             ),
             'may_terminate' => true,
@@ -115,7 +130,7 @@ return array(
                 ),
                 'defaults' => array(
                     'lang' => 'en',
-                    'controller'    => 'dog',
+                    'controller'    => 'dogtore_dog_controller',
                     'action'        => 'listmydogs',
                 ),
             ),
@@ -132,7 +147,7 @@ return array(
                 ),
                 'defaults' => array(
                     'lang' => 'en',
-                    'controller'    => 'dog',
+                    'controller'    => 'dogtore_dog_controller',
                     'action'        => 'listuserdogs',
                 ),
             ),

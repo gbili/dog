@@ -66,4 +66,8 @@ return array (
   'You have five dogs' => 'Vous avez cinq chiens',
   'You have six dogs' => 'Vous avez six chiens',
   'You have seven dogs' => 'Vous avez sept chiens',
+  'You have too many dogs' => 'Vous avez trop de chiens',
+  'has two dogs' => 'a deux chiens',
+  'firstname surname<small>\'s Profile</small>' => '<small>Profil de</small> prénom nom',
+  'Info' => 'Infos',
 );

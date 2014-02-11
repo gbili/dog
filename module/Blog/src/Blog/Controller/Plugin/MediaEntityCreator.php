@@ -27,6 +27,7 @@ class MediaEntityCreator extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
         $publicDir     = $config['blog_constants']['images_src_dirpath'];
         $locale        = $controller->locale();
 
+        $createdMedias = array();
         foreach ($files as $file) {
             $media = new \Blog\Entity\Media();
             $basename = $file->getBasename();
@@ -38,6 +39,10 @@ class MediaEntityCreator extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
             $media->setDate(new \DateTime());
             $objectManager->persist($media);
             $objectManager->flush();
+
+            $createdMedias[] = $media;
         }
+
+        return $createdMedias;
     }
 }

@@ -31,7 +31,7 @@ class PostButtonsGenerator extends \Zend\View\Helper\AbstractHelper
         if (!$user || $post['owner_uniquename'] !== $user->getUniquename()) {
             return '';
         }
-        $url = $this->view->url('blog_post', array('action' => 'edit', 'id' => $post['post_id']), true);
+        $url = $this->view->url('blog_post_route', array('action' => 'edit', 'id' => $post['post_id']), true);
         $text = $this->view->translate('Edit');
         return $this->getButton($url, $text, 'default');
     }

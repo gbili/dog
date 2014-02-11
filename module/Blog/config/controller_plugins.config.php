@@ -2,10 +2,12 @@
 namespace Blog;
 return array(
     'invokables' => array(
-        'em'           => 'Blog\Controller\Plugin\EntityManager',
-        'paginator'    => 'Blog\Controller\Plugin\Paginator',
-        'repository'   => 'Blog\Controller\Plugin\Repository',
-        'messenger'    => 'Blog\Controller\Plugin\Messenger',
-        'mediaEntityCreator' => 'Blog\Controller\Plugin\MediaEntityCreator',
+        'em'                 => __NAMESPACE__ . '\Controller\Plugin\EntityManager',
+        'paginator'          => __NAMESPACE__ . '\Controller\Plugin\Paginator',
+        'repository'         => __NAMESPACE__ . '\Controller\Plugin\Repository',
+        'messenger'          => __NAMESPACE__ . '\Controller\Plugin\Messenger',
+        'mediaEntityCreator' => __NAMESPACE__ . '\Controller\Plugin\MediaEntityCreator',
+        'string'             => __NAMESPACE__ . '\Controller\Plugin\ExpressivePregTransform',
+        'routeParamTransform'=> __NAMESPACE__ . '\Controller\Plugin\RouteParamsTransformer',
     ),
 );

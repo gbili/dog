@@ -16,7 +16,6 @@ class Lang
         $routeMatch = $this->application->getMvcEvent()->getRouteMatch();
 
         if (null === $routeMatch) {
-            // throw new \Exception('route not matched, calling get lang too soon');
             $config = $this->application->getServiceManager()->get('config');
             if (isset($config['lang']) && isset($config['lang']['default_lang'])) {
                 return $config['lang']['default_lang'];

@@ -2,7 +2,7 @@
 namespace Blog;
 return array(
         'routes' => array(
-            'blog_post' => array(
+            'blog_post_route' => array(
                 'type' => 'segment',
                 'options' => array(
                     'route' => '[/:lang]/post[/:action][/:id][/:fourthparam]',
@@ -14,12 +14,12 @@ return array(
                     ),
                     'defaults' => array(
                         'lang' => 'en',
-                        'controller' => 'post_controller',
+                        'controller' => 'blog_post_controller',
                         'action' => 'index',
                     ),
                 ),
             ),
-            'blog_category' => array(
+            'blog_category_route' => array(
                 'type' => 'segment',
                 'options' => array(
                     'route' => '[/:lang]/category[/:action][/:id][/:fourthparam]',
@@ -31,15 +31,15 @@ return array(
                     ),
                     'defaults' => array(
                         'lang' => 'en',
-                        'controller' => 'category_controller',
+                        'controller' => 'blog_category_controller',
                         'action' => 'index',
                     ),
                 ),
             ),
-            'blog_media' => array(
+            'blog_media_route' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '[/:lang]/media[/:action][/:id][/:fourthparam]',
+                    'route' => '[/:lang]/media[/:action[/:id[/:fourthparam]]]',
                     'constraints' => array(
                         'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
@@ -48,11 +48,30 @@ return array(
                     ),
                     'defaults' => array(
                         'lang' => 'en',
-                        'controller' => 'media_controller',
+                        'controller' => 'blog_media_controller',
                         'action' => 'index',
                     ),
                 ),
             ),
+
+            'blog_media_delete_route' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '[/:lang]/media/delete/:id/:nonce',
+                    'constraints' => array(
+                        'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]+',
+                        'nonce' => '[a-zA-Z0-9_-]+',
+                    ),
+                    'defaults' => array(
+                        'lang' => 'en',
+                        'controller' => 'blog_media_controller',
+                        'action' => 'delete',
+                    ),
+                ),
+            ),
+
             'blog_media_view' => array(
                 'type' => 'segment',
                 'options' => array(
@@ -63,12 +82,12 @@ return array(
                     ),
                     'defaults' => array(
                         'lang' => 'en',
-                        'controller' => 'media_controller',
+                        'controller' => 'blog_media_controller',
                         'action' => 'view',
                     ),
                 ),
             ),
-            'blog_file' => array(
+            'blog_file_route' => array(
                 'type' => 'segment',
                 'options' => array(
                     'route' => '[/:lang]/file[/:action][/:id][/:fourthparam]',
@@ -80,7 +99,7 @@ return array(
                     ),
                     'defaults' => array(
                         'lang' => 'en',
-                        'controller' => 'file_controller',
+                        'controller' => 'blog_file_controller',
                         'action' => 'index',
                     ),
                 ),

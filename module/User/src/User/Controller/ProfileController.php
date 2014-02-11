@@ -118,13 +118,18 @@ class ProfileController extends \Zend\Mvc\Controller\AbstractActionController
         ));
     }
 
+    public function redirectToLoggedInUserProfile()
+    {
+        return $this->redirect()->toRoute(null, array('uniquename' => $this->identity()->getUniquename()), true);
+    }
+
     /**
      * Create profile 
      */
     public function editAction()
     {
         if (!$this->isParamsUniquenameSameAsLoggedInUser()) {
-            return $this->redirect()->toRoute($routename, array('uniquename' => $this->identity()->getUniquename()), true);
+            return $this->redirectToLoggedInUserProfile();
         }
 
         $objectManager = $this->em();
@@ -137,7 +142,7 @@ class ProfileController extends \Zend\Mvc\Controller\AbstractActionController
         if (!$this->request->isPost()) {
             return new \Zend\View\Model\ViewModel(array(
                 'entityId' => $profile->getId(),
-                'form' => $profileForm,
+                'form'     => $profileForm,
                 'messages' => $this->messenger()->getMessages(),
             ));
         }

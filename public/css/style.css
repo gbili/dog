@@ -2,14 +2,36 @@ body {
     padding-top: 60px;
     padding-bottom: 40px;
 }
+.dog-names-enum {
+    color: #999;
+}
+
+/* Make sur header is well spaced*/
+header.row {
+    margin-bottom: 20px;
+}
+header h3 {
+    margin: 0;
+}
+#bulk-action div.row > div .form-group{
+    margin-top:0;
+}
+#bulk-action div.row > div .pagination {
+    margin-top:0;
+}
+/*End header*/
 
 /* Bulk action form */
 /* Adjust margins */
+#bulk-action table.table {
+    margin-bottom:20px;
+}
 #bulk-action > .row .form-group {
     margin: 20px 0;
 }
-#bulk-action table.table {
-    margin: 0;
+
+div.container .form-group {
+    margin: 0 0 20px 0;
 }
 
 div.container a.brand {
@@ -79,7 +101,7 @@ div#posts-container .solution {
 }
 /* Restrict images size*/
 .image_picker_selector > li > .thumbnail > img {
-    max-width: 113px;
+    max-width: 96px;
 }
 /* End Image Picker */
 

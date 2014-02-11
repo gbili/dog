@@ -208,7 +208,7 @@ class File
 
     public function move($newBasename)
     {
-        if (0 ===  preg_match('#^[a-zA-Z0-9][a-zA-Z0-9-_]+?\\.[a-zA-Z0-9]+$#', $newBasename)) {
+        if (0 ===  preg_match('#^[a-zA-Z0-9][a-zA-Z0-9-_]*?\\.[a-zA-Z0-9]+$#', $newBasename)) {
             throw new \Exception('The filename is not supported');
         }
         $newUri = $this->getDirpath() . '/' . $newBasename;

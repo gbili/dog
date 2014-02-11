@@ -16,6 +16,8 @@ return array(
         'numberInLetters'   => __NAMESPACE__ . '\View\Helper\NumberToString',
         'renderNavigation'  => __NAMESPACE__ . '\View\Helper\RenderNavigation',
         'simpleMessage'     => __NAMESPACE__ . '\View\Helper\SimpleMessage',
+        'string'            => __NAMESPACE__ . '\View\Helper\ExpressivePregTransform',
+        'scriptalicious'    => __NAMESPACE__ . '\View\Helper\RegisterScript',
     ),
 
     'factories' => array(

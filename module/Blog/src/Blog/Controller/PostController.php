@@ -159,7 +159,7 @@ class PostController extends \Zend\Mvc\Controller\AbstractActionController
         $objectManager->persist($blogPost);
         $objectManager->flush();
 
-        return $this->redirect()->toRoute(null, array('controller' => 'post_controller', 'action' => 'index', 'id' => null), true);
+        return $this->redirect()->toRoute(null, array('controller' => 'blog_post_controller', 'action' => 'index', 'id' => null), true);
     }
 
     public function badRequest($type)
@@ -205,7 +205,7 @@ class PostController extends \Zend\Mvc\Controller\AbstractActionController
         $postDatas = $objectManager->getRepository('Blog\Entity\PostData')->findAll();
         if (empty($postDatas)) {
             $reuseMatchedParams = true;
-            return $this->redirect()->toRoute(null, array('controller' => 'post_controller', 'action' => 'create'), $reuseMatchedParams);
+            return $this->redirect()->toRoute(null, array('controller' => 'blog_post_controller', 'action' => 'create'), $reuseMatchedParams);
         }
 
         // TODO all this is wrong find a way to ignore the postdata fieldset and add a hidden element with the postdata id
@@ -268,6 +268,6 @@ class PostController extends \Zend\Mvc\Controller\AbstractActionController
     public function redirectToIndex()
     {
         $reuseMatchedParams = true;
-        return $this->redirect()->toRoute(null, array('controller' => 'post_controller', 'action' => 'index'), $reuseMatchedParams);
+        return $this->redirect()->toRoute(null, array('controller' => 'blog_post_controller', 'action' => 'index'), $reuseMatchedParams);
     }
 }

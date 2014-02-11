@@ -6,39 +6,25 @@ $fileparts = explode('/', $__VIEWFILE__);
 $action = substr(end($fileparts), 0, -6);
 $controller = prev($fileparts); 
 $title = ucfirst($this->translate($action)) . ' ' . ucfirst($this->translate($controller));
-$route = array(
-    'lang' => $this->lang(),
-    'action' => $action
-);
-$form->setAttribute('action', $this->url(null ,$route));
+
 $this->headTitle($title);
-$form->prepare();
 ?>
 <?php if (isset($messages) && !empty($messages)) : ?>
     <?php $messages['helper_name'] = 'fileUploadMessage'?>
     <?php $this->notify($messages) ?>
 <?php endif ?>
+<header class="row">
+    <div class="col-sm-0 col-md-2 col-lg-2"></div>
+    <div class="col-sm-12 col-md-8 col-lg-8">
+        <h3><?php echo $this->escapeHtml($title); ?></h3>
+    </div>
+    <div class="col-sm-0 col-md-2 col-lg-2"></div>
+</header>
 <div class="row">
     <div class="col-sm-0 col-md-2 col-lg-2"></div>
     <div class="col-sm-12 col-md-8 col-lg-8">
-        <h1><?php echo $this->escapeHtml($title); ?></h1>
+        <?= $this->uploader()->renderForm() ?>
     </div>
     <div class="col-sm-0 col-md-2 col-lg-2"></div>
 </div>
-<div class="row">
-    <div class="col-sm-0 col-md-2 col-lg-2"></div>
-    <div class="col-sm-12 col-md-8 col-lg-8">
-    <?php echo $this->form()->openTag($form)?>
-        <?= $this->formFileUploadProgress(); ?>
-        <?php foreach ($form->getElements() as $element) : ?>
-            <div class="form-group">
-                <?php echo ((null !== $element->getLabel())? $this->translate($this->formLabel($element), 'blog') : '') ?>
-                <?php echo $this->formElement($element) ?>
-            </div>
-        <?php endforeach ?>
-    <?php echo $this->form()->closeTag() ?>
-    </div>
-    <div class="col-sm-0 col-md-2 col-lg-2"></div>
-</div>
-
-<?php include __DIR__ . '/'.  $this->ajaxFileUpload()->getScriptFilename() ?>
+<?php include $this->uploader()->getScriptPath() ?>

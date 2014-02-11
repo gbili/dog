@@ -1,8 +1,22 @@
 <?php
 namespace Blog\Controller;
 
-class FileController extends \Zend\Mvc\Controller\AbstractActionController
+class FileController extends \Zend\Mvc\Controller\AbstractActionController 
+    implements \Upload\ConfigKeyAwareInterface
 {
+    protected $configKey;
+
+    public function getConfigKey()
+    {
+        return $this->configKey;
+    }
+
+    public function setConfigKey($configKey)
+    {
+        $this->configKey = $configKey;
+        return $this;
+    }
+
     /**
     * Index action
     *
@@ -21,7 +35,7 @@ class FileController extends \Zend\Mvc\Controller\AbstractActionController
     public function bulkAction()
     {
         if (!$this->request->isPost()) {
-            return $this->redirect()->toRoute('blog_file', array('controller' => 'file_controller', 'action' => 'index'));
+            return $this->redirect()->toRoute('blog_file_route', array('controller' => 'blog_file_controller', 'action' => 'index'));
         }
 
         $form = new \Blog\Form\FileBulk('bulk-action');
@@ -34,7 +48,7 @@ class FileController extends \Zend\Mvc\Controller\AbstractActionController
         $form->setData($formData = $this->request->getPost());
 
         if (!$form->isValid()) {
-            return $this->redirect()->toRoute('blog_file', array('controller' => 'file_controller', 'action' => 'index'));
+            return $this->redirect()->toRoute('blog_file_route', array('controller' => 'blog_file_controller', 'action' => 'index'));
         }
 
         $formValidData = $form->getData();
@@ -50,7 +64,7 @@ class FileController extends \Zend\Mvc\Controller\AbstractActionController
     {
         //translations is limited to admin
         if (!$this->identity()->isAdmin()) {
-            return $this->redirect()->toRoute('blog_file', array('controller' => 'file_controller', 'action' => 'index'));
+            return $this->redirect()->toRoute('blog_file_route', array('controller' => 'blog_file_controller', 'action' => 'index'));
         }
 
         $em = $this->em();
@@ -63,7 +77,7 @@ class FileController extends \Zend\Mvc\Controller\AbstractActionController
             }
         }
         $this->flashMessenger()->addSuccessMessage('Files Deleted');
-        return $this->redirect()->toRoute('blog_file', array('controller' => 'file_controller', 'action' => 'index'));
+        return $this->redirect()->toRoute('blog_file_route', array('controller' => 'blog_file_controller', 'action' => 'index'));
     }
 
     /**
@@ -100,10 +114,7 @@ class FileController extends \Zend\Mvc\Controller\AbstractActionController
 
     public function uploadAction()
     {
-        $config = $this->getServiceLocator()->get('Config');
-        $fileUploaderConfig = $config['file_uploader']['file_controller'];
-        return $this->fileUploader(array(
-        ));
+        return $this->fileUploader();
     }
 
    /**

@@ -23,7 +23,7 @@ class Message extends \Zend\View\Helper\AbstractHelper
             $message = "<strong>$former</strong>, $message";
         }
 
-        return "<div class=\"alert alert-dismiss alert-$class cancel-padding\">"
+        return "<div class=\"alert alert-dismiss alert-$class\">"
                . '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>' 
                . "<p>$message</p>"
              . '</div>';

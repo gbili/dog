@@ -8,7 +8,21 @@ namespace Dogtore\Controller;
  *
  */
 class DogController extends \Zend\Mvc\Controller\AbstractActionController
+    implements \Upload\ConfigKeyAwareInterface
 {
+    protected $configKey;
+
+    public function getConfigKey()
+    {
+        return $this->configKey;
+    }
+
+    public function setConfigKey($configKey)
+    {
+        $this->configKey = $configKey;
+        return $this;
+    }
+
     /**
      * View uniquename user's name dog 
      * :uniquename and :dogname are enforced by route
@@ -16,9 +30,9 @@ class DogController extends \Zend\Mvc\Controller\AbstractActionController
     public function viewAction()
     {
         $uniquename = $this->params()->fromRoute('uniquename');
-        $dogName    = $this->params()->fromRoute('dogname', null);
+        $dogname = $this->routeParamTransform('dogname_underscored')->underscoreToSpace();
 
-        $dogs = $this->getDogs($uniquename, $dogName);
+        $dogs = $this->getDogs($uniquename, $dogname);
 
         $viewVars = array(
             'dogs'
@@ -27,8 +41,16 @@ class DogController extends \Zend\Mvc\Controller\AbstractActionController
     }
 
     /**
+     * Upload images
+     */
+    public function uploadAction()
+    {
+        return $this->fileUploader();
+    }
+
+    /**
      * Edit uniquename user's dog with name
-     * :uniquename and :dogname are enforced by route
+     * :uniquename and :dogname_underscored are enforced by route
      */
     public function editAction()
     {
@@ -80,23 +102,24 @@ class DogController extends \Zend\Mvc\Controller\AbstractActionController
 
     /**
      * Editor for dogs 
-     * Uses route params :dogname
-     * if :dogname is not provided then it creates a new
+     * Uses route params :dogname_underscored
+     * if :dogname_underscored is not provided then it creates a new
      * dog to edit
      */
     public function editor()
     {
-        $dogName    = $this->params()->fromRoute('dogname', false);
-        $user       = $this->identity();
-        $em         = $this->em();
-        $locale     = $this->locale();
+        $dogname = $this->routeParamTransform('dogname_underscored')->underscoreToSpace();
+        $user    = $this->identity();
+        $em      = $this->em();
+        $locale  = $this->locale();
 
-        if (false !== $dogName) {
-            $dogs = $em->getRepository('Dogtore\Entity\Dog')->findBy(array('owner' => $user, 'name' => $dogName));
+        if ($dogname) {
+            $dogname = preg_replace();
+            $dogs = $em->getRepository('Dogtore\Entity\Dog')->findBy(array('owner' => $user, 'name' => $dogname));
         }
 
         if (empty($dogs)) {
-            if (false !== $dogName) {
+            if (false !== $dogname) {
                 $this->messenger()->addMessage('The requested dog does not exist', 'danger');
                 return $this->getResponse()->setStatusCode(404);
             }
@@ -136,17 +159,18 @@ class DogController extends \Zend\Mvc\Controller\AbstractActionController
         $em->persist($dog);
         $em->flush();
 
-        return $this->redirect()->toRoute('dog_view_user_dog', array('uniquename' => (string) $user->getUniquename(), 'dogname' => $dog->getName()), true);
+        $dognameUnder = $this->string()->spaceToUnderscore($dog->getName());
+        return $this->redirect()->toRoute('dog_view_user_dog', array('uniquename' => (string) $user->getUniquename(), 'dogname_underscored' => $dognameUnder), true);
     }
 
-    protected function getDogs($userUniquename, $dogName = null)
+    protected function getDogs($userUniquename, $dogname = null)
     {
         $req = new \Dogtore\Req\Dog();
         $conditions = [];
 
         $conditions[] = array('owner_uniquename' => array('=' => $userUniquename));
-        if (null !== $dogName) {
-            $conditions[] = array('dog_name' => array('=' => $dogName));
+        if (null !== $dogname) {
+            $conditions[] = array('dog_name' => array('=' => $dogname));
         }
 
         return $req->getDogs(((empty($conditions))? [] : ['and' => $conditions]));

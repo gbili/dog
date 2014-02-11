@@ -5,9 +5,8 @@
 </div>
 <div class="row">
     <div class="col-sm-12 col-md-12 col-lg-12">
-    <a href="<?php echo $this->url('blog', array(
+    <a href="<?php echo $this->url('blog_media_route' , array(
                                        'lang' => $this->lang(),
-                                       'controller' => 'media_controller', 
                                        'action' => 'index',
                                   ));
             ?>"><?php $this->translate('Back to media library', 'blog')?></a>

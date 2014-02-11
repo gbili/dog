@@ -38,10 +38,9 @@ class AuthController extends \Zend\Mvc\Controller\AbstractActionController
         $userEmail = $this->getUserEmail($formData);
 
         if (!$userEmail || !$this->authenticate($userEmail, $formData['user']['password'])) {
-            $this->messenger()->addMessage('The credential/password combination does not exist, try something else or register', 'danger');
             return new ViewModel(array(
                 'form' => $form,
-                'messages' => $this->messenger()->getMessages(),
+                'messages' => array('danger' => 'The credential/password combination does not exist, try something else or register'),
             ));
         }
 

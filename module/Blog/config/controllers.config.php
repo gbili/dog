@@ -2,9 +2,11 @@
 namespace Blog;
 return array(
         'invokables' => array(
-            'post_controller'     => 'Blog\Controller\PostController',
-            'category_controller' => 'Blog\Controller\CategoryController',
-            'media_controller'    => 'Blog\Controller\MediaController',
-            'file_controller'     => 'Blog\Controller\FileController',
+            'blog_post_controller'     => 'Blog\Controller\PostController',
+            'blog_category_controller' => 'Blog\Controller\CategoryController',
+        ),
+        'factories' => array(
+            'blog_media_controller' => 'Upload\Controller\ConfigKeyAwareControllerFactory',
+            'blog_file_controller'  => 'Upload\Controller\ConfigKeyAwareControllerFactory',
         ),
     );

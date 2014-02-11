@@ -9,7 +9,7 @@ $this->formActionPrepare($form, 'form-inline', true);
 <h1><?php echo $this->escapeHtml($title); ?></h1>
 <p><a href="<?php echo $this->url(null , array(
     'lang' => $this->lang(),
-    'controller' => 'file_controller', 
+    'controller' => 'blog_file_controller', 
     'action'=>'upload',
 ));?>"><?php echo $this->translate('Add new File') ?></a></p>
 <?php echo $this->form()->openTag($form) ?>
@@ -47,7 +47,7 @@ $this->formActionPrepare($form, 'form-inline', true);
 	        <td>
                 <a href="<?php echo $this->url(null, array(
                     'lang' => $this->lang(),
-                    'controller' => 'media_controller', 
+                    'controller' => 'blog_media_controller', 
                     'action' => 'create',
                     'id' => $file->getId()
                 )); ?>"><?php echo $this->translate('Link')?></a>
@@ -55,7 +55,7 @@ $this->formActionPrepare($form, 'form-inline', true);
 	        <td>
                 <a href="<?php echo $this->url(null, array(
                     'lang' => $this->lang(),
-                    'controller' => 'file_controller', 
+                    'controller' => 'blog_file_controller', 
                     'action' => 'edit', 
                     'id' => $file->getId(),
                 )); ?>"><?php echo $this->translate('Edit')?></a>
@@ -64,7 +64,7 @@ $this->formActionPrepare($form, 'form-inline', true);
 	        <td>
                 <a href="<?php echo $this->url(null, array(
                     'lang' => $this->lang(),
-                    'controller' => 'file_controller', 
+                    'controller' => 'blog_file_controller', 
                     'action' => 'delete',
                     'id' => $file->getId()
                 )); ?>" onclick="return confirm('Are you sure?')"><?php echo $this->translate('Delete')?></a>

@@ -21,7 +21,6 @@ class CategoryController extends \Zend\Mvc\Controller\AbstractActionController
             'categories' => $categories,
             'form'       => new \Blog\Form\CategoryBulk('bulk-action'),
             'paginator'  => $paginator,
-            'nonce'      => $this->nonce()->getHash(),
         ));
     }
 
@@ -153,11 +152,9 @@ class CategoryController extends \Zend\Mvc\Controller\AbstractActionController
 
     public function deleteAction()
     {
-        $nonceParamName = 'fourthparam';
-        $overrideParams = array('id'=>null, $nonceParamName => null);
-
-        if (!$this->nonce($nonceParamName)->isValid()) {
-            return $this->redirectToCategoriesList($overrideParams);
+        $this->nonce()->setNonceParamName('fourthparam');
+        if (!$this->nonce()->isValid()) {
+            throw new \Exception('500 access denied');
         }
         $category = $this->em()->getRepository('Blog\Entity\Category')->find($this->params('id'));
 

@@ -2,16 +2,16 @@
 $title = $this->translate('My Pack');
 $this->headTitle($title);
 ?>
-<div class="row">
+<header class="row">
     <div class="col-sm-4 col-md-4 col-4">
-        <h1><?php echo $this->escapeHtml($title); ?></h1>
+        <h3><?php echo $this->escapeHtml($title); ?></h3>
     </div>
     <div class="col-sm-4 col-md-4 col-4">
     </div>
     <div class="col-sm-4 col-md-4 col-4">
-        <p><a class="btn btn-success" href="<?php echo $this->url('dog_add_my_dog', array(), true);?>"><?php echo $this->translate('Add Dog') ?></a></p>
+        <p><a class="btn btn-success" href="<?php echo $this->url('dogtore_dog_add_route', array(), true);?>"><?php echo $this->translate('Add Dog') ?></a></p>
     </div>
-</div>
+</header>
 <?php $count = count($dogs) ?>
 <?php $itemsPerRow = 4 ?>
 <?php $excess = $count % $itemsPerRow ?>
@@ -31,7 +31,7 @@ $this->headTitle($title);
         <p>
             <a class="btn btn-primary btn-xs" role="button"href="<?php echo $this->url('dog_view_user_dog', array(
                 'uniquename' => $dog['owner_uniquename'],
-                'dogname' => $dog['dog_name'],
+                'dogname_underscored' => $this->string()->spaceToUnderscore($dog['dog_name']),
             ), true); ?>"><?php echo $this->translate('View') ?></a>
         </p>
      </div><!-- end caption -->

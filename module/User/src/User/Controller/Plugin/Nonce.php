@@ -14,8 +14,16 @@ namespace User\Controller\Plugin;
  */
 class Nonce extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
 {
-    protected $routeParamName = 'fourthparam';
-    protected $validator;
+    protected $nonceParamName = 'nonce';
+
+    protected $service;
+
+
+    public function setService(\User\Service\Nonce $service)
+    {
+        $this->service = $service;
+        return $this;
+    }
 
     /**
      * Grabs a param from route match by default.
@@ -24,65 +32,82 @@ class Nonce extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
      * @param mixed $default
      * @return mixed
      */
-    public function __invoke($paramName=null)
+    public function __invoke()
     {
-        if (null !== $paramName) {
-            return $this->setRouteParamName($paramName);
-        }
         return $this;
     }
 
-    /**
-     *
-     */
-    public function isValid()
+    public function setRouteName($name)
     {
-        return $this->getValidator()->isValid($this->getParam());
+        $this->service->setRouteName($name);
+        return $this;
     }
 
-    public function getParam()
+    public function setItemId($itemId)
     {
+        $this->service->setItemId($itemId);
+        return $this;
+    }
+
+    public function isValid()
+    {
+        $this->prepareSalt();
+        $this->service->setProvidedHash($this->getProvidedNonce());
+        return $this->service->isValid();
+    }
+
+    public function prepareSalt()
+    {
+        // When no routename is passed, considered validation process
+        // And tries to get it from route match
+
         $controller = $this->getController();
-        if (!$controller || !method_exists($controller, 'plugin')) {
-            throw new \Zend\Mvc\Exception\DomainException('Redirect plugin requires a controller that defines the plugin() method');
+        if (!$this->service->hasRouteName()) {
+            $routeMatch = $controller->getServiceLocator()
+                ->get('Application')
+                ->getMvcEvent()
+                ->getRouteMatch();
+
+            if (null === $routeMatch) {
+                throw new \Exception('no route match');
+            }
+            $this->service->setRouteName($routeMatch->getMatchedRouteName());
         }
 
-        $nonce = $controller->plugin('params')->fromRoute($this->routeParamName, false);
-        if (!$nonce) {
-            throw new Exception\BadRequestException('Missing nonce param, using param name:');
+        if (!$this->service->hasItemId()) {
+            $itemId = $controller->params()->fromRoute('id', null);
+            if (null === $itemId) {
+                throw new \Exception('Missing route param "id", or not setting it before calling getHash');
+            }
+            $this->service->setItemId($itemId);
+        }
+
+        if (!$this->service->hasUser()) {
+            $this->service->setUser($controller->identity());
+        }
+    }
+
+    /**
+     * The hash sent in the get request as nonce param
+     */
+    public function getProvidedNonce()
+    {
+        $controller = $this->getController();
+        $nonce = $controller->params()->fromRoute($this->nonceParamName, null);
+        if (null === $nonce) {
+            throw new Exception\BadRequestException('Missing nonce param, using param name:' . $this->nonceParamName);
         }
         return $nonce;
     }
 
     public function getHash()
     {
-        return $this->getValidator()->getHash();
+        return $this->service->getHash();
     }
 
-    public function setRouteParamName($name)
+    public function setNonceParamName($name)
     {
-        $this->routeParamName = $name;
+        $this->nonceParamName = $name;
         return $this;
-    }
-
-    public function getValidator()
-    {
-        if (null === $this->validator) {
-            $this->validator = new \Zend\Validator\Csrf;
-            $this->validator->setSalt($this->getSalt());
-        }
-        return $this->validator;
-    }
-
-    public function getSalt()
-    {
-        $user = $this->getController()->identity();
-        $uid = $user->getId();
-
-        preg_match_all('/(?<alnum>[a-z0-9]+)/', $user->getPassword(), $matches);
-
-        $passwordAlnum = implode('', $matches['alnum']);
-
-        return $uid . $passwordAlnum;
     }
 }

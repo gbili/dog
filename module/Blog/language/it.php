@@ -42,4 +42,10 @@ return array (
   'Delete' => '',
   'Link to' => '',
   'Are you sure?' => '',
+  'My Profile' => '',
+  'My Pack' => '',
+  'Add Dog' => '',
+  'upload' => '',
+  'media' => '',
+  '<label for="file_input">Select</label>' => '',
 );

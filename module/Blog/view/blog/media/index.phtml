@@ -2,9 +2,9 @@
 $title = $this->translate('Media Library');
 $this->headTitle($title);
 ?>
-<div class="row">
+<header class="row">
     <div class="col-sm-4 col-md-4 col-4">
-        <h1><?php echo $this->escapeHtml($title); ?></h1>
+        <h3><?php echo $this->escapeHtml($title); ?></h3>
     </div>
     <div class="col-sm-4 col-md-4 col-4">
         <p><a class="btn btn-default" href="<?php echo $this->url(null, array('action'=>'create'), true);?>" title="<?php echo $this->translate('Media from previously uploaded image') ?>"><?php echo $this->translate('Create from Existing') ?></a></p>
@@ -12,13 +12,16 @@ $this->headTitle($title);
     <div class="col-sm-4 col-md-4 col-4">
         <p><a class="btn btn-success" href="<?php echo $this->url(null, array('action'=>'upload'), true);?>"><?php echo $this->translate('Upload media') ?></a></p>
     </div>
-</div>
+</header>
 <?php $count = count($medias) ?>
 <?php $itemsPerRow = 4 ?>
 <?php $excess = $count % $itemsPerRow ?>
 <?php $rows = ($count - $excess) / $itemsPerRow ?>
 <?php $isRowOpened = false ?>
 <?php $i = 1 ?>
+
+<?php $this->nonce()->setRouteName('blog_media_delete_route') ?>
+
     <?php foreach($medias as $media) : ?>
 <?php if (1 === $i || 0 === ($i % $itemsPerRow)) : ?> 
     <div class="row">
@@ -56,10 +59,10 @@ $this->headTitle($title);
                 'action' => 'edit', 
                 'id' => $media->getId(),
             )); ?>"><?php echo $this->translate('Edit') ?></a>
-            <a class="btn btn-danger btn-xs" role="button" href="<?php echo $this->url(null, array(
+            <a class="btn btn-danger btn-xs" role="button" href="<?php echo $this->url($this->nonce()->getRouteName(), array(
                 'lang' => $this->lang(), 
-                'action' => 'delete',
-                'id' => $media->getId()
+                'id' => $media->getId(),
+                'nonce' => $this->nonce()->getHash($media->getId()),
             )); ?>" onclick="return confirm(<?php echo $this->translate('Are you sure?') ?>'')"><?php echo $this->translate('Delete') ?></a>
         </p>
      </div><!-- end caption -->

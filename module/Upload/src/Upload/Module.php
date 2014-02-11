@@ -18,4 +18,8 @@ class Module
             ),
         );
     }
+
+    public function onBootstrap(\Zend\Mvc\MvcEvent $e)
+    {
+    }
 }

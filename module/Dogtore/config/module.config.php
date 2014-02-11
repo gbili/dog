@@ -17,6 +17,7 @@ return array(
 
     'controllers'     => include __DIR__ . '/controllers.config.php',
     'doctrine'        => include __DIR__ . '/doctrine.config.php',
+    'file_uploader'   => include __DIR__ . '/file_uploader.config.php',
     'navigation'      => include __DIR__ . '/navigation.config.php',
     'router'          => include __DIR__ . '/router.config.php',
     'service_manager' => include __DIR__ . '/service_manager.config.php',

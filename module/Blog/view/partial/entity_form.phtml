@@ -8,14 +8,12 @@ $action = substr(end($fileparts), 0, -6);
 $controller = prev($fileparts); 
 $textDomain = prev($fileparts);
 $route = array(
-    'lang' => $this->lang(),
-    'controller' => $controller,
     'action' => $action
 );
 if (isset($entityId) && null !== $entityId) {
     $route['id'] = $entityId;
 }
-$form->setAttribute('action', $this->url('blog',$route));
+$form->setAttribute('action', $this->url(null ,$route, true));
 $form->setAttribute('class', 'form-horizontal');
 $form->prepare();
 ?>
@@ -23,13 +21,13 @@ $form->prepare();
 $title = ucfirst($this->translate($action, $textDomain)) . ' ' . ucfirst($this->translate($controller, $textDomain));
 $this->headTitle($title);
 ?>
-<div class="row">
+<header class="row">
     <div class="col-sm-0 col-md-2 col-lg-2"></div>
     <div class="col-sm-12 col-md-8 col-lg-8">
-        <h1><?php echo $this->escapeHtml($title); ?></h1>
+        <h3><?php echo $this->escapeHtml($title); ?></h3>
     </div>
     <div class="col-sm-0 col-md-2 col-lg-2"></div>
-</div>
+</header>
 
 <div class="row">
     <div class="col-sm-0 col-md-2 col-lg-2"></div>
@@ -53,17 +51,3 @@ $this->headTitle($title);
     </div>
     <div class="col-sm-0 col-md-2 col-lg-2"></div>
 </div>
-
-<script type="text/javascript">
-        $(function() {
-            $('textarea[name="content"]').tinymce({
-                    script_url : '/js/tiny_mce/tiny_mce.js',
-                    theme : "advanced",
-                    plugins : "pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras",
-                    // Theme options
-                    theme_advanced_buttons1 : "save,newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
-                    theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,cleanup,code,|,insertdate,inserttime,preview,template",
-                    theme_advanced_resizing : true
-            });
-        });
-</script>

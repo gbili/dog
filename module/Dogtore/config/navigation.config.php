@@ -11,9 +11,9 @@ return array(
         ),
        'side_2' => array(
             // And finally, here is where we define our page hierarchy
-            'dog_add_my_dog' => array(
+            'dogtore_dog_add_route' => array(
                 'label' => 'Add Dog',
-                'route' => 'dog_add_my_dog',
+                'route' => 'dogtore_dog_add_route',
             ),
         ),
 );

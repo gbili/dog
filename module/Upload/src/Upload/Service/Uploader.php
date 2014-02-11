@@ -1,7 +1,7 @@
 <?php
 namespace Upload\Service;
 
-class FileEntityUploader
+class Uploader 
 {
     /**
      * Points to a php file containing
@@ -12,46 +12,65 @@ class FileEntityUploader
      */
     protected $includeScriptFilePath;
 
+    /**
+     * @var array
+     */
+    protected $formActionRouteParams = array('route' => null, 'params' => array(), 'reuse_matched_params' => true);
+
+    /**
+     *
+     * @var \Upload\FileHydratorInterface
+     */
     protected $hydrator;
 
+    /**
+     *
+     * @var \Zend\Http\Request
+     */
     protected $request;
 
+    /**
+     * @var StdObject array
+     */
     protected $postData;
 
+    /**
+     * @var string
+     */
     protected $fileInputName;
 
+    /**
+     * @var string
+     */
     protected $formName;
 
+    /**
+     * @var array
+     */
     protected $messages;
 
+    /**
+     * @var array
+     */
     protected $files = array();
 
+    /**
+     * @var \Upload\Form\Html5MultiUpload
+     */
     protected $form = null;
+
+    /**
+     * @var \Upload\Form\Html5MultiUpload
+     */
+    protected $clonableForm = null;
 
     public function getFormCopy()
     {
-        if (null !== $this->form) {
-            return clone $this->form;
+        if (null === $this->clonableForm) {
+            //Popopulate clonableForm
+            $this->getForm();
         }
-
-        $options = array();
-
-        if (!$this->hasFileInputName()) {
-            //using default throw new \Exception('File input name must be set with : $fu->setFileInputName("file_input")');
-            $this->setFileInputName('file_input');
-        }
-        $options['file_input_name'] = $this->getFileInputName();
-
-        if (!$this->hasFormName()) {
-            //using default throw new \Exception('File form name must be set with : $fu->setFormName("file_form")');
-            $this->setFormName('file_form');
-        }
-        $name = $this->getFormName();
-
-        $form = new \Upload\Form\Html5MultiUpload($name, $options);
-        $this->setForm($form);
-
-        return $form;
+        return clone $this->clonableForm;
     }
 
     /**
@@ -87,6 +106,50 @@ class FileEntityUploader
         }
         $this->form = $form;
         return $this;
+    }
+
+    public function getForm()
+    {
+        if (null !== $this->form) {
+            return $this->form;
+        }
+
+        $options = array();
+        if (!$this->hasFileInputName()) {
+            $this->setFileInputName('file_input');
+        }
+        $options['file_input_name'] = $this->getFileInputName();
+
+        if (!$this->hasFormName()) {
+            $this->setFormName('file_form');
+        }
+        $name = $this->getFormName();
+
+        $form = new \Upload\Form\Html5MultiUpload($name, $options);
+
+        $this->clonableForm = clone $form;
+        $this->setForm($form);
+
+        return $form;
+    }
+
+    public function setFormActionRouteParams(array $routeParams)
+    {
+        if (isset($routeParams['route'])) {
+            $this->formActionRouteParams['route'] = $routeParams['route'];
+        }
+        if (isset($routeParams['params'])) {
+            $this->formActionRouteParams['params'] = $routeParams['params'];
+        }
+        if (isset($routeParams['reuse_matched_params'])) {
+            $this->formActionRouteParams['reuse_matched_params'] = $routeParams['reuse_matched_params'];
+        }
+        return $this;
+    }
+
+    public function getFormActionRouteParams()
+    {
+        return $this->formActionRouteParams;
     }
 
     public function getFiles()
@@ -168,7 +231,7 @@ class FileEntityUploader
 
     public function hasFileInputName()
     {
-        return (null !== $this->fileInputName);
+        return null !== $this->fileInputName;
     }
 
     public function getFileInputName()
@@ -224,7 +287,7 @@ class FileEntityUploader
 
     public function isFileUploaded($message)
     {
-        return isset($message['success']);
+        return isset($message['class']) && $message['class'] === 'success';
     }
 
     public function uploadFiles()

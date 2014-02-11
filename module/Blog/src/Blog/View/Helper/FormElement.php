@@ -29,11 +29,12 @@ class FormElement extends \Zend\View\Helper\AbstractHelper
         $errors = $this->renderTranslatedErrors($element);
         $hasErrors = ('' !== ($errors));
         $statusClass = (($hasErrors)? ' has-error' : (($firstRendering)? '' : ' has-success'));
+        $formGroupClass = $this->getElementOption($element, 'form_group_class', '');
 
         $controlsDivClass = $this->getElementOption($element, 'controls_div_class', '');
         $helperMethod = $this->getElementOption($element, 'helper_method', 'formElement');
 
-        return "<div class=\"form-group$statusClass\">"
+        return "<div class=\"form-group$statusClass $formGroupClass\">"
                     . $this->renderTranslatedLabel($element)
                     . "<div class=\"controls $controlsDivClass\">"
                         . $this->view->$helperMethod($element)

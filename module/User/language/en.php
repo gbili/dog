@@ -74,4 +74,8 @@ return array (
   'three' => '',
   'You have two dogs' => '',
   '. Their names are: ' => '',
+  'You have four dogs' => '',
+  'firstname surname<small>\'s Profile</small>' => '',
+  'Info' => '',
+  'You have too many dogs' => '',
 );

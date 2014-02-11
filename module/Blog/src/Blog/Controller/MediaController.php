@@ -2,7 +2,21 @@
 namespace Blog\Controller;
 
 class MediaController extends \Zend\Mvc\Controller\AbstractActionController
+    implements \Upload\ConfigKeyAwareInterface
 {
+    protected $configKey;
+
+    public function getConfigKey()
+    {
+        return $this->configKey;
+    }
+
+    public function setConfigKey($configKey)
+    {
+        $this->configKey = $configKey;
+        return $this;
+    }
+
     /**
      * Index action
      */
@@ -105,9 +119,7 @@ class MediaController extends \Zend\Mvc\Controller\AbstractActionController
 
     public function uploadAction()
     {
-        $config = $this->getServiceLocator()->get('Config');
-        $fileUploaderConfig = $config['file_uploader']['media_controller'];
-        return $this->fileUploader($fileUploaderConfig);
+        return $this->fileUploader();
     }
 
     /**
@@ -128,14 +140,16 @@ class MediaController extends \Zend\Mvc\Controller\AbstractActionController
     {
         return $this->redirect()->toRoute('blog_media_view', array(
             'action' => 'view',
+            'slug' => $media->getSlug(),
         ), true);
     }
 
     public function redirectToMediaLibrary()
     {
-        return $this->redirect()->toRoute(null, array(
+        return $this->redirect()->toRoute('blog_media_route', array(
             'action'     => 'index', 
-        ), true);
+            'lang' => $this->locale(),
+        ), false);
     }
 
     /**
@@ -143,6 +157,10 @@ class MediaController extends \Zend\Mvc\Controller\AbstractActionController
      */
     public function deleteAction()
     {
+        if (!$this->nonce()->isValid()) {
+            throw new \Exception('500 access denied');
+        }
+
         $media = $this->em()->getRepository('Blog\Entity\Media')->find($this->params()->fromRoute('id'));
 
         if ($media) {
