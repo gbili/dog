@@ -27,7 +27,7 @@ class PostController extends \Zend\Mvc\Controller\AbstractActionController
             return $this->posts;
         }
         $paginator = $this->paginator();
-        $this->posts = $this->em()->getRepository('Blog\Entity\Post')->findBy(
+        $this->posts = $this->repository()->findBy(
             array(
                 'user' => $this->identity()->getId(),
             ),
@@ -125,6 +125,7 @@ class PostController extends \Zend\Mvc\Controller\AbstractActionController
 
         if (!$this->request->isPost()) {
             return new \Zend\View\Model\ViewModel(array(
+                'firstRendering' => true,
                 'entityId' => $blogPost->getId(),
                 'form' => $combinedForm,
             ));
@@ -135,6 +136,7 @@ class PostController extends \Zend\Mvc\Controller\AbstractActionController
 
         if (!$combinedForm->isValid()) {
             return new \Zend\View\Model\ViewModel(array(
+                'firstRendering' => false,
                 'form' => $combinedForm,
                 'entityId' => $blogPost->getId(),
             ));

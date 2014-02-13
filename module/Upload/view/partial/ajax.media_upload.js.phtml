@@ -1,0 +1,25 @@
+<?php include_once __DIR__ . '/jquery_image_picker.init.js.phtml' ?>
+
+<?php ob_start() ?>
+<script type="text/javascript">
+var uploadSuccess = function (response) {
+    var options = '';
+    var callbackReturn = response.callbackReturn;
+    for( key in  callbackReturn) {
+        options = options + '<option data-img-src="' + callbackReturn[key].mediaSrc + '" value="' + callbackReturn[key].mediaId + '" >';
+    }
+    var selectElement = $('select.image-picker');
+    selectElement.html(selectElement.html() + options);
+    selectElement.imagepicker();
+};
+
+var uploadFail = function (response) {
+    showMessages(response.messages);
+};
+</script>
+<?php $ajax_media_upload = ob_get_clean() ?>
+
+<?php $this->scriptalicious()->addInline('ajax_media_upload_library', $ajax_media_upload)
+    ->addDependency('ajax_media_upload_library', 'image_picker') ?>
+
+<?php unset($ajax_media_upload) ?>

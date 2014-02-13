@@ -1,0 +1,20 @@
+<?php $this->scriptalicious()->addSrc('jQuery', '/js/jquery-ui-1.10.4.custom.min.js') ?>
+<?php ob_start() ?>
+<script type="text/javascript">
+function bulkSelectAll() {
+    var checkboxes = $("#bulk-action input[name|='<?= $form->getOption('multicheck_element_name')?>[]']");
+    var n=checkboxes.length;
+    for (var i=0; i<n; i++) {
+        checkboxes[i].checked = this.checked;
+    }
+};
+if (document.getElementById('bulk-action-input-all').addEventListener) {
+    document.getElementById('bulk-action-input-all').addEventListener('click', bulkSelectAll, false); 
+} else if (el.attachEvent)  {
+    document.getElementById('bulk-action-input-all').attachEvent('onclick', bulkSelectAll);
+}
+</script>
+
+<?php $this->scriptalicious()->addInline('bulk_action', ob_get_clean()) 
+    ->addDependency('bulk_action', 'jQuery') ?>
+

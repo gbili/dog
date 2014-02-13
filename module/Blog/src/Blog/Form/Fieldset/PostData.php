@@ -46,14 +46,17 @@ implements \Zend\InputFilter\InputFilterProviderInterface
 
         $this->add(array(
             'name' => 'media',
-            'type' => 'DoctrineModule\Form\Element\ObjectSelect',
+            'type' => 'Blog\Form\Element\ObjectSelect',
             'options' => array(
-                'label' => 'Featured Image',
+                'label' => 'Picture',
                 'property' => 'slug',
+                'attributes' => array(
+                    'data-img-src' => 'src',
+                ),
+                'form_group_class' => 'well',
+                'is_method' => true,
                 'target_class' => 'Blog\Entity\Media',
                 'object_manager' => $objectManager,
-                'display_empty_item' => true,
-                'empty_item_label' => '---',
                 'is_method' => true,
                 'find_method' => array(
                     'name' => 'findBy',
@@ -61,9 +64,11 @@ implements \Zend\InputFilter\InputFilterProviderInterface
                         'criteria' => array('locale' => $lang),
                     ),
                 ),
+                'display_empty_item' => true,
+                'empty_item_label' => '---',
             ),
             'attributes' => array(
-                'class' => 'form-control',
+                'class' => 'image-picker masonry',
             )
         ));
     }

@@ -88,21 +88,6 @@ $this->headTitle($title);
 }
 </style>
 
-<?php ob_start() ?>
-<script type="text/javascript">
-//Image Picker
-$("select.image-picker").imagepicker();
-
-//Trying to masonize image picker
-//var container = $(".image_picker_selector").next('ul.thumbnails');
-//container.imagesLoaded(function (){
-//    container.masonry({
-//    itemSelector : "li",
-//    });
-//});
-// End Image Picker
-</script>
-<?php $init_image_picker = ob_get_clean() ?>
 
 <?php ob_start() ?>
 <script type="text/javascript">
@@ -159,16 +144,7 @@ if (!Modernizr.inputtypes.date) {
     ->addDependency('conditional_datepicker', 'jQuery') //of what only datepicker
     ->addDependency('conditional_datepicker', 'modernizr_input') ?>
 
-<?php $this->scriptalicious()->addSrc('image_picker', '/js/image-picker.min.js')
-    ->addDependency('image_picker', 'jQuery') ?>
-
-<?php $this->scriptalicious()->addInline('init_image_picker', $init_image_picker)
-    ->addDependency('init_image_picker', 'image_picker') ?>
-
 <?php $this->scriptalicious()->addSrc('modernizr_input', '/js/modernizr.input.min.js')
     ->addDependency('modernizr_input', 'jQuery') ?>
 
-<?php $this->scriptalicious()->addSrc('colpick','/js/colpick.js')
-    ->addDependency('colpick', 'jQuery') ?>
-
-<?php include $this->uploader()->getScriptPath() ?>
+<?php include_once $this->uploader()->getScriptPath() ?>

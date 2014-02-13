@@ -1,10 +1,8 @@
 <?php
 $title = $this->translate('Posts');
 $this->headTitle($title);
-$form->setAttribute('action', $this->url(null ,array('action' => 'bulk'), true));
-$form->setAttribute('class', 'form-inline');
-$form->setAttribute('role', 'form');
-$form->prepare();
+
+$this->bulkForm()->prepare();
 ?>
 <header class="row">
     <div class="col-sm-4 col-md-4 col-4">
@@ -30,7 +28,7 @@ $form->prepare();
 </div>
 <table class="table table-bordered table-hover">
     <tr>
-        <th><?php echo $this->translate('Bulk')?></th>
+        <th><?= $this->bulkForm()->renderSelectAllCheckbox()?></th>
         <th><?php echo $this->translate('Id')?></th>
         <th><?php echo $this->translate('Title')?></th>
         <th><?php echo $this->translate('Slug')?></th>
@@ -41,7 +39,7 @@ $form->prepare();
     </tr>
     <?php foreach($posts as $post) : ?>
 	    <tr>
-            <td><input type="checkbox" name="posts[]" value="<?php echo $this->escapeHtml($post->getId()) ?>"></td>
+            <td><?= $this->bulkForm()->renderElementCheckbox($post->getId()) ?></td>
 	        <td><?php echo $this->escapeHtml($post->getId());?></td>
 	        <td><?php echo $this->escapeHtml($post->getData()->getTitle());?></td>
 	        <td><?php echo $this->escapeHtml($post->getSlug());?></td>
@@ -79,3 +77,5 @@ $form->prepare();
     </div>
 </div>
 <?php echo $this->form()->closeTag();?>
+
+<?php include $this->bulkForm()->getPartialScriptPath() ?>

@@ -17,14 +17,19 @@ class Form extends \Zend\View\Helper\AbstractHelper
      * Translate a message
      * @return string
      */
-    public function __invoke(\Zend\Form\Form $form, $firstRendering = true)
+    public function __invoke(\Zend\Form\Form $form, $firstRendering = null)
     {
         $view = $this->view;
+
+        if (null !== $firstRendering) {
+            $view->renderElement()->setFirstRendering((boolean) $firstRendering);
+        }
+
         $html = '';
 
         $html .= $view->form()->openTag($form);
         foreach ($view->elementsFlatArray($form) as $element) {
-            $html .= $view->renderElement($element, $firstRendering);
+            $html .= $view->renderElement($element);
         } 
         $html .= $view->form()->closeTag();
 

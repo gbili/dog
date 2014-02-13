@@ -38,24 +38,16 @@ class Search extends \Zend\Form\Form
     {
         return array(
             't' => array(//terms
-                'required' => false,
+                'required' => true,
                 'filters'  => array(
                     /*array('name' => 'StripTags'),
                     array('name' => 'StringTrim'),*/
                 ),
                 'validators' => array(
-                    array(
-                        'name'    => 'Alnum',
+                   array(
+                        'name'    => 'Regex',
                         'options' => array(
-                            'allowWhiteSpace' => true,
-                        ),
-                    ),
-                    array(
-                        'name'    => 'StringLength',
-                        'options' => array(
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-                            'max'      => 255,
+                            'pattern' => '/([A-Za-z0-9?!- ]{3,})/',
                         ),
                     ),
                 ),
@@ -79,7 +71,7 @@ class Search extends \Zend\Form\Form
         if ($this->hasValidated) {
             return $this->isValid;
         }
-        return $this->isValid = parent::isValid() && ($this->hasTerms() || $this->hasCategory());
+        return $this->isValid = (parent::isValid() && ($this->hasTerms() || $this->hasCategory()));
     }
 
     public function getElementData($elementName)
@@ -93,6 +85,9 @@ class Search extends \Zend\Form\Form
         return $this->validData[$elementName];
     }
 
+    /*
+     * TODO beware of the strlen check
+     */
     public function hasTerms()
     {
         $terms = $this->getElementData('t');

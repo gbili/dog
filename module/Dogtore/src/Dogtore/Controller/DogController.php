@@ -134,6 +134,7 @@ class DogController extends \Zend\Mvc\Controller\AbstractActionController
         if (!$this->request->isPost()) {
             return new \Zend\View\Model\ViewModel(array(
                 'form' => $dogForm,
+                'firstRendering' => true,
                 'messages' => $this->messenger()->getMessages(),
             ));
         }
@@ -144,6 +145,7 @@ class DogController extends \Zend\Mvc\Controller\AbstractActionController
         if (!$dogForm->isValid()) {
             return new \Zend\View\Model\ViewModel(array(
                 'form' => $dogForm,
+                'firstRendering' => false,
                 'messages' => $this->messenger()->getMessages(),
             ));
         }

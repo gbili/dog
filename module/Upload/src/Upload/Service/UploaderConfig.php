@@ -12,7 +12,7 @@ class UploaderConfig implements UploaderServiceConfigInterface, UploaderControll
     protected $errorMessages = array(
           self::ERROR_MISSING_CONTROLLER_CONFIG => 'Controller impelements \Upload\ConfigKeyAwareInterface, but no controller specific configuration was found',
           self::ERROR_MISSING_DEFAULT_CONFIG    => 'There is no controller specific config, nor a default config',
-          self::ERROR_MISSING_CONFIG_ALIAS      => "'file_uploader':'%s' config value, is string. So alias is expected. But no 'file_uploader':%s isset.",
+          self::ERROR_MISSING_CONFIG_ALIAS      => "'file_uploader':'%s' config, references an alias. But no 'file_uploader':%s isset.",
     );
 
     protected $sm;
@@ -23,6 +23,13 @@ class UploaderConfig implements UploaderServiceConfigInterface, UploaderControll
      * Controller specific config
      */
     protected $specificConfig;
+
+    /**
+     * aliased config, can be used if some controller specific config key is not set
+     * would be better if it was mergeable, to the controller spcific but I dont know how
+     * array_merge_recursive adds new arrays when key exists
+     */
+    protected $aliasedConfig;
 
     protected $controllerKey;
 
@@ -58,20 +65,19 @@ class UploaderConfig implements UploaderServiceConfigInterface, UploaderControll
 
     public function configureService(\Upload\Service\Uploader $service)
     {
-        $config = $this->getControllerSpecificConfig();
-        $serviceConfig = $config['service'];
-
-        if (isset($serviceConfig['form_action_route_params'])) {
-            $service->setFormActionRouteParams($serviceConfig['form_action_route_params']);
+        $actionRouteParams = $this->getConfigValue('service', 'form_action_route_params', false);
+        if ($actionRouteParams) {
+            $service->setFormActionRouteParams($actionRouteParams);
         }
 
-        if (isset($serviceConfig['include_js_script'])) {
-            $service->setIncludeScriptFilePath($serviceConfig['include_js_script']);
+        $jsScriptPath = $this->getConfigValue('service', 'include_js_script', false);
+        if ($jsScriptPath) {
+            $service->setIncludeScriptFilePath($jsScriptPath);
         }
         
         $service->setFileHydrator($this->getServiceFileHydrator());
-        $service->setFormName($this->getServiceFormName());
-        $service->setFileInputName($this->getServiceFileInputName());
+        $service->setFormName($this->getConfigValue('service', 'form_name', 'file_form'));
+        $service->setFileInputName($this->getConfigValue('service', 'file_input_name', 'file_input'));
     }
 
     public function getControllerSpecificConfig()
@@ -90,6 +96,14 @@ class UploaderConfig implements UploaderServiceConfigInterface, UploaderControll
         }
 
         $specificConfig = $config[$configKey];
+
+        if (isset($specificConfig['alias'])) {
+            $configAlias = $specificConfig['alias'];
+            if (!isset($config[$configAlias])) {
+                throw new \Exception(sprintf($this->errorMessages[self::ERROR_MISSING_CONFIG_ALIAS], $configKey, $configAlias));
+            }
+            $this->aliasedConfig  = $config[$configAlias];
+        }
 
         $this->specificConfig = $specificConfig;
 
@@ -114,44 +128,41 @@ class UploaderConfig implements UploaderServiceConfigInterface, UploaderControll
         return $configKey;
     }
 
-    public function getServiceFormName()
+    protected function getConfigValue($for, $key, $default, $throw=false)
     {
         $config = $this->getControllerSpecificConfig();
-        $serviceConfig = $config['service'];
-        return ((isset($serviceConfig['form_name']))? $serviceConfig['form_name'] : 'file_form');
-    }
-
-    public function getServiceFileInputName()
-    {
-        $config = $this->getControllerSpecificConfig();
-        $serviceConfig = $config['service'];
-        return ((isset($serviceConfig['file_input_name']))? $serviceConfig['file_input_name'] : 'file_input');
+        if (isset($config[$for][$key])) {
+            $value = $config[$for][$key];
+        } else if (isset($this->aliasedConfig[$for][$key])) {
+            $value = $this->aliasedConfig[$for][$key];
+        } else if ($throw) {
+            $message = $default;
+            throw new \Exception('Missing config key: ' . $message);
+        } else {
+            $value = $default;
+        }
+        return $value;
     }
 
     public function getServiceFileHydrator()
     {
-        $config = $this->getControllerSpecificConfig();
-        $serviceConfig = $config['service'];
-        if (!isset($serviceConfig['file_hydrator'])) {
-            throw new \Exception('You must set a file hydrator to allow the "uploader" to save entities');
-        }
-        return $this->sm->get($serviceConfig['file_hydrator']);
+        $fileHydrator = $this->getConfigValue('service', 'file_hydrator', 'You must set a file hydrator to allow the "uploader" to save entities', $throw=true);
+        return $this->sm->get($fileHydrator);
     }
 
     public function configureControllerPlugin(\Upload\Controller\Plugin\Uploader $plugin)
     {
-        $config = $this->getControllerSpecificConfig();
-        $pluginConfig = $config['controller_plugin'];
-
-        if (isset($pluginConfig['post_upload_callback'])) {
-            if (!is_callable($pluginConfig['post_upload_callback'])) {
+        $postUploadCallback = $this->getConfigValue('controller_plugin', 'post_upload_callback', false);
+        if ($postUploadCallback) {
+            if (!is_callable($postUploadCallback)) {
                 throw new \Exception('post_upload_callback is not callable');
             }
-            $plugin->setPostUploadCallback($pluginConfig['post_upload_callback']);
+            $plugin->setPostUploadCallback($postUploadCallback);
         }
 
-        if (isset($pluginConfig['route_success'])) {
-            $plugin->setRouteSuccessParams($pluginConfig['route_success']);
+        $routeSuccess = $this->getConfigValue('controller_plugin', 'route_success', false);
+        if ($routeSuccess) {
+            $plugin->setRouteSuccessParams($routeSuccess);
         }
 
         $plugin->setService($this->getServiceLocator()->get('Upload\Service\Uploader'));

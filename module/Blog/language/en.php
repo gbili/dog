@@ -68,4 +68,11 @@ return array (
   '<label for="file-input">Select</label>' => '',
   '<label for="file_input">Select</label>' => '',
   'fileUploadMessage' => '',
+  'All' => '',
+  'Picture' => '',
+  'the-post-title-without-special-chars' => '',
+  'the-slug-will-be-shown-in-url' => '',
+  'The post title' => '',
+  'Write cool content..' => '',
+  'sintoma' => '',
 );

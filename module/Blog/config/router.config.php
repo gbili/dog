@@ -36,6 +36,23 @@ return array(
                     ),
                 ),
             ),
+            'blog_category_delete_route' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '[/:lang]/category/delete/:id/:nonce',
+                    'constraints' => array(
+                        'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]+',
+                        'nonce' => '[a-zA-Z0-9_-]+',
+                    ),
+                    'defaults' => array(
+                        'lang' => 'en',
+                        'controller' => 'blog_category_controller',
+                        'action' => 'delete',
+                    ),
+                ),
+            ),
             'blog_media_route' => array(
                 'type' => 'segment',
                 'options' => array(

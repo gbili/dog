@@ -1,92 +1,93 @@
 <?php
 $title = $this->translate('Categories');
 $this->headTitle($title);
-$form->setAttribute('action', $this->url(null ,array('action' => 'bulk'), true));
-$form->setAttribute('role', 'form');
-$this->formActionPrepare($form, 'form-inline', true);
+
+$this->bulkForm()->prepare();
 ?>
 <!-- Add New Category Button Row -->
 <header class="row">
     <div class="col-sm-4 col-md-4 col-4">
-        <h3><?php echo $this->escapeHtml($title); ?></h3>
+        <h3><?= $this->escapeHtml($title); ?></h3>
     </div>
     <div class="col-sm-4 col-md-4 col-4">
     </div>
     <div class="col-sm-4 col-md-4 col-4">
-        <p><a class="btn btn-success" href="<?php echo $this->url(
+        <p><a class="btn btn-success" href="<?= $this->url(
             null, 
             array(
                 'action'=>'create',
             ),
             true
-        )?>"><?php echo $this->translate('Add New Category') ?></a></p>
+        )?>"><?= $this->translate('Add New Category') ?></a></p>
     </div>
 </header><!-- ENDOF Add New Category Button Row-->
 
 <!-- Form action dropdown and submit Row -->
-<?php echo $this->form()->openTag($form) ?>
+<?= $this->form()->openTag($form) ?>
 <div class="row">
     <div class="col-sm-8 col-md-8 col-lg-8">
-        <?php echo $this->renderElement($form->get('action-top')) ?>
-        <?php echo $this->renderElement($form->get('submit')) ?>
+        <?= $this->renderElement($form->get('action-top')) ?>
+        <?= $this->renderElement($form->get('submit')) ?>
     </div>
     <div class="col-sm-4 col-md-4 col-lg-4">
 <!-- Page selector -->
-    <?php echo $this->paginator($paginator) ?>
+    <?= $this->paginator($paginator) ?>
 <!-- ENDOF Page selector -->
     </div>
 </div><!-- ENDOF Form action dropdown and submit Row -->
 
 <table class="table table-bordered table-hover">
     <tr>
-        <th><?php echo $this->translate('Bulk')?></th>
-        <th><?php echo $this->translate('Category')?></th>
-        <th><?php echo $this->translate('Lang')?></th>
+        <th><?= $this->bulkForm()->renderSelectAllCheckbox()?></th>
+        <th><?= $this->translate('Category')?></th>
+        <th><?= $this->translate('Lang')?></th>
 <?php if ($user->isAdmin()) : ?>
-        <th><?php echo $this->translate('Translated Id')?></th>
+        <th><?= $this->translate('Translated Id')?></th>
 <?php endif ?>
         <th>&nbsp;</th>
         <th>&nbsp;</th>
     </tr>
+    <?php $this->nonce()->setRouteName('blog_category_delete_route') ?>
     <?php foreach($categories as $category) : ?>
 	    <tr>
-            <td><input type="checkbox" name="categories[]" value="<?php echo $this->escapeHtml($category['id']) ?>"></td>
-            <td style="padding-left:<?php echo ($category['lvl'] * 2) + 1?>em;"><?php echo $category['name'];?></td>
-	        <td><?php echo $this->translate($category['locale']) ?></td>
+            <td><?= $this->bulkForm()->renderElementCheckbox($category['id']) ?></td>
+            <td style="padding-left:<?= ($category['lvl'] * 2) + 1?>em;"><?= $category['name'];?></td>
+	        <td><?= $this->translate($category['locale']) ?></td>
 <?php if ($user->isAdmin()) : ?>
-            <td><?php echo ((isset($category['translated_category_id']))? $category['translated_category_id'] : $this->translate('N/A')) ?></td>
+            <td><?= ((isset($category['translated_category_id']))? $category['translated_category_id'] : $this->translate('N/A')) ?></td>
 <?php endif ?>
 	        <td>
-                <a href="<?php echo $this->url(null, array('action'=>'edit', 'id' => $category['id']), true); ?>"><?php echo $this->translate('Edit') ?></a>
+                <a href="<?= $this->url(null, array('action'=>'edit', 'id' => $category['id']), true); ?>"><?= $this->translate('Edit') ?></a>
 	        </td>
 	        <td>
-                <a href="<?php echo $this->url(
-                    null, 
+                <a href="<?= $this->url(
+                    $this->nonce()->getRouteName(),
                     array(
-                        'action'      =>'delete', 
                         'id'          => $category['id'],
-                        'fourthparam' => $nonce,
+                        'nonce' => $this->nonce()->getHash($category['id']),
                     ),
                     true
-                ); ?>" onclick="return confirm('Are you sure?')"><?php echo $this->translate('Delete') ?></a>
+                ); ?>" onclick="return confirm('Are you sure?')"><?= $this->translate('Delete') ?></a>
 	        </td>
 	    </tr>
     <?php endforeach; ?>
     <?php if (empty($categories)) : ?>
 	    <tr>
-            <td><?php echo $this->translate('You have not added any category for the moment...')?></td>
+            <td><?= $this->translate('You have not added any category for the moment...')?></td>
 	    </tr>
     <?php endif ?>
 </table>
 <div class="row listing">
     <div class="col-sm-8 col-md-8 col-lg-8">
-        <?php echo $this->renderElement($form->get('action-bottom')) ?>
-        <?php echo $this->renderElement($form->get('submit')) ?>
+        <?= $this->renderElement($form->get('action-bottom')) ?>
+        <?= $this->renderElement($form->get('submit')) ?>
     </div>
     <div class="col-sm-4 col-md-4 col-lg-4">
 <!-- Page selector -->
-    <?php echo $this->paginator($paginator) ?>
+    <?= $this->paginator($paginator) ?>
 <!-- ENDOF Page selector -->
     </div>
 </div><!-- ENDOF Form action dropdown and submit Row -->
-<?php echo $this->form()->closeTag();?>
+<?= $this->form()->closeTag();?>
+
+<?php include $this->bulkForm()->getPartialScriptPath() ?>

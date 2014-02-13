@@ -18,6 +18,7 @@ return array(
         'simpleMessage'     => __NAMESPACE__ . '\View\Helper\SimpleMessage',
         'string'            => __NAMESPACE__ . '\View\Helper\ExpressivePregTransform',
         'scriptalicious'    => __NAMESPACE__ . '\View\Helper\RegisterScript',
+        'bulkForm'          => __NAMESPACE__ . '\View\Helper\BulkForm',
     ),
 
     'factories' => array(

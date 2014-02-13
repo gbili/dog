@@ -14,21 +14,36 @@ namespace Blog\View\Helper;
 class FormElement extends \Zend\View\Helper\AbstractHelper
 {
     /**
+     * Has this element been already presented to user?
+     * Used to decide whther to show error or success colors
+     */
+    protected $firstRendering = true;
+
+    /**
      * Translate a message
      * @return string
      */
-    public function __invoke(\Zend\Form\Element $element, $firstRendering = true)
+    public function __invoke($element=null)
     {
-        return $this->render($element, $firstRendering);
+        if ($element instanceof \Zend\Form\Element) {
+            return $this->render($element);
+        }
+        return $this;
+    }
+
+    public function setFirstRendering($boolean)
+    {
+        $this->firstRendering = $boolean;
+        return $this;
     }
 
 
-    public function render(\Zend\Form\Element $element, $firstRendering = true)
+    public function render(\Zend\Form\Element $element)
     {
         $this->translatePlaceholderAttribute($element);
         $errors = $this->renderTranslatedErrors($element);
         $hasErrors = ('' !== ($errors));
-        $statusClass = (($hasErrors)? ' has-error' : (($firstRendering)? '' : ' has-success'));
+        $statusClass = (($hasErrors)? ' has-error' : (($this->firstRendering)? '' : ' has-success'));
         $formGroupClass = $this->getElementOption($element, 'form_group_class', '');
 
         $controlsDivClass = $this->getElementOption($element, 'controls_div_class', '');

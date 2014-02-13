@@ -17,7 +17,6 @@ class ScsController extends \Zend\Mvc\Controller\AbstractActionController
         $viewVars = array();
 
         $form = $this->getSearchFormCopy();
-        $viewVars[] = 'form';
 
         $relation = $this->params()->fromRoute('related');
         $postSlug = $this->params()->fromRoute('post_slug');
@@ -28,12 +27,12 @@ class ScsController extends \Zend\Mvc\Controller\AbstractActionController
         } else {
             $posts = $this->getDoggies();
         }
-        $viewVars[] = 'posts';
 
         if (empty($posts)) {
             $messages = array('warning' => 'Woff, wff!!! There are no posts in your language, be the first one to post.');
-            $viewVars[] = 'messages';
         }
+
+        $viewVars = array('form', 'posts', 'messages');
 
         return new \Zend\View\Model\ViewModel(compact($viewVars));
     }
@@ -77,7 +76,6 @@ class ScsController extends \Zend\Mvc\Controller\AbstractActionController
     public function searchAction()
     { 
         $form = $this->getSearchFormCopy();
-        $viewVars[] = 'form';
 
         if ('GET' === $this->request->getMethod()) {
             $form->setData($this->request->getQuery());
@@ -89,7 +87,6 @@ class ScsController extends \Zend\Mvc\Controller\AbstractActionController
         if (!isset($posts)) {
             $posts = $this->getDoggies(); 
         }
-        $viewVars[] = 'posts';
 
         if (empty($posts)) {
             $messages = array('warning' => 'Woff, wff!!! No posts match your search, care to write a little one? Some dog may be thankful');
@@ -97,7 +94,8 @@ class ScsController extends \Zend\Mvc\Controller\AbstractActionController
         }
 
         $terms = $this->getTerms();
-        $viewVars[] = 'terms';
+
+        $viewVars = array('form', 'terms', 'posts');
         
         return new \Zend\View\Model\ViewModel(compact($viewVars));
     }

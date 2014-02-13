@@ -53,4 +53,10 @@ return array (
   'Locale' => '',
   'file' => '',
   '<label for="file_input">Select</label>' => '',
+  'Translated Id' => '',
+  'fr' => '',
+  'N/A' => '',
+  'es' => '',
+  'en' => '',
+  'All' => '',
 );

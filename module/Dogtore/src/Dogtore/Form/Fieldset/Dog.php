@@ -9,7 +9,7 @@ implements \Zend\InputFilter\InputFilterProviderInterface
         parent::__construct('name');
 
         $objectManager = $sm->get('Doctrine\ORM\EntityManager');
-        $lang = $sm->get('lang');
+        $lang = $sm->get('lang')->getLang();
 
         $this->setHydrator(new \DoctrineModule\Stdlib\Hydrator\DoctrineObject($objectManager))
              ->setObject(new \Blog\Entity\PostData());
@@ -125,6 +125,13 @@ implements \Zend\InputFilter\InputFilterProviderInterface
                 'is_method' => true,
                 'target_class' => 'Blog\Entity\Media',
                 'object_manager' => $objectManager,
+                'is_method' => true,
+                'find_method' => array(
+                    'name' => 'findBy',
+                    'params' => array(
+                        'criteria' => array('locale' => $lang),
+                    ),
+                ),
                 'display_empty_item' => true,
                 'empty_item_label' => '---',
             ),

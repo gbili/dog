@@ -2,21 +2,19 @@
 $title = 'Files Library';
 $this->headTitle($title);
 
-$form->setAttribute('action', $this->url(null ,array('action' => 'bulk'), true));
-$form->setAttribute('role', 'form');
-$this->formActionPrepare($form, 'form-inline', true);
+$this->bulkForm()->prepare();
 ?>
-<h1><?php echo $this->escapeHtml($title); ?></h1>
-<p><a href="<?php echo $this->url(null , array(
+<h1><?= $this->escapeHtml($title); ?></h1>
+<p><a href="<?= $this->url(null , array(
     'lang' => $this->lang(),
     'controller' => 'blog_file_controller', 
     'action'=>'upload',
-));?>"><?php echo $this->translate('Add new File') ?></a></p>
-<?php echo $this->form()->openTag($form) ?>
+));?>"><?= $this->translate('Add new File') ?></a></p>
+<?= $this->form()->openTag($form) ?>
 <div class="row">
     <div class="col-sm-8 col-md-8 col-lg-8">
-        <?php echo $this->renderElement($form->get('action-top')) ?>
-        <?php echo $this->renderElement($form->get('submit')) ?>
+        <?= $this->renderElement($form->get('action-top')) ?>
+        <?= $this->renderElement($form->get('submit')) ?>
     </div>
     <div class="col-sm-4 col-md-4 col-lg-4">
 <!-- Page selector -->
@@ -26,56 +24,56 @@ $this->formActionPrepare($form, 'form-inline', true);
 </div><!-- ENDOF Form action dropdown and submit Row -->
 <table class="table table-bordered table-hover">
     <tr>
-        <th><?php echo $this->translate('Bulk')?></th>
-        <th><?php echo $this->translate('Name')?></th>
-        <th><?php echo $this->translate('Dirpath')?></th>
-        <th><?php echo $this->translate('Basename')?></th>
-        <th><?php echo $this->translate('Type')?></th>
-        <th><?php echo $this->translate('Size')?></th>
+        <th><?= $this->bulkForm()->renderSelectAllCheckbox()?></th>
+        <th><?= $this->translate('Name')?></th>
+        <th><?= $this->translate('Dirpath')?></th>
+        <th><?= $this->translate('Basename')?></th>
+        <th><?= $this->translate('Type')?></th>
+        <th><?= $this->translate('Size')?></th>
         <th>&nbsp;</th>
         <th>&nbsp;</th>
         <th>&nbsp;</th>
     </tr>
     <?php foreach($files as $file) : ?>
 	    <tr>
-            <td><input type="checkbox" name="files[]" value="<?php echo $this->escapeHtml($file->getId()) ?>"></td>
-	        <td><?php echo $this->escapeHtml($file->getName());?></td>
-	        <td><?php echo $this->escapeHtml($file->getDirpath());?></td>
-	        <td><?php echo $this->escapeHtml($file->getBasename());?></td>
-	        <td><?php echo $this->escapeHtml($file->getType());?></td>
-	        <td><?php echo $this->escapeHtml($file->getSize());?></td>
+            <td><?= $this->bulkForm()->renderElementCheckbox($file->getId()) ?></td>
+	        <td><?= $this->escapeHtml($file->getName());?></td>
+	        <td><?= $this->escapeHtml($file->getDirpath());?></td>
+	        <td><?= $this->escapeHtml($file->getBasename());?></td>
+	        <td><?= $this->escapeHtml($file->getType());?></td>
+	        <td><?= $this->escapeHtml($file->getSize());?></td>
 	        <td>
-                <a href="<?php echo $this->url(null, array(
+                <a href="<?= $this->url(null, array(
                     'lang' => $this->lang(),
                     'controller' => 'blog_media_controller', 
                     'action' => 'create',
                     'id' => $file->getId()
-                )); ?>"><?php echo $this->translate('Link')?></a>
+                )); ?>"><?= $this->translate('Link')?></a>
 	        </td>
 	        <td>
-                <a href="<?php echo $this->url(null, array(
+                <a href="<?= $this->url(null, array(
                     'lang' => $this->lang(),
                     'controller' => 'blog_file_controller', 
                     'action' => 'edit', 
                     'id' => $file->getId(),
-                )); ?>"><?php echo $this->translate('Edit')?></a>
+                )); ?>"><?= $this->translate('Edit')?></a>
 
 	        </td>
 	        <td>
-                <a href="<?php echo $this->url(null, array(
+                <a href="<?= $this->url(null, array(
                     'lang' => $this->lang(),
                     'controller' => 'blog_file_controller', 
                     'action' => 'delete',
                     'id' => $file->getId()
-                )); ?>" onclick="return confirm('Are you sure?')"><?php echo $this->translate('Delete')?></a>
+                )); ?>" onclick="return confirm('Are you sure?')"><?= $this->translate('Delete')?></a>
 	        </td>
 	    </tr>
     <?php endforeach; ?>
 </table>
 <div class="row">
     <div class="col-sm-8 col-md-8 col-lg-8">
-        <?php echo $this->renderElement($form->get('action-bottom')) ?>
-        <?php echo $this->renderElement($form->get('submit')) ?>
+        <?= $this->renderElement($form->get('action-bottom')) ?>
+        <?= $this->renderElement($form->get('submit')) ?>
     </div>
     <div class="col-sm-4 col-md-4 col-lg-4">
 <!-- Page selector -->
@@ -83,4 +81,6 @@ $this->formActionPrepare($form, 'form-inline', true);
 <!-- ENDOF Page selector -->
     </div>
 </div><!-- ENDOF Form action dropdown and submit Row -->
-<?php echo $this->form()->closeTag() ?>
+<?= $this->form()->closeTag() ?>
+
+<?php include $this->bulkForm()->getPartialScriptPath() ?>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Zend Framework (http://framework.zend.com/)
  *
@@ -14,7 +15,20 @@ namespace Blog\Controller\Plugin;
  */
 class Repository extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
 {
-    protected $repository;
+    /**
+     * @var array('controllerClass' => repositoryInstance, )
+     */
+    protected $controllerToRepository = array();
+
+    /**
+     * @var array('repositoryClass' => repositoryInstance, )
+     */
+    protected $preparedRepositories = array();
+
+    /**
+     * @var array('repositoryClass' => callback, )
+     */
+    protected $preparationCallbacks = array();
 
     /**
      * Grabs a param from route match by default.
@@ -25,39 +39,102 @@ class Repository extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
      */
     public function __invoke($entityName=null)
     {
+        if (null === $entityName) {
+            return $this->guessRepository();
+        }
         return $this->getRepository($entityName);
     }
 
     /**
      * Get the repository of the entity being represented by the controller
-     * E.g: PostController -> 
+     * E.g: Blog\Controller\PostController -> Blog\Entity\Post repository
      */
-    public function getRepository($entityName = null)
+    public function guessRepository()
     {
-        if (null === $entityName && null !== $this->repository) {
-            return $this->repository;
-        }
-        
-        $controller = $this->getController();
-        if (null === $entityName) {
-            $controllerFQCN = get_class($controller);
-            $controllerFQCNParts = explode('\\', $controllerFQCN);
-            $controllerCN = end($controllerFQCNParts);
-            $entityName = 'Blog\Entity\\' . substr($controllerCN, 0, -10);
+        $controllerClass = get_class($this->controller);
+
+        if ($this->alreadyGuessed($controllerClass)) {
+            return $this->controllerToRepository[$controllerClass]; 
         }
 
-        $repo = $controller->em()->getRepository($entityName);
-        if (!$repo instanceof \Blog\Entity\Repository\NestedTreeFlat) {
-            return $repo;
+        $entityClass = $this->getEntityClass($controllerClass);
+        $repository = $this->getRepository($entityClass);
+
+        $this->controllerToRepository[$controllerClass] = $repository;
+        return $repository;
+    }
+
+    protected function alreadyGuessed($controllerClass)
+    {
+        return isset($this->controllerToRepository[$controllerClass]);
+    }
+
+    public function getEntityClass($controllerClass)
+    {
+        $controllerClassNoTrailingController = substr($controllerClass, 0, -(strlen('Controller')));
+        return preg_replace('#Controller#', 'Entity', $controllerClassNoTrailingController);
+    }
+
+    public function getRepository($entityClass)
+    {
+        $repository = $this->controller->em()->getRepository($entityClass);
+        return $this->prepareRepository($repository);
+    }
+
+    public function prepareRepository($repository)
+    {
+        $repositoryClass = get_class($repository);
+        if (!$this->needsPreparation($repositoryClass)) {
+            return $repository;
         }
 
-        if (!$controller->identity()->isAdmin()) {
-            $repo->setLocale($controller->locale());
+        call_user_func($this->getPreparationCallback($repositoryClass), $repository, $this);
+
+        $this->preparedRepositories[] = $repositoryClass;
+
+        return $repository;
+    }
+
+    public function setPreparationCallbacks(array $preparationCallbacks)
+    {
+        $this->preparationCallbacks = $preparationCallbacks;
+        return $this;
+    }
+
+    protected function getPreparationCallback($repositoryClass)
+    {
+        if (!$this->hasPreparationCallback($repositoryClass)) {
+            throw new \Exception('No preparation callback, call hasPreparationCallback before this');
         }
-        $paginator = $controller->paginator();
-        $repo->setFirstResult($paginator->getPageFirstItem());
-        $repo->setMaxResults($paginator->getItemsPerPage());
-        $this->repository = $repo;
-        return $repo;
+
+        $callback = $this->preparationCallbacks[$repositoryClass];
+        while (is_string($callback)) {
+            $aliasedCallback = $callback;
+            if (!isset($this->preparationCallbacks[$aliasedCallback])) {
+                throw new \Exception('Aliased callback not set');
+            }
+            $callback = $this->preparationCallbacks[$aliasedCallback];
+        }
+
+        if (!is_callable($callback)) {
+            throw new \Exception('Bad callback');
+        }
+
+        return $callback;
+    }
+
+    public function needsPreparation($repositoryClass)
+    {
+        return !$this->isPrepared($repositoryClass) && $this->hasPreparationCallback($repositoryClass);
+    }
+
+    public function isPrepared($repositoryClass)
+    {
+        return in_array($repositoryClass, $this->preparedRepositories);
+    }
+
+    public function hasPreparationCallback($repositoryClass)
+    {
+        return isset($this->preparationCallbacks[$repositoryClass]);
     }
 }

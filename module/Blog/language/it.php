@@ -48,4 +48,5 @@ return array (
   'upload' => '',
   'media' => '',
   '<label for="file_input">Select</label>' => '',
+  'Bulk' => '',
 );

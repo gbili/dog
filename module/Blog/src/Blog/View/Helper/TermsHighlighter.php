@@ -17,7 +17,7 @@ class TermsHighlighter extends \Zend\View\Helper\AbstractHelper
      * Translate a message
      * @return string
      */
-    public function __invoke(array $terms, $description)
+    public function __invoke($description, array $terms=array())
     {
         if (empty($terms)) {
             return $description;

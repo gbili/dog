@@ -39,26 +39,28 @@ class Scs extends \Gbili\Db\Req\AbstractReq
 
     public function getBaseSqlString()
     {
-        return 'SELECT ' 
+        $categoryTrunkSql = ' LEFT JOIN categories AS %spc ON %spc.lft <= %sc.lft AND %spc.rgt >= %sc.rgt AND %spc.lvl = 1 AND %spc.root = %sc.root';
+
+        return 'SELECT ' . "\n"
                 . $this->getFieldAsKeyString() 
-            . ' FROM posts p '
+            . ' FROM posts AS p ' . "\n"
                 // For parent post slug and lvl1 category
-                . ' LEFT JOIN posts AS parent_p ON p.parent_id = parent_p.id '
-                . ' LEFT JOIN post_datas AS parent_pd ON parent_p.data_id = parent_pd.id '
-                . ' LEFT JOIN categories AS parent_c ON parent_p.category_id = parent_c.id '
-                . ' LEFT JOIN categories AS parent_pc ON parent_pc.lft <= parent_c.lft AND parent_pc.rgt >= parent_c.rgt AND parent_pc.lvl = 1 '
-                // For child post slug and lvl1 category
-                . ' LEFT JOIN posts AS child_p ON p.root = child_p.root AND p.lvl + 1 = child_p.lvl'
-                . ' LEFT JOIN post_datas AS child_pd ON child_p.data_id = child_pd.id '
-                . ' LEFT JOIN categories AS child_c ON child_p.category_id = child_c.id '
-                . ' LEFT JOIN categories AS child_pc ON child_pc.lft <= child_c.lft AND child_pc.rgt >= child_c.rgt AND child_pc.lvl = 1 '
-                // For the rest of the post info
-                . ' INNER JOIN users AS u ON p.user_id = u.id '
-                . ' INNER JOIN post_datas AS pd ON p.data_id = pd.id '
-                . ' INNER JOIN medias AS m ON pd.media_id = m.id ' 
-                . ' INNER JOIN files AS f ON m.file_id = f.id ' 
-                . ' INNER JOIN categories AS c ON p.category_id = c.id ' 
-                . ' INNER JOIN categories AS pc ON pc.lft <= c.lft AND pc.rgt >= c.rgt AND pc.lvl = 1 ';
+                . ' LEFT JOIN posts AS parent_p ON p.parent_id = parent_p.id ' . "\n"
+                . ' LEFT JOIN post_datas AS parent_pd ON parent_p.data_id = parent_pd.id ' . "\n"
+                . ' LEFT JOIN categories AS parent_c ON parent_p.category_id = parent_c.id ' . "\n"
+                . str_replace('%s', 'parent_', $categoryTrunkSql) . "\n"
+                // For child post slug and lvl1 category 
+                . ' LEFT JOIN posts AS child_p ON p.root = child_p.root AND p.lvl + 1 = child_p.lvl' . "\n"
+                . ' LEFT JOIN post_datas AS child_pd ON child_p.data_id = child_pd.id ' . "\n"
+                . ' LEFT JOIN categories AS child_c ON child_p.category_id = child_c.id ' . "\n"
+                . str_replace('%s', 'child_', $categoryTrunkSql) . "\n"
+                // For the rest of the post info 
+                . ' LEFT JOIN users AS u ON p.user_id = u.id ' . "\n"
+                . ' LEFT JOIN post_datas AS pd ON p.data_id = pd.id ' . "\n"
+                . ' LEFT JOIN medias AS m ON pd.media_id = m.id '  . "\n"
+                . ' LEFT JOIN files AS f ON m.file_id = f.id '  . "\n"
+                . ' LEFT JOIN categories AS c ON p.category_id = c.id '  . "\n"
+                . str_replace('%s', '', $categoryTrunkSql) . "\n";
     }
 
     public function getTrailingSql()
