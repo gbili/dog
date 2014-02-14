@@ -75,4 +75,5 @@ return array (
   'The post title' => '',
   'Write cool content..' => '',
   'sintoma' => '',
+  'unlink' => '',
 );

@@ -76,4 +76,5 @@ return array (
   'My Pack' => 'Ma Meute',
   '<label for="file_input">Select</label>' => '<label for="file_input">Choisir</label>',
   '<label for="media_input">Select</label>' => '',
+  'All' => '',
 );
