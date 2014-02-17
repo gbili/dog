@@ -3,8 +3,6 @@ namespace Dogtore;
 
 class Module 
 {
-    const ACL_CHECK_PRIORITY = 2;
-
     public function getConfig()
     {
         $preConfig = include __DIR__ . '/../../config/module.pre_config.php';
@@ -24,16 +22,5 @@ class Module
 
     public function onBootstrap(\Zend\Mvc\MvcEvent $e)
     {
-        $this->attachAclGuard($e);
-    }
-
-    public function attachAclGuard(\Zend\Mvc\MvcEvent $e)
-    {
-        $eventManager = $e->getApplication()->getEventManager();
-
-        $aclGuard = $e->getApplication()->getServiceManager()->get('acl_guard');
-        $e->getViewModel()->aclGuard = $aclGuard;
-
-        $eventManager->attach(\Zend\Mvc\MvcEvent::EVENT_DISPATCH, array($aclGuard, 'check'), self::ACL_CHECK_PRIORITY);
     }
 }

@@ -39,19 +39,12 @@ class Nonce
     protected $providedHash;
 
     /**
-     * @var string what makes the hash generation different?
-     */
-    protected $salt;
-
-
-    /**
      *
      */
     public function isValid()
     {
         return $this->getValidator()->isValid($this->getProvidedHash());
     }
-
 
     public function setProvidedHash($hash)
     {
@@ -61,6 +54,9 @@ class Nonce
 
     public function getProvidedHash()
     {
+        if (null === $this->providedHash) {
+            throw new \Exception('Need to setProvidedHash($hash), before calling isValid()');
+        }
         return $this->providedHash;
     }
 
@@ -74,26 +70,22 @@ class Nonce
 
     public function getValidator()
     {
+        $this->validator = new \Zend\Validator\Csrf;
+        $this->validator->setSalt($this->getSalt());
+        return $this->validator;
+    }
+
+    public function getLastValidator()
+    {
         if (null === $this->validator) {
-            $this->validator = new \Zend\Validator\Csrf;
-            $this->validator->setSalt($this->getSalt());
+            throw new \Exception('No validator was set, call getValidator() to be able to call getLastValidator()');
         }
         return $this->validator;
     }
 
     public function getSalt()
     {
-        if ($this->hasSalt()) {
-            return $this->salt;
-        }
-        $salt = $this->getUserUniqueIdentifier() . $this->getActionUniqueIdentifier();
-        $this->salt = $salt;
-        return $salt;
-    }
-
-    public function hasSalt()
-    {
-        return null !== $this->salt;
+        return $this->getUserUniqueIdentifier() . $this->getActionUniqueIdentifier();
     }
 
     public function getActionUniqueIdentifier()

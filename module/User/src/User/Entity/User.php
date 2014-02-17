@@ -66,8 +66,8 @@ class User
 
     public function __construct()
     {
-        $this->posts = new \Doctrine\Common\Collections\Collection();
-        $this->dogs  = new \Doctrine\Common\Collections\Collection();
+        $this->posts = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->dogs  = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     public function isAdmin()

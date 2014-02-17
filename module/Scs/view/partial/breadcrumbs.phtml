@@ -1,0 +1,28 @@
+<ul class="breadcrumb">
+<?php foreach ($this->container as $page) : ?>
+    <?php if (!$page->isActive()) continue ?>
+    <?php if ($breadcrumb_is_not_empty = $page->hasPages()) : ?>
+        <li id="foreach-has-pages">
+            <a href="<?= $page->getHref() ?>"><?=$page->getLabel()?></a>
+        </li>
+        <?php foreach ($page->getPages() as $child) : ?>
+              <?php if (!$child->isActive()) continue; ?>
+              <?php if ($child->hasPages()) : ?>
+                    <li id="foreach-has-pages-foreach-has-pages">
+                        <a href="<?=$child->getHref() ?>"><?= $this->translate($child->getLabel(), 'dogtore') ?></a>
+                    </li>
+              <?php else : ?>
+                <li id="foreach-has-pages-foreach-else"><?= $this->translate($child->getLabel()), 'dogtore' ?></li>
+              <?php endif ?>
+              <?php break ?>     
+        <?php endforeach ?>
+    <?php else : ?>
+            <li id="foreach-else"><?= $this->translate($page->getLabel(), 'dogtore')?></li>
+    <?php endif ?>
+    <?php break ?>
+<?php endforeach ?>
+<?php if (!isset($breadcrumb_is_not_empty)) : ?>
+<li><?= $this->translate('Home', 'dogtore') ?></li> 
+    <?php unset($breadcrumb_is_not_empty) ?>
+<?php endif ?>
+</ul>

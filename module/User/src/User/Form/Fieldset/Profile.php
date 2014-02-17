@@ -4,9 +4,12 @@ namespace User\Form\Fieldset;
 class Profile extends \Zend\Form\Fieldset 
 implements \Zend\InputFilter\InputFilterProviderInterface
 {
-    public function __construct(\Doctrine\Common\Persistence\ObjectManager $objectManager)
+    public function __construct($sm)
     {
         parent::__construct('profile');
+
+        $objectManager = $sm->get('Doctrine\ORM\EntityManager');
+        $lang = $sm->get('lang')->getLang();
 
         $this->setHydrator(new \DoctrineModule\Stdlib\Hydrator\DoctrineObject($objectManager))
              ->setObject(new \Blog\Entity\PostData());
@@ -42,17 +45,29 @@ implements \Zend\InputFilter\InputFilterProviderInterface
 
         $this->add(array(
             'name' => 'media',
-            'type' => 'DoctrineModule\Form\Element\ObjectSelect',
+            'type' => 'Blog\Form\Element\ObjectSelect',
             'options' => array(
-                'label' => 'Featured Image',
+                'label' => 'Profile Picture',
                 'property' => 'slug',
+                'attributes' => array(
+                    'data-img-src' => 'src',
+                ),
+                'form_group_class' => 'well',
+                'is_method' => true,
                 'target_class' => 'Blog\Entity\Media',
                 'object_manager' => $objectManager,
+                'is_method' => true,
+                'find_method' => array(
+                    'name' => 'findBy',
+                    'params' => array(
+                        'criteria' => array('locale' => $lang),
+                    ),
+                ),
                 'display_empty_item' => true,
                 'empty_item_label' => '---',
             ),
             'attributes' => array(
-                'class' => 'form-control',
+                'class' => 'image-picker masonry',
             )
         ));
     }

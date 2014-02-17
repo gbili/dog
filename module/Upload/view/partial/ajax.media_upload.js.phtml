@@ -1,8 +1,15 @@
-<?php include_once __DIR__ . '/jquery_image_picker.init.js.phtml' ?>
-
+<?php require_once __DIR__ . '/ajax.file_upload.js.phtml' ?>
+<?php require_once __DIR__ . '/add_formupload_show_button_to_image_picker.js.phtml' ?>
 <?php ob_start() ?>
 <script type="text/javascript">
-var uploadSuccess = function (response) {
+/*
+ * Reload Image picker with new image
+ *
+ * 1.Append the uploaded image to the image select
+ * 2.Reload image-picker on select so that the new image
+ * is available for select
+ */
+function gbiliUploaderAddImageToSelectForm(response) {
     var options = '';
     var callbackReturn = response.callbackReturn;
     for( key in  callbackReturn) {
@@ -10,16 +17,27 @@ var uploadSuccess = function (response) {
     }
     var selectElement = $('select.image-picker');
     selectElement.html(selectElement.html() + options);
-    selectElement.imagepicker();
+}
+
+var uploadSuccess = function (response) {
+    gbiliUploaderProgressUploadSuccess();
+    gbiliUploaderAddImageToSelectForm(response);
+    gbiliUploaderReloadImagePicker();
+    gbiliUploaderHideUploadPopup();
+    gbiliUploaderResetProgress();
+    gbiliUploaderAddListenersToButtonHidePopup();
 };
 
 var uploadFail = function (response) {
     showMessages(response.messages);
+    gbiliUploaderProgressUploadedBadFile();
+    gbiliUploaderAddListenersToButtonHidePopup();
 };
 </script>
 <?php $ajax_media_upload = ob_get_clean() ?>
 
-<?php $this->scriptalicious()->addInline('ajax_media_upload_library', $ajax_media_upload)
-    ->addDependency('ajax_media_upload_library', 'image_picker') ?>
+<?php $view->scriptalicious()->addInline('gbiliuploader_ajax_media_upload', $ajax_media_upload)
+    ->addDependency('gbiliuploader_ajax_media_upload', 'gbiliuploader_imagepicker_with_addbutton')
+    ->addDependency('gbiliuploader_ajax_media_upload', 'gbiliuploader_ajax_file_upload')?>
 
 <?php unset($ajax_media_upload) ?>

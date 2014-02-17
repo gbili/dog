@@ -28,7 +28,7 @@ class Dog extends \Gbili\Db\Req\AbstractReq
         return 'SELECT ' 
                 . $this->getFieldAsKeyString() 
             . ' FROM users u '
-                . ' LEFT JOIN dogs AS d ON u.id = d.owner_id '
+                . ' RIGHT JOIN dogs AS d ON u.id = d.owner_id '
                 . ' LEFT JOIN medias AS m ON d.media_id = m.id ';
     }
 

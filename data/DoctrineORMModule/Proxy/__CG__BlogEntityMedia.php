@@ -540,4 +540,15 @@ class Media extends \Blog\Entity\Media implements \Doctrine\ORM\Proxy\Proxy
         return parent::getLocale();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public function isOwnedBy(\User\Entity\User $user)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'isOwnedBy', array($user));
+
+        return parent::isOwnedBy($user);
+    }
+
 }

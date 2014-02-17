@@ -77,7 +77,7 @@ class Dog
 
     /**
      * @ORM\ManyToOne(targetEntity="\Blog\Entity\Media", inversedBy="posts")
-     * @ORM\JoinColumn(name="media_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="media_id", referencedColumnName="id")
      */
     private $media;
 

@@ -13,6 +13,8 @@ return array(
         'Lang',
         'Req',
         'Upload',
+        'Scs',
+        'GbiliAclGuard',
     ),
 
     // These are various options for the listeners attached to the ModuleManager

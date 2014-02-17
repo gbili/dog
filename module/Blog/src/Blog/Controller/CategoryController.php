@@ -128,6 +128,7 @@ class CategoryController extends \Zend\Mvc\Controller\AbstractActionController
 
         if (!$this->request->isPost()) {
             return new \Zend\View\Model\ViewModel(array(
+                'firstRendering' => true,
                 'form' => $form,
                 'entityId' => $blogCategory->getId(),
             ));
@@ -137,6 +138,7 @@ class CategoryController extends \Zend\Mvc\Controller\AbstractActionController
 
         if (!$form->isValid()) {
             return new \Zend\View\Model\ViewModel(array(
+                'firstRendering' => false,
                 'form' => $form,
                 'entityId' => $blogCategory->getId(),
             ));

@@ -74,6 +74,12 @@ return array (
   'the-slug-will-be-shown-in-url' => '',
   'The post title' => '',
   'Write cool content..' => '',
-  'sintoma' => '',
+  'sintoma' => 'symptom',
   'unlink' => '',
+  'Category Name' => '',
+  'the-slug-is-a-lowercase-representation-of-the-name-with-dashes' => '',
+  'Descriptions may not be shown, but they are used as meta for search engines' => '',
+  'Media Deleted' => '',
+  'No medias have been uploaded' => '',
+  'The form submitted did not originate from the expected site' => '',
 );

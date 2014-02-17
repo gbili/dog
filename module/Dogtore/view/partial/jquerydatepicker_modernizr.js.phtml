@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="/css/ui-lightness/jquery-ui-1.10.4.custom.min.css" type="text/css"/>
+<style type="text/css">
+#ui-datepicker-div  .ui-widget-header {
+    background: #FFFFFF  no-repeat scroll 50% 50% #F6A828;
+}
+#ui-datepicker-div.ui-widget-content {
+    background: #FFFFFF  no-repeat scroll 50% 50% #F6A828;
+}
+</style>
+
+<?php ob_start() ?>
+<script type="text/javascript">
+//End Color Picker
+//Date Picker
+if (!Modernizr.inputtypes.date) {
+    $(document).ready(function (){
+        $("#datepicker").datepicker();
+    });
+}
+//End Color Picker
+</script>
+<?php $conditional_datepicker = ob_get_clean() ?>
+
+<?php $this->scriptalicious()->addSrc('jQuery', '/js/jquery-ui-1.10.4.custom.min.js') ?>
+
+<?php $this->scriptalicious()->addInline('conditional_datepicker', $conditional_datepicker)
+    ->addDependency('conditional_datepicker', 'jQuery') //of what only datepicker
+    ->addDependency('conditional_datepicker', 'modernizr_input') ?>
+
+<?php $this->scriptalicious()->addSrc('modernizr_input', '/js/modernizr.input.min.js')
+    ->addDependency('modernizr_input', 'jQuery') ?>

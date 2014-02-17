@@ -78,4 +78,12 @@ return array (
   'firstname surname<small>\'s Profile</small>' => '',
   'Info' => '',
   'You have too many dogs' => '',
+  'Congratulations! Do you want to tell people what breed of dog you have? You can do that here, in the description. Or you can start searching for dogtore cards.' => '',
+  'Profile Picture' => '',
+  'has no dogs' => '',
+  ':phrase' => '',
+  ':firstname :phrase' => '',
+  'You have no dogs' => '',
+  'has one dog' => '',
+  '. Her name is: ' => '',
 );

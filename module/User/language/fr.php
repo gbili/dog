@@ -70,4 +70,5 @@ return array (
   'has two dogs' => 'a deux chiens',
   'firstname surname<small>\'s Profile</small>' => '<small>Profil de</small> prénom nom',
   'Info' => 'Infos',
+  'Profile Picture' => '',
 );

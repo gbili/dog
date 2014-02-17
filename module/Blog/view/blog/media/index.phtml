@@ -1,16 +1,17 @@
 <?php
 $title = $this->translate('Media Library');
 $this->headTitle($title);
+$this->notify(((isset($messages))? $messages : array()));
 ?>
 <header class="row">
     <div class="col-sm-4 col-md-4 col-4">
-        <h3><?php echo $this->escapeHtml($title); ?></h3>
+        <h3><?= $this->escapeHtml($title); ?></h3>
     </div>
     <div class="col-sm-4 col-md-4 col-4">
-        <p><a class="btn btn-default" href="<?php echo $this->url(null, array('action'=>'create'), true);?>" title="<?php echo $this->translate('Media from previously uploaded image') ?>"><?php echo $this->translate('Create from Existing') ?></a></p>
+        <p><a class="btn btn-default" href="<?= $this->url(null, array('action'=>'create'), true);?>" title="<?= $this->translate('Media from previously uploaded image') ?>"><?= $this->translate('Create from Existing') ?></a></p>
     </div>
     <div class="col-sm-4 col-md-4 col-4">
-        <p><a class="btn btn-success" href="<?php echo $this->url(null, array('action'=>'upload'), true);?>"><?php echo $this->translate('Upload media') ?></a></p>
+        <p><a class="btn btn-success" href="<?= $this->url(null, array('action'=>'upload'), true);?>"><?= $this->translate('Upload media') ?></a></p>
     </div>
 </header>
 <?php $count = count($medias) ?>
@@ -29,10 +30,10 @@ $this->headTitle($title);
 <?php endif ?>
 <div class="col-sm-6 col-md-4 col-lg-3">
     <div class="thumbnail">
-    <a href="<?php echo $this->url('blog_media_view', array('slug' => $media->getSlug()), true) ?>"><img class="img-responsive" src="<?php echo $this->escapeHtml($media->getFile()->getSrc());?>">
+    <a href="<?= $this->url('blog_media_view', array('slug' => $media->getSlug()), true) ?>"><img class="img-responsive" src="<?= $this->escapeHtml($media->getFile()->getSrc());?>">
      </a>
       <div class="caption">
-        <h5><?php echo $this->escapeHtml($media->getSlug());?></h5>
+        <h5><?= $this->escapeHtml($media->getSlug());?></h5>
         <p>
             <?php if (!$media->getPosts()->isEmpty()) : ?>
                 <?php $linkedPosts = array();
@@ -49,21 +50,21 @@ $this->headTitle($title);
                     endforeach;
                     echo implode(', ', $unlinkablePosts);?>
             <?php endif ?>
-            <a class="btn btn-default btn-xs" role="button"href="<?php echo $this->url(null, array(
+            <a class="btn btn-default btn-xs" role="button"href="<?= $this->url(null, array(
                 'lang' => $this->lang(), 
                 'action' => 'link', 
                 'id' => $media->getId(),
-            )); ?>"><?php echo $this->translate('Link to') ?></a>
-            <a class="btn btn-primary btn-xs" role="button" href="<?php echo $this->url(null, array(
+            )); ?>"><?= $this->translate('Link to') ?></a>
+            <a class="btn btn-primary btn-xs" role="button" href="<?= $this->url(null, array(
                 'lang' => $this->lang(), 
                 'action' => 'edit', 
                 'id' => $media->getId(),
-            )); ?>"><?php echo $this->translate('Edit') ?></a>
-            <a class="btn btn-danger btn-xs" role="button" href="<?php echo $this->url($this->nonce()->getRouteName(), array(
+            )); ?>"><?= $this->translate('Edit') ?></a>
+            <a class="btn btn-danger btn-xs" role="button" href="<?= $this->url($this->nonce()->getRouteName(), array(
                 'lang' => $this->lang(), 
                 'id' => $media->getId(),
                 'nonce' => $this->nonce()->getHash($media->getId()),
-            )); ?>" onclick="return confirm(<?php echo $this->translate('Are you sure?') ?>'')"><?php echo $this->translate('Delete') ?></a>
+            )); ?>" onclick="return confirm('<?= $this->translate('Are you sure?') ?>')"><?= $this->translate('Delete') ?></a>
         </p>
      </div><!-- end caption -->
    </div><!-- end thumbnail -->
@@ -78,5 +79,5 @@ $this->headTitle($title);
              </div><!-- end row -->
 <?php endif ?>
 <?php if (empty($medias)) : ?>
-    <p><?php echo $this->translate('No medias have been uploaded') ?></p>
+    <p><?= $this->translate('No medias have been uploaded') ?></p>
 <?php endif ?>

@@ -19,24 +19,24 @@ $this->headTitle($title);
 <?php $isRowOpened = false ?>
 <?php $i = 1 ?>
     <?php foreach($dogs as $dog) : ?>
-<?php if (1 === $i || 0 === ($i % $itemsPerRow)) : ?> 
-    <div class="row">
-    <?php $isRowOpened = true?>
-<?php endif ?>
-<div class="col-sm-6 col-md-4 col-lg-3">
-    <div class="thumbnail<?= ' ' . (('f' === $dog['dog_gender'])? 'female': 'male') ?>">
-      <img src="<?= $dog['media_src']?>" alt="<?= $dog['media_alt']?>"/>
-      <div class="caption">
-      <h5><?= $dog['dog_name'] ?></h5>
-        <p>
-            <a class="btn btn-primary btn-xs" role="button"href="<?php echo $this->url('dog_view_user_dog', array(
-                'uniquename' => $dog['owner_uniquename'],
-                'dogname_underscored' => $this->string()->spaceToUnderscore($dog['dog_name']),
-            ), true); ?>"><?php echo $this->translate('View') ?></a>
-        </p>
-     </div><!-- end caption -->
-   </div><!-- end thumbnail -->
-</div><!-- end col -->
+        <?php if (1 === $i || 0 === ($i % $itemsPerRow)) : ?> 
+            <div class="row">
+            <?php $isRowOpened = true?>
+        <?php endif ?>
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="thumbnail<?= ' ' . (('f' === $dog['dog_gender'])? 'female': 'male') ?>">
+              <img src="<?= $dog['media_src']?>" alt="<?= $dog['media_alt']?>"/>
+              <div class="caption">
+              <h5><?= $dog['dog_name'] ?></h5>
+                <p>
+                    <a class="btn btn-primary btn-xs" role="button"href="<?php echo $this->url('dog_view_user_dog', array(
+                        'uniquename' => $dog['owner_uniquename'],
+                        'dogname_underscored' => $this->string()->spaceToUnderscore($dog['dog_name']),
+                    ), true); ?>"><?php echo $this->translate('View') ?></a>
+                </p>
+             </div><!-- end caption -->
+           </div><!-- end thumbnail -->
+        </div><!-- end col -->
     <?php $i++ ?>
     <?php if (0 === ($i % $itemsPerRow)) : ?> 
              </div><!-- end row -->

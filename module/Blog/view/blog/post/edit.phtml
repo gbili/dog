@@ -1,17 +1,4 @@
 <?php $__VIEWFILE__ = __FILE__ ?>
 <?php require_once __DIR__ . '/../../partial/entity_form.phtml'; ?> 
 
-<div class="row">
-    <div class="col-sm-0 col-md-1 col-lg-1"></div>
-    <div class="col-sm-5 col-md-4 col-lg-4"></div>
-    <div class="col-sm-1 col-md-1 col-lg-1"></div>
-    <div class="col-sm-6 col-md-6 col-lg-6">
-        <div class="row">
-            <div class="col-sm-12 col-md-12 col-lg-12">
-                <?= $this->uploader()->renderForm() ?>
-            </div>
-        </div>
-    </div>
-</div>
-
-<?php include $this->uploader()->getScriptPath() ?>
+<?= $this->uploader() ?>

@@ -49,4 +49,6 @@ return array (
   'media' => '',
   '<label for="file_input">Select</label>' => '',
   'Bulk' => '',
+  'All' => '',
+  'Locale' => '',
 );

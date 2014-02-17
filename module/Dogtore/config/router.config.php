@@ -2,58 +2,6 @@
 namespace Dogtore;
 return array(
     'routes' => array(
-        'dogtore_index' => array(
-            'type' => 'Zend\Mvc\Router\Http\Segment',
-            'options' => array(
-                'route'    => '/[:lang/][:post_slug/][:related/]',
-                'constraints' => array(
-                    'lang' => $preConfig['regex_patterns']['lang'],
-                    'post_slug' => '[a-z0-9]+[a-z0-9-]+[a-z0-9]+',
-                    'related' => '(?:children)|(?:parent)',
-                ),
-                'defaults' => array(
-                    'lang'          => 'en',
-                    'controller'    => 'dogtore_scs_controller',
-                    'action'        => 'index',
-                ),
-            ),
-            'may_terminate' => true,
-        ),
-
-        /*'dogtore_search_handy' => array(
-            'type' => 'Zend\Mvc\Router\Http\Segment',
-            'options' => array(
-                'route'    => '[/:lang][/get-me-:category{-}[-talking-about-:terms]]',
-                'constraints' => array(
-                    'lang' => $preConfig['regex_patterns']['lang'],
-                    'category' => $preConfig['regex_patterns']['category'],
-                    'terms' => '[a-zA-Z0-9]+[a-zA-Z0-9_-]*',
-                ),
-                'defaults' => array(
-                    'lang'       => 'en',
-                    'controller' => 'dogtore_scs_controller',
-                    'action'     => 'search',
-                ),
-            ),
-            'may_terminate' => true,
-        ),*/
-
-        'dogtore_search' => array(
-            'type' => 'Zend\Mvc\Router\Http\Segment',
-            'options' => array(
-                'route'    => '[/:lang]/search',
-                'constraints' => array(
-                    'lang' => $preConfig['regex_patterns']['lang'],
-                ),
-                'defaults' => array(
-                    'lang'       => 'en',
-                    'controller' => 'dogtore_scs_controller',
-                    'action'     => 'search',
-                ),
-            ),
-            'may_terminate' => true,
-        ),
-
         'dog_view_user_dog' => array(
             'type' => 'Zend\Mvc\Router\Http\Segment',
             'options' => array(

@@ -10,7 +10,7 @@
             </div>
             <div class="col-sm-4 col-md-4 col-4">
                 <a class="btn btn-success pull-right" href="<?php echo $this->url('profile_edit', array(
-                    'controller' => 'profile', 
+                    'controller' => 'gbiliuser_profile_controller', 
                     'action'=>'edit',
                     'uniquename'=> $user->getUniquename(),
                 ), true);?>"><?php echo $this->translate('Edit Profile', 'user') ?></a>

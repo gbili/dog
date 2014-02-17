@@ -1,0 +1,44 @@
+<link rel="stylesheet" href="/css/colpick.css" type="text/css"/>
+
+<?php ob_start() ?>
+<script type="text/javascript">
+//Color Picker
+if (!Modernizr.inputtypes.color) {
+    $(document).ready(function (){
+        var colorInput = $('#colpick');
+        var colorInputValue = colorInput.val();
+        if ('' != colorInputValue) {
+            colorInput.css('color', '#' + colorInputValue);
+            colorInput.css('background', '#' + colorInputValue);
+        }
+        colorInput.colpick({
+            layout:'hex',
+            submit:0,
+            colorScheme:'dark',
+            onChange:function(hsb,hex,rgb,el,bySetColor) {
+                $(el).css('background','#'+hex);
+                $(el).css('color','#'+hex);
+                // Fill the text box just if the color was set using the picker, and not the colpickSetColor function.
+                if(!bySetColor) $(el).val(hex);
+            }
+        }).keyup(function(){
+            $(this).colpickSetColor(this.value);
+        });
+    });
+}
+</script>
+<?php $conditional_colpick = ob_get_clean() ?>
+
+<?php $this->scriptalicious()->addSrc('jQuery', '/js/jquery-ui-1.10.4.custom.min.js') ?>
+
+<?php $this->scriptalicious()->addSrc('colpick', '/js/colpick.js')
+    ->addDependency('colpick', 'jQuery') ?>
+
+<?php $this->scriptalicious()->addInline('conditional_colpick', $conditional_colpick)
+    ->addDependency('conditional_colpick', 'colpick') 
+    ->addDependency('conditional_colpick', 'modernizr_input') ?>
+
+<?php unset($conditional_colpick) ?>
+
+<?php $this->scriptalicious()->addSrc('modernizr_input', '/js/modernizr.input.min.js')
+    ->addDependency('modernizr_input', 'jQuery') ?>

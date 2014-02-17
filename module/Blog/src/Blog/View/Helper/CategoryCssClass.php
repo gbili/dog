@@ -30,7 +30,7 @@ class CategoryCssClass extends \Zend\View\Helper\AbstractHelper
         }
 
         if (!isset($cssClass[$categorySlug])) {
-            $categorySlug = $this->getView()->translate($categorySlug, 'blog', 'en');
+            $categorySlug = $this->getView()->translate($categorySlug, null, 'en');
             if (!isset($cssClass[$categorySlug])) {
                 throw new \Exception('You must translate the category slug in Blog/language/en.php before using CategoryCssClass : ' . $categorySlug);
             }

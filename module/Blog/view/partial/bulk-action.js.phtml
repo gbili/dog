@@ -1,18 +1,27 @@
 <?php $this->scriptalicious()->addSrc('jQuery', '/js/jquery-ui-1.10.4.custom.min.js') ?>
 <?php ob_start() ?>
 <script type="text/javascript">
-function bulkSelectAll() {
-    var checkboxes = $("#bulk-action input[name|='<?= $form->getOption('multicheck_element_name')?>[]']");
-    var n=checkboxes.length;
-    for (var i=0; i<n; i++) {
-        checkboxes[i].checked = this.checked;
+(function () {
+    // Function will go through all element in the form and
+    // and put them to the same state as the selectAllInput
+    // checkbox
+    function bulkSelectAll() {
+        var checkboxes = $("#bulk-action input[name|='<?= $form->getOption('multicheck_element_name')?>[]']");
+        var n=checkboxes.length;
+        for (var i=0; i<n; i++) {
+            checkboxes[i].checked = this.checked;
+        }
+    };
+
+    // Add the onclick event listener to the selectAllInput
+    // checkbox
+    var selectAllInput = document.getElementById('bulk-action-input-all');
+    if (selectAllInput.addEventListener) {
+        selectAllInput.addEventListener('click', bulkSelectAll, false); 
+    } else if (selectAllInput.attachEvent)  {
+        selectAllInput.attachEvent('onclick', bulkSelectAll);
     }
-};
-if (document.getElementById('bulk-action-input-all').addEventListener) {
-    document.getElementById('bulk-action-input-all').addEventListener('click', bulkSelectAll, false); 
-} else if (el.attachEvent)  {
-    document.getElementById('bulk-action-input-all').attachEvent('onclick', bulkSelectAll);
-}
+})();
 </script>
 
 <?php $this->scriptalicious()->addInline('bulk_action', ob_get_clean()) 

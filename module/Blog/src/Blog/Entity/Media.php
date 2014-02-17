@@ -18,7 +18,7 @@ class Media
 
     /**
      * @ORM\ManyToOne(targetEntity="\User\Entity\User", inversedBy="posts")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
 
@@ -281,5 +281,10 @@ class Media
     public function getLocale()
     {
         return $this->locale;
+    }
+
+    public function isOwnedBy(\User\Entity\User $user)
+    {
+        return $this->getUser() === $user;
     }
 }

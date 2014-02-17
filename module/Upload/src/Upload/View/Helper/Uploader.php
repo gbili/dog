@@ -15,6 +15,8 @@ class Uploader extends \Zend\View\Helper\AbstractHelper
 {
     protected $service;
     protected $formHtml;
+    protected $areScriptsRegistered = false;
+    protected $popupDivId = 'gbiliuploader-upload-popup';
 
     /**
      * Translate a message
@@ -22,7 +24,13 @@ class Uploader extends \Zend\View\Helper\AbstractHelper
      */
     public function __invoke()
     {
-        return $this;
+        $html = $this->renderHtml();
+
+        if (!$this->areScriptsRegistered) {
+            $this->registerScripts();
+        }
+
+        return $html;
     }
 
     /**
@@ -30,9 +38,49 @@ class Uploader extends \Zend\View\Helper\AbstractHelper
      * execution first, that's why its phtml and not js
      *
      */
-    public function getScriptPath()
+    public function registerScripts()
     {
-        return realpath(__DIR__ . '/../../../../view/partial') . '/ajax.file_upload.js.phtml';
+        $view = $this->view;
+
+        require_once realpath(__DIR__ . '/../../../../view/partial') . '/ajax.file_upload.js.phtml';
+
+        if ($this->service->hasIncludeScriptFilePath()) {
+            require_once $this->service->getIncludeScriptFilePath();
+        }
+
+        $this->areScriptsRegistered = true;
+    }
+
+    public function renderHtml()
+    {
+        if ($this->getService()->isFormDisplayedAsPopup()) {
+            $html = $this->getAllInsidePopup();
+        } else {
+            $html = $this->renderForm()
+                  . $this->renderProgressBar();
+        }
+        return $html;
+    }
+
+    public function getAllInsidePopup()
+    {
+        $id = $this->popupDivId;
+        $hidden = (($this->getService()->isFormInitialStateHidden())? 'hidden' : '');
+
+        return "<div id=\"$id\" class=\"$hidden\">"
+                 . '<a class="gbiliuploader-hide-popup-button">✖</a>'
+                 . $this->renderForm() 
+                 . $this->renderProgressBar() 
+             . '</div>';
+    }
+
+    public function renderProgressBar()
+    {
+        return '<div id="gbiliuploader-progress" class="progress help-block">'
+                  . '<div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">'
+                  . '</div>'
+                  . '<p></p>'
+              . '</div>';
     }
 
     public function renderForm()
@@ -41,12 +89,12 @@ class Uploader extends \Zend\View\Helper\AbstractHelper
             return $this->formHtml;
         }
 
-        $view = $this->getView();
-
-        $form = $this->getService()->getForm();
+        $view    = $this->getView();
+        $service = $this->getService();
+        $form    = $service->getForm();
 
         if (!$form->hasAttribute('action')) {
-            $actionRouteParams = $this->getService()->getFormActionRouteParams();
+            $actionRouteParams = $service->getFormActionRouteParams();
             $form->setAttribute(
                 'action', 
                 $view->url(
@@ -60,6 +108,7 @@ class Uploader extends \Zend\View\Helper\AbstractHelper
 
         $html = '';
         $html .= $view->form()->openTag($form);
+        // File upload progress input
         $html .= $view->formFileUploadProgress();
         foreach ($form->getElements() as $element) {
             $html .= '<div class="form-group">';
@@ -68,19 +117,10 @@ class Uploader extends \Zend\View\Helper\AbstractHelper
             $html .= '</div>';
         }
         $html .=  $view->form()->closeTag(); 
-        $view->formHtml = $html;
+
+        $this->formHtml = $html;
 
         return $html;
-    }
-
-    public function progressBar()
-    {
-      ?><div id="progress" class="help-block">
-            <div class="progress progress-info progress-striped">
-                <div class="bar"></div>
-            </div>
-            <p></p>
-        </div><?php
     }
 
     public function setService($service)

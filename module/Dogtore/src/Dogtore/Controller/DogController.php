@@ -8,21 +8,7 @@ namespace Dogtore\Controller;
  *
  */
 class DogController extends \Zend\Mvc\Controller\AbstractActionController
-    implements \Upload\ConfigKeyAwareInterface
 {
-    protected $configKey;
-
-    public function getConfigKey()
-    {
-        return $this->configKey;
-    }
-
-    public function setConfigKey($configKey)
-    {
-        $this->configKey = $configKey;
-        return $this;
-    }
-
     /**
      * View uniquename user's name dog 
      * :uniquename and :dogname are enforced by route

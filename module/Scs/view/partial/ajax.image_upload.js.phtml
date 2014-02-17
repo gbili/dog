@@ -1,0 +1,16 @@
+<script type="text/javascript">
+var uploadSuccess = function (response) {
+    var options = '';
+    var callbackReturn = response.callbackReturn;
+    for( key in  callbackReturn) {
+        options = options + '<option data-img-src="' + callbackReturn[key].mediaSrc + '" value="' + callbackReturn[key].mediaId + '" >';
+    }
+    var selectElement = $('select.image-picker');
+    selectElement.html(selectElement.html() + options);
+    selectElement.imagepicker();
+};
+
+var uploadFail = function (response) {
+    showMessages(response.messages);
+};
+</script>

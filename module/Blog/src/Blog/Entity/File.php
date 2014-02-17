@@ -9,7 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class File 
 {
-
     /**
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id

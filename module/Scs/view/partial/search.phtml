@@ -1,0 +1,23 @@
+<div class="row post-search-row">
+<?php
+$form->setAttribute('action', $this->url('scs_scs_search_route', array(), true));
+$form->setAttribute('method', 'get');
+$form->setAttribute('class', 'form-horizontal');
+$form->prepare();
+?>
+<?= $this->form()->openTag($form) ?>
+  <div class="col-xs-1 col-md-1 col-lg-1"></div>
+  <div class="col-xs-10 col-md-10 col-lg-10">
+    <div class="input-group">
+      <?= $this->formElement($form->get('t')) ?>
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="submit"><?= $this->translate('Any')?></button>
+        <button class="btn btn-<?= $this->cssClass('symptom') ?>" type="submit" name="c" value="<?= $this->translate('symptom')?>"><?= $this->translate('Symptoms')?></button>
+        <button class="btn btn-<?= $this->cssClass('cause') ?>" type="submit" name="c" value="<?= $this->translate('cause')?>"><?= $this->translate('Causes')?></button>
+        <button class="btn btn-<?= $this->cssClass('solution') ?>" type="submit" name="c" value="<?= $this->translate('solution')?>"><?php echo $this->translate('Solutions')?></button>
+      </span>
+    </div><!-- /input-group -->
+  </div><!-- /.col-lg-6 -->
+  <div class="col-xs-1 col-md-1 col-lg-1"></div>
+<?= $this->form()->closeTag() ?>
+</div><!-- /.row -->

@@ -98,7 +98,7 @@ return array(
                 ),
                 'defaults' => array(
                     'lang' => 'en',
-                    'controller' => 'profile',
+                    'controller' => 'gbiliuser_profile_controller',
                     'action' => 'edit',
                     'uniquename' => false,
                 ),
@@ -114,7 +114,7 @@ return array(
                 ),
                 'defaults' => array(
                     'lang' => 'en',
-                    'controller' => 'profile',
+                    'controller' => 'gbiliuser_profile_controller',
                     'action' => 'private',
                 ),
             ),
@@ -130,7 +130,7 @@ return array(
                 ),
                 'defaults' => array(
                     'lang' => 'en',
-                    'controller' => 'profile',
+                    'controller' => 'gbiliuser_profile_controller',
                     'action' => 'public',
                     'uniquename' => false,
                 ),
@@ -147,7 +147,7 @@ return array(
                 ),
                 'defaults' => array(
                     'lang' => 'en',
-                    'controller' => 'profile',
+                    'controller' => 'gbiliuser_profile_controller',
                     'action' => 'index',
                     'uniquename' => false,
                 ),
@@ -162,7 +162,7 @@ return array(
                 ),
                 'defaults' => array(
                     'lang' => 'en',
-                    'controller' => 'profile',
+                    'controller' => 'gbiliuser_profile_controller',
                     'action' => 'list',
                 ),
             ),

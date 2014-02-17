@@ -2,21 +2,7 @@
 namespace Blog\Controller;
 
 class FileController extends \Zend\Mvc\Controller\AbstractActionController 
-    implements \Upload\ConfigKeyAwareInterface
 {
-    protected $configKey;
-
-    public function getConfigKey()
-    {
-        return $this->configKey;
-    }
-
-    public function setConfigKey($configKey)
-    {
-        $this->configKey = $configKey;
-        return $this;
-    }
-
     /**
     * Index action
     *

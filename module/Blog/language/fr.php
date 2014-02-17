@@ -77,4 +77,12 @@ return array (
   '<label for="file_input">Select</label>' => '<label for="file_input">Choisir</label>',
   '<label for="media_input">Select</label>' => '',
   'All' => '',
+  'Category Name' => '',
+  'the-slug-is-a-lowercase-representation-of-the-name-with-dashes' => '',
+  'Descriptions may not be shown, but they are used as meta for search engines' => '',
+  'the-post-title-without-special-chars' => '',
+  'the-slug-will-be-shown-in-url' => '',
+  'The post title' => '',
+  'Write cool content..' => '',
+  'Picture' => '',
 );

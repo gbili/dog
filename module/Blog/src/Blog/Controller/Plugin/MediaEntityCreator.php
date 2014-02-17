@@ -24,7 +24,7 @@ class MediaEntityCreator extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
         $controller = $this->getController();
         $objectManager = $controller->em();
         $config        = $controller->getServiceLocator()->get('Config');
-        $publicDir     = $config['blog_constants']['images_src_dirpath'];
+        $publicDir     = $config['blog_constants']['IMAGES_SRC_DIRPATH'];
         $locale        = $controller->locale();
 
         $createdMedias = array();
@@ -37,12 +37,13 @@ class MediaEntityCreator extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
             $media->setPublicdir($publicDir);
             $media->setLocale($locale);
             $media->setDate(new \DateTime());
+            $media->setUser($controller->identity());
+
             $objectManager->persist($media);
             $objectManager->flush();
 
             $createdMedias[] = $media;
         }
-
         return $createdMedias;
     }
 }

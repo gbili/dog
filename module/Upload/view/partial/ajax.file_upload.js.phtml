@@ -1,7 +1,13 @@
-<?php $this->scriptalicious()->addSrc('jQuery', '/js/jquery-ui-1.10.4.custom.min.js') ?>
+<?php if (!isset($view)) : ?>
+    <?php throw new \Exception('You need to set the $view variable in order to use this script') ?>
+<?php endif ?>
 
-<?php $this->scriptalicious()->addSrc('jquery_form', '/js/jquery.form.js')
+<?php $view->scriptalicious()->addSrc('jQuery', '/js/jquery-ui-1.10.4.custom.min.js') ?>
+<?php $view->scriptalicious()->addSrc('jquery_form', '/js/jquery.form.js')
     ->addDependency('jquery_form', 'jQuery') ?>
+
+<?php $fileInputName = $this->getService()->getFileInputName() ?>
+<?php $formId      = $this->getService()->getFormId() ?>
 
 <?php ob_start()?>
 <script type="text/javascript">
@@ -21,30 +27,47 @@ function getProgress() {
     });
 }
 
+function gbiliUploaderResetProgress() {
+    $('#gbiliuploader-progress .progress-bar').width('0%');
+    $('#gbiliuploader-progress > p').html('Nothing to upload');
+    gbiliUploaderProgressNormal();
+}
+
+function gbiliUploaderProgressUploadedBadFile() {
+    $('#gbiliuploader-progress .progress-bar')
+        .removeClass('progress-bar-primary')
+        .addClass('progress-bar-warning');
+}
+
+function gbiliUploaderProgressUploadSuccess() {
+    $('#gbiliuploader-progress .progress-bar')
+        .removeClass('progress-bar-primary')
+        .addClass('progress-bar-success');
+}
+
+function gbiliUploaderProgressNormal() {
+    $('#gbiliuploader-progress .progress-bar')
+        .removeClass('progress-bar-success')
+        .removeClass('progress-bar-warning')
+        .addClass('progress-bar-primary');
+}
+
 function startProgress() {
     showProgress(0, 'Starting upload...');
     progressInterval = setInterval(getProgress, 900);
 }
 
 function showProgress(amount, message) {
-    $('#progress').show();
-    $('#progress .bar').width(amount + '%');
-    $('#progress > p').html(message);
-    if (amount < 100) {
-        $('#progress .progress')
-            .addClass('progress-info active')
-            .removeClass('progress-success');
-    } else {
-        $('#progress .progress')
-            .removeClass('progress-info active')
-            .addClass('progress-success');
-    }
+    $('#gbiliuploader-progress').show();
+    $('#gbiliuploader-progress .progress-bar').width(amount + '%');
+    $('#gbiliuploader-progress > p').html(message);
 }
 
 // TODO XSS 
 function showMessages(messages) {
     var message = '';
-    var container = $('#messages');
+    <?php //Either add the messages in the popup or in the messages container ?>
+    var container = $('#<?= (($this->service->isFormDisplayedAsPopup())? $this->popupDivId : 'messages')?>');
 
     for( key in messages ) {
         dismissButton = '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>';
@@ -53,33 +76,20 @@ function showMessages(messages) {
     }
 }
 
-<?php //TODO this is crap ?>
-<?php /* File uploader service may not be set, get it */ ?>
-<?php if (!isset($uploaderService)) : ?>
-    <?php $uploaderService = $this->uploader()->getService() ?> 
-<?php endif ?>
+var uploadSuccess = function (response) {
+    showMessages(response.messages);
+};
 
-<?php /* Allow script inclusion to override existing behaviour */ ?>
-<?php if ($uploaderService->hasIncludeScriptFilePath()) : ?>
-    </script>
-    <?php include $uploaderService->getIncludeScriptFilePath() ?>    
-    <script type="text/javascript">
-<?php else : ?>
-    var uploadSuccess = function (response) {
-        showMessages(response.messages);
-    };
-
-    var uploadFail = function (response) {
-        showMessages(response.messages);
-    };
-<?php endif ?>
+var uploadFail = function (response) {
+    showMessages(response.messages);
+};
 
 $(function() {
     // Register a 'submit' event listener on the form to perform the AJAX POST
-    $('#<?= $uploaderService->getFormName() ?>').on('submit', function(e) {
+    $('#<?= $formId ?>').on('submit', function(e) {
         e.preventDefault();
 
-        if ($('#<?= $uploaderService->getFileInputName() ?>').val() == '') {
+        if ($('#<?= $fileInputName ?>').val() == '') {
             // No files selected, abort
             return;
         }
@@ -103,12 +113,12 @@ $(function() {
                     uploadSuccess(response);
                     // Clear the file input, otherwise the same file gets re-uploaded
                     // http://stackoverflow.com/a/1043969
-                    var fileInput = $('#<?= $uploaderService->getFileInputName() ?>');
+                    var fileInput = $('#<?= $fileInputName ?>');
                     fileInput.replaceWith( fileInput.val('').clone( true ) );
                 } else {
                     // Clear the file input, otherwise the same file gets re-uploaded
                     // http://stackoverflow.com/a/1043969
-                    var fileInput = $('#<?= $uploaderService->getFileInputName() ?>');
+                    var fileInput = $('#<?= $fileInputName ?>');
                     fileInput.replaceWith( fileInput.val('').clone( true ) );
 
                     // TODO: Do something with these errors
@@ -129,5 +139,5 @@ $(function() {
 </script>
 <?php $ajax_file_upload = ob_get_clean() ?>
 
-<?php $this->scriptalicious()->addInline('ajax_file_upload', $ajax_file_upload)
-            ->addDependency('ajax_file_upload', 'jquery_form') ?>
+<?php $view->scriptalicious()->addInline('gbiliuploader_ajax_file_upload', $ajax_file_upload)
+           ->addDependency('gbiliuploader_ajax_file_upload', 'jquery_form') ?>

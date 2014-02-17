@@ -6,7 +6,6 @@
  * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
-
 namespace User\Controller\Plugin;
 
 /**
@@ -23,6 +22,11 @@ class Nonce extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
     {
         $this->service = $service;
         return $this;
+    }
+
+    public function getLastValidator()
+    {
+        return $this->service->getLastValidator();
     }
 
     /**
@@ -60,7 +64,6 @@ class Nonce extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
     {
         // When no routename is passed, considered validation process
         // And tries to get it from route match
-
         $controller = $this->getController();
         if (!$this->service->hasRouteName()) {
             $routeMatch = $controller->getServiceLocator()

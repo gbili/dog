@@ -2,20 +2,7 @@
 namespace Blog\Controller;
 
 class MediaController extends \Zend\Mvc\Controller\AbstractActionController
-    implements \Upload\ConfigKeyAwareInterface
 {
-    protected $configKey;
-
-    public function getConfigKey()
-    {
-        return $this->configKey;
-    }
-
-    public function setConfigKey($configKey)
-    {
-        $this->configKey = $configKey;
-        return $this;
-    }
 
     /**
      * Index action
@@ -26,6 +13,7 @@ class MediaController extends \Zend\Mvc\Controller\AbstractActionController
         $medias = $em->getRepository('Blog\Entity\Media')->findBy(array('locale' => $this->locale()), array('date' => 'DESC'));
 
         return new \Zend\View\Model\ViewModel(array(
+            'messages' => $this->messenger()->getMessages(),
             'medias' => $medias,
         ));
     }
@@ -111,7 +99,7 @@ class MediaController extends \Zend\Mvc\Controller\AbstractActionController
             $media->removePost($post);
             $objectManager->flush();
 
-            $this->flashMessenger()->addSuccessMessage('Media and post unlinked');
+            $this->messenger()->addMessage('Media and post unlinked', 'success');
         }
 
         return $this->redirectToMediaLibrary();
@@ -158,18 +146,37 @@ class MediaController extends \Zend\Mvc\Controller\AbstractActionController
     public function deleteAction()
     {
         if (!$this->nonce()->isValid()) {
-            throw new \Exception('500 access denied');
+            $this->messenger()->addMessage(implode(', ', $this->nonce()->getLastValidator()->getMessages()), 'danger');
+            return $this->redirectToMediaLibrary();
         }
 
         $media = $this->em()->getRepository('Blog\Entity\Media')->find($this->params()->fromRoute('id'));
+        $genericMedia = current($this->em()->getRepository('Blog\Entity\Media')->findBy(array('slug' => 'symptom-thumbnail.jpg', 'locale' => $this->lang())));
 
-        if ($media) {
-            $em = $this->em();
-            $em->remove($media);
-            $em->flush();
-
-            $this->flashMessenger()->addSuccessMessage('Media Deleted');
+        if (!$media) {
+            $this->messenger()->addMessage('Media does not exist', 'danger');
+            return $this->redirectToMediaLibrary();
         }
+
+        $loggedInUser = $this->identity();
+        if (!$media->isOwnedBy($loggedInUser) && !$loggedInUser->isAdmin()) {
+            $this->messenger()->addMessage('You don\'t have the right to delete something that does not belong to you', 'danger');
+            return $this->redirectToMediaLibrary();
+        }
+
+        $em = $this->em();
+        $posts = $media->getPosts();
+
+        $em->remove($media);
+
+        foreach ($posts as $post) {
+            $post->setMedia($genericMedia);
+            $em->persist($post);
+        }
+
+        $em->flush();
+
+        $this->messenger()->addMessage('Media Deleted', 'success');
 
         return $this->redirectToMediaLibrary();
     }

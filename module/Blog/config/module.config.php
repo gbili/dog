@@ -3,13 +3,12 @@ namespace Blog;
 
 return array(
     'blog_constants' => array(
-        'uploaded_files_dirpath' => __DIR__ . '/../public/img',
-        'images_src_dirpath' => '/img',
+        'UPLOADED_FILES_DIRPATH' => __DIR__ . '/../public/img',
+        'IMAGES_SRC_DIRPATH'     => '/img',
     ),
-
     'view_manager' => array(
         'template_path_stack' => array(
-            'blog' => __DIR__ . '/../view',
+            strtolower(__NAMESPACE__) => __DIR__ . '/../view',
         ),
         'strategies' => array(
             'ViewJsonStrategy',

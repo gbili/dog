@@ -24,6 +24,20 @@ class Uploader
     protected $hydrator;
 
     /**
+     * TODO this belongs to view helper
+     * is the form going to be displayed as a popup
+     * or integrated in the content?
+     */
+    protected $isFormDisplayedAsPopup = false;
+
+    /**
+     * TODO this belongs to view helper
+     * is the form going to be displayed as a popup
+     * or integrated in the content?
+     */
+    protected $isFormInitialStateHidden = true;
+
+    /**
      *
      * @var \Zend\Http\Request
      */
@@ -43,6 +57,11 @@ class Uploader
      * @var string
      */
     protected $formName;
+
+    /**
+     * @var string
+     */
+    protected $formId;
 
     /**
      * @var array
@@ -123,9 +142,13 @@ class Uploader
         if (!$this->hasFormName()) {
             $this->setFormName('file_form');
         }
-        $name = $this->getFormName();
 
-        $form = new \Upload\Form\Html5MultiUpload($name, $options);
+        if (!$this->hasFormId()) {
+            $this->setFormId('gbiliuploader_upload_form');
+        }
+
+        $form = new \Upload\Form\Html5MultiUpload($this->getFormName(), $options);
+        $form->setAttribute('id', $this->getFormId());
 
         $this->clonableForm = clone $form;
         $this->setForm($form);
@@ -188,6 +211,22 @@ class Uploader
     public function getFormName()
     {
         return $this->formName;
+    }
+
+    public function setFormId($id)
+    {
+        $this->formId = $id;
+        return $this;
+    }
+
+    public function hasFormId()
+    {
+        return null !== $this->formId;
+    }
+
+    public function getFormId()
+    {
+        return $this->formId;
     }
 
     public function setEntityManager(\Doctrine\ORM\EntityManager $em)
@@ -355,6 +394,28 @@ class Uploader
         $this->persistFile($file);
 
         $this->addFile($file);
+    }
+
+    public function displayFormAsPopup($bool)
+    {
+        $this->isFormDisplayedAsPopup = (boolean) $bool;
+        return $this;
+    }
+
+    public function isFormDisplayedAsPopup()
+    {
+        return $this->isFormDisplayedAsPopup;
+    }
+
+    public function setFormInitialStateHidden($bool)
+    {
+        $this->isFormInitialStateHidden = (boolean) $bool;
+        return $this;
+    }
+
+    public function isFormInitialStateHidden()
+    {
+        return $this->isFormInitialStateHidden;
     }
 
     /**
