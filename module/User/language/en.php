@@ -86,4 +86,5 @@ return array (
   'You have no dogs' => '',
   'has one dog' => '',
   '. Her name is: ' => '',
+  'You have one dog' => '',
 );
