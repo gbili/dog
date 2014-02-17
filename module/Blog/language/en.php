@@ -82,4 +82,13 @@ return array (
   'Media Deleted' => '',
   'No medias have been uploaded' => '',
   'The form submitted did not originate from the expected site' => '',
+  'Represented file' => '',
+  'Enter Slug' => '',
+  'Alternate text' => '',
+  'Alt' => '',
+  'Descriptions are usefull for search engines...' => '',
+  'Leave empty for defaults' => '',
+  'Css Percent' => '',
+  'Width (px)' => '',
+  'Height (px)' => '',
 );

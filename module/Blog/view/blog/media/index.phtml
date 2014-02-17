@@ -14,24 +14,15 @@ $this->notify(((isset($messages))? $messages : array()));
         <p><a class="btn btn-success" href="<?= $this->url(null, array('action'=>'upload'), true);?>"><?= $this->translate('Upload media') ?></a></p>
     </div>
 </header>
-<?php $count = count($medias) ?>
-<?php $itemsPerRow = 4 ?>
-<?php $excess = $count % $itemsPerRow ?>
-<?php $rows = ($count - $excess) / $itemsPerRow ?>
-<?php $isRowOpened = false ?>
-<?php $i = 1 ?>
 
 <?php $this->nonce()->setRouteName('blog_media_delete_route') ?>
 
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+<ul class="image-library">
     <?php foreach($medias as $media) : ?>
-<?php if (1 === $i || 0 === ($i % $itemsPerRow)) : ?> 
-    <div class="row">
-    <?php $isRowOpened = true?>
-<?php endif ?>
-<div class="col-sm-6 col-md-4 col-lg-3">
-    <div class="thumbnail">
-    <a href="<?= $this->url('blog_media_view', array('slug' => $media->getSlug()), true) ?>"><img class="img-responsive" src="<?= $this->escapeHtml($media->getFile()->getSrc());?>">
-     </a>
+    <li>
+    <a href="<?= $this->url('blog_media_view', array('slug' => $media->getSlug()), true) ?>"><img class="img-responsive" src="<?= $this->escapeHtml($media->getFile()->getSrc());?>"></a>
       <div class="caption">
         <h5><?= $this->escapeHtml($media->getSlug());?></h5>
         <p>
@@ -67,17 +58,27 @@ $this->notify(((isset($messages))? $messages : array()));
             )); ?>" onclick="return confirm('<?= $this->translate('Are you sure?') ?>')"><?= $this->translate('Delete') ?></a>
         </p>
      </div><!-- end caption -->
-   </div><!-- end thumbnail -->
-</div><!-- end col -->
-    <?php $i++ ?>
-    <?php if (0 === ($i % $itemsPerRow)) : ?> 
-             </div><!-- end row -->
-        <?php $isRowOpened = false?>
-    <?php endif ?>
+   </li><!-- end thumbnail -->
 <?php endforeach ?>
-<?php if (true === $isRowOpened) : ?>
-             </div><!-- end row -->
-<?php endif ?>
+        </ul><!--masonize -->
+    </div><!-- end col -->
+ </div><!-- end row -->
 <?php if (empty($medias)) : ?>
     <p><?= $this->translate('No medias have been uploaded') ?></p>
 <?php endif ?>
+
+<?php ob_start() ?>
+<?php //TODO make this masonry work ?>
+<script type="text/javascript">
+$('ul.image-library').masonry({
+    columnWidth: 200,
+    itemSelector: 'li',
+});
+</script>
+<?php $initMason = ob_get_clean() ?>
+<?php $this->scriptalicious()->addSrc('jQuery', '/js/jquery-ui-1.10.4.custom.min.js') ?>
+<?php $this->scriptalicious()->addSrc('masonry', '/js/masonry.pkgd.min.js')
+    ->addDependency('masonry', 'jQuery') ?>
+<?php $this->scriptalicious()->addInline('init_image_library_mason', $initMason)
+    ->addDependency('init_image_library_mason', 'masonry')
+    ->addDependency('init_image_library_mason', 'jQuery');

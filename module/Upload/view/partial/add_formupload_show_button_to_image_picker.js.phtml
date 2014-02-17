@@ -26,6 +26,7 @@ function gbiliUploaderHideUploadPopup () {
 function gbiliUploaderInitImagePicker() {
     $("select.image-picker").imagepicker();
     var $container = $("select.image-picker.masonry").next('ul.thumbnails');
+    //TODO find out why there is no imagesLoaded method in $container
     $container.masonry({
         itemSelector: 'li',
     });
