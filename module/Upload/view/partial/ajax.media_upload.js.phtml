@@ -19,7 +19,7 @@ function gbiliUploaderAddImageToSelectForm(response) {
     selectElement.html(selectElement.html() + options);
 }
 
-var uploadSuccess = function (response) {
+var gbiliUploaderUploadSuccess = function (response) {
     gbiliUploaderProgressUploadSuccess();
     gbiliUploaderAddImageToSelectForm(response);
     gbiliUploaderReloadImagePicker();
@@ -28,11 +28,20 @@ var uploadSuccess = function (response) {
     gbiliUploaderAddListenersToButtonHidePopup();
 };
 
-var uploadFail = function (response) {
+var gbiliUploaderUploadFail = function (response) {
     showMessages(response.messages);
     gbiliUploaderProgressUploadedBadFile();
     gbiliUploaderAddListenersToButtonHidePopup();
 };
+
+var gbiliUploaderUploadPartialSuccess = function (response) {
+    showMessages(response.messages);
+    gbiliUploaderProgressUploadedBadFile();
+    gbiliUploaderAddImageToSelectForm(response);
+    gbiliUploaderReloadImagePicker();
+    gbiliUploaderAddListenersToButtonHidePopup();
+};
+
 </script>
 <?php $ajax_media_upload = ob_get_clean() ?>
 

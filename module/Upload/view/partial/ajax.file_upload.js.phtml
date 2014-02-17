@@ -76,11 +76,22 @@ function showMessages(messages) {
     }
 }
 
-var uploadSuccess = function (response) {
+// Clear the file input, otherwise the same file gets re-uploaded
+// http://stackoverflow.com/a/1043969
+function gbiliUploaderResetFileInput() {
+    var fileInput = $('#<?= $fileInputName ?>');
+    fileInput.replaceWith(fileInput.val('').clone( true ) );
+}
+
+var gbiliUploaderUploadSuccess = function (response) {
     showMessages(response.messages);
 };
 
-var uploadFail = function (response) {
+var gbiliUploaderUploadPartialSuccess = function (response) {
+    showMessages(response.messages);
+};
+
+var gbiliUploaderUploadFail = function (response) {
     showMessages(response.messages);
 };
 
@@ -105,24 +116,16 @@ $(function() {
                 clearInterval(progressInterval);
                 showProgress(100, 'Complete!');
 
-                // TODO: You'll need to do some custom logic here to handle a successful
-                // form post, and when the form is invalid with validation errors.
-                if (response.status) {
-                    // TODO: Do something with a successful form post, like redirect
-                    // window.location.replace(response.redirect);
-                    uploadSuccess(response);
-                    // Clear the file input, otherwise the same file gets re-uploaded
-                    // http://stackoverflow.com/a/1043969
-                    var fileInput = $('#<?= $fileInputName ?>');
-                    fileInput.replaceWith( fileInput.val('').clone( true ) );
+                gbiliUploaderResetFileInput();
+                //All files uploaded correctly
+                if (1 === response.status) {
+                    gbiliUploaderUploadSuccess(response);
+                } else if (2 === response.status) {
+                    gbiliUploaderUploadPartialSuccess(response);
+                } else if (0 === response.status) {
+                    gbiliUploaderUploadFail(response);
                 } else {
-                    // Clear the file input, otherwise the same file gets re-uploaded
-                    // http://stackoverflow.com/a/1043969
-                    var fileInput = $('#<?= $fileInputName ?>');
-                    fileInput.replaceWith( fileInput.val('').clone( true ) );
-
-                    // TODO: Do something with these errors
-                    uploadFail(response);
+                    alert('Application Error, The response is not well formatted');
                 }
             },
             error: function(a, b, c) {

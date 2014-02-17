@@ -4,6 +4,13 @@ namespace Upload\Service;
 class Uploader 
 {
     /**
+     * These have to match up the js script
+     */
+    const UPLOAD_STATUS_ALL_SUCCESS = 1;
+    const UPLOAD_STATUS_ALL_FAIL = 0;
+    const UPLOAD_STATUS_PARTIAL_SUCCESS = 2;
+
+    /**
      * Points to a php file containing
      * javascript code to override ajax.file_upload.js.phtml
      * TODO Weird
@@ -76,12 +83,18 @@ class Uploader
     /**
      * @var \Upload\Form\Html5MultiUpload
      */
-    protected $form = null;
+    protected $form;
 
     /**
      * @var \Upload\Form\Html5MultiUpload
      */
-    protected $clonableForm = null;
+    protected $clonableForm;
+
+    /**
+     * Conains either the flag for : all success, partial success, all fail
+     * @var integer
+     */
+    protected $uploadStatus;
 
     public function getFormCopy()
     {
@@ -305,12 +318,35 @@ class Uploader
 
     public function areAllFilesUploaded()
     {
+        return $this->getUploadStatus() === self::UPLOAD_STATUS_ALL_SUCCESS;
+    }
+
+    public function getUploadStatus()
+    {
+        if (null !== $this->uploadStatus) {
+            return $this->uploadStatus;
+        }
+
+        $atLeastOneSuccess = false;
+        $atLeastOneFail    = false;
         foreach ($this->getMessages() as $message) {
-            if (!$this->isFileUploaded($message)) {
-                return false; 
+            if ($this->isFileUploaded($message)) {
+                $atLeastOneSuccess = true; 
+            } else {
+                $atLeastOneFail = true; 
             }
         }
-        return true;
+
+        if ($atLeastOneSuccess && $atLeastOneFail) {
+            $uploadStatus = self::UPLOAD_STATUS_PARTIAL_SUCCESS;
+        } else if ($atLeastOneSuccess) {
+            $uploadStatus = self::UPLOAD_STATUS_ALL_SUCCESS;
+        } else {
+            $uploadStatus = self::UPLOAD_STATUS_ALL_FAIL;
+        }
+        $this->uploadStatus = $uploadStatus;
+
+        return $uploadStatus;
     }
 
     /**

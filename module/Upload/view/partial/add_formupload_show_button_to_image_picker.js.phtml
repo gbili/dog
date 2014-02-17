@@ -1,6 +1,8 @@
 <?php $view->scriptalicious()->addSrc('jQuery', '/js/jquery-ui-1.10.4.custom.min.js') ?>
 <?php $view->scriptalicious()->addSrc('image_picker', '/js/image-picker.min.js')
     ->addDependency('image_picker', 'jQuery') ?>
+<?php $view->scriptalicious()->addSrc('masonry', '/js/masonry.pkgd.min.js')
+    ->addDependency('masonry', 'jQuery') ?>
 
 <?php ob_start() ?>
 <script type="text/javascript">
@@ -23,6 +25,10 @@ function gbiliUploaderHideUploadPopup () {
 
 function gbiliUploaderInitImagePicker() {
     $("select.image-picker").imagepicker();
+    var $container = $("select.image-picker.masonry").next('ul.thumbnails');
+    $container.masonry({
+        itemSelector: 'li',
+    });
 }
 
 function gbiliUploaderReloadImagePicker() {
@@ -75,6 +81,7 @@ gbiliUploaderInitImagePicker();
 <?php $add_button_to_image_picker = ob_get_clean()?>
 
 <?php $view->scriptalicious()->addInline('gbiliuploader_imagepicker_with_addbutton', $add_button_to_image_picker)
+    ->addDependency('gbiliuploader_imagepicker_with_addbutton', 'masonry')
     ->addDependency('gbiliuploader_imagepicker_with_addbutton', 'image_picker') ?>
 
 <?php unset($add_button_to_image_picker) ?>

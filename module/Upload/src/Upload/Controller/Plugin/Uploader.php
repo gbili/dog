@@ -54,7 +54,7 @@ class Uploader extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
 
             if ($fileUploader->isAjax()) {
                 return new \Zend\View\Model\JsonModel(array(
-                    'status' => $fileUploader->areAllFilesUploaded(),
+                    'status' => $fileUploader->getUploadStatus(),
                     'callbackReturn' => ((isset($callbackReturn))? $callbackReturn : array()),
                     'messages' => ((isset($messages))? $messages : array()),
                     'formData' => $fileUploader->getPostData(),
