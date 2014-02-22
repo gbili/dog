@@ -4,12 +4,15 @@ namespace Dogtore\Form\Fieldset;
 class Dog extends \Zend\Form\Fieldset 
 implements \Zend\InputFilter\InputFilterProviderInterface
 {
+    protected $langService;
+
     public function __construct($sm)
     {
         parent::__construct('name');
 
         $objectManager = $sm->get('Doctrine\ORM\EntityManager');
-        $lang = $sm->get('lang')->getLang();
+        $this->langService = $sm->get('lang');
+        $lang = $this->langService->getLang();
 
         $this->setHydrator(new \DoctrineModule\Stdlib\Hydrator\DoctrineObject($objectManager))
              ->setObject(new \Blog\Entity\PostData());
@@ -35,7 +38,7 @@ implements \Zend\InputFilter\InputFilterProviderInterface
             'name' => 'birthdate',
             'type'  => 'Zend\Form\Element\Date',
             'options' => array(
-                'label' => 'Birth date'
+                'label' => 'Birth date',
             ),
             'attributes' => array(
                 'class' => 'form-control',
@@ -47,6 +50,7 @@ implements \Zend\InputFilter\InputFilterProviderInterface
             'name' => 'gender',
             'type'  => 'Blog\Form\Element\Select',
             'options' => array(
+                'helper_method' => 'formElementStaticValueOptions',
                 'label' => 'Gender',
                 'empty_option' => '---',
                 'value_options' => array(
@@ -174,6 +178,15 @@ implements \Zend\InputFilter\InputFilterProviderInterface
                 'filters'  => array(
                     array('name' => 'StripTags'),
                     array('name' => 'StringTrim'),
+                    array(
+                        'name' => 'callback',
+                        'options' => array(
+                            'callback' => function ($value) {
+                                //Convert a locale lang to an standard iso DateTime::ISO8601
+                                return $this->langService->getStandardDate($value);
+                            },
+                        ),
+                    ),
                 ),
                 'validators' => array(
                     array(

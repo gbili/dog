@@ -140,7 +140,10 @@ class DogController extends \Zend\Mvc\Controller\AbstractActionController
         $user->addDog($dog);
         
         if (!$dog->hasMedia()) {
+            //TODO fix this, make sure there is allways the default media.
+            // should it be a non displayable media?
             $media = $em->getRepository('Blog\Entity\Media')->findBySlug('profile-thumbnail.jpg');
+            throw new \Exception(var_dump($media));
             $dog->setMedia(current($media));
         }
 

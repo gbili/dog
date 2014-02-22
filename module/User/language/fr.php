@@ -71,4 +71,9 @@ return array (
   'firstname surname<small>\'s Profile</small>' => '<small>Profil de</small> prénom nom',
   'Info' => 'Infos',
   'Profile Picture' => '',
+  '. Her name is: ' => '',
+  'Complete!' => '',
+  'Uploading...' => '',
+  'Click the "Upload" button when you are ready.' => '',
+  'You need to click "Browse" button, and select some files to upload.' => '',
 );

@@ -1,0 +1,28 @@
+<?php $this->scriptalicious()->addSrc('jQuery', '/js/jquery-ui-1.10.4.custom.min.js') ?>
+<?php $view->scriptalicious()->addSrc('imagesloaded', '/js/imagesloaded.pkgd.min.js')
+    ->addDependency('imagesloaded', 'jQuery') ?>
+<?php $view->scriptalicious()->addSrc('image_picker', '/js/image-picker.min.js')
+    ->addDependency('image_picker', 'jQuery') ?>
+<?php $view->scriptalicious()->addSrc('masonry', '/js/masonry.pkgd.min.js')
+    ->addDependency('masonry', 'jQuery') ?>
+
+<?php ob_start() ?>
+<script type="text/javascript">
+/* File: <?= __FILE__ ?>*/
+(function () {
+    $("select.image-picker").imagepicker();
+    var $container = $("select.image-picker.masonry").next('ul.thumbnails');
+    //TODO find out why there is no imagesLoaded method in $container
+    $container.imagesLoaded($container.masonry({
+        itemSelector: 'li',
+        columnWidth: 100,
+    }));
+})();
+</script>
+<?php $init_image_picker_mason = ob_get_clean() ?>
+<?php $view->scriptalicious()->addInline('init_image_picker_mason', $init_image_picker_mason)
+    ->addDependency('init_image_picker_mason', 'masonry')
+    ->addDependency('init_image_picker_mason', 'image_picker')
+    ->addDependency('init_image_picker_mason', 'imagesloaded') ?>
+
+<?php unset($image_picker_mason) ?>

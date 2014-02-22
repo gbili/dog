@@ -30,6 +30,47 @@ class Lang
         return $langParam;
     }
 
+    /**
+     * Return the date time format for the current lang
+     */
+    public function getDateTimeFormat()
+    {
+        $config = $this->application->getServiceManager()->get('Config');
+        $lang = $this->getLang();
+        if (isset($config['lang']['date_time_formats'][$lang])) {
+            return $config['lang']['date_time_formats'][$lang];
+        }
+        return \DateTime::ISO8601;
+    }
+
+    public function getStandardDate($value)
+    {
+        $format = $this->getDateTimeFormat();
+        $namedPatterns = array(
+            'dd' => '(?P<dd>[0-9]{2})',
+            'mm' => '(?P<mm>[0-9]{2})',
+            'yy' => '(?P<yy>[0-9]{4})',
+        );
+        $patterns = array();
+        $replacements = array();
+        foreach ($namedPatterns as $name => $replacement) {
+            $patterns[] = "/$name/";
+            $replacements[] = $replacement;
+        }
+        preg_replace($patterns, $replacements, '#'. $format . '#');
+        $regexFormat = '#' . preg_replace($patterns, $replacements, $format) . '#';
+
+        if (!(0 < preg_match_all($regexFormat, $value, $matches))) {
+            return false;
+        }
+        $day = current($matches['dd']);
+        $month = current($matches['mm']);
+        $year = current($matches['yy']);
+
+        $isoDate = "$year-$month-$day";
+        return $isoDate;
+    }
+
     public function getLocale()
     {
         throw new \Exception('use getLang() instead of getLocale()');

@@ -51,9 +51,14 @@ class Uploader extends \Zend\View\Helper\AbstractHelper
         $this->areScriptsRegistered = true;
     }
 
+    public function isDisplayedAsPopup()
+    {
+        return $this->getService()->isFormDisplayedAsPopup();
+    }
+
     public function renderHtml()
     {
-        if ($this->getService()->isFormDisplayedAsPopup()) {
+        if ($this->isDisplayedAsPopup()) {
             $html = $this->getAllInsidePopup();
         } else {
             $html = $this->renderForm()
@@ -71,16 +76,18 @@ class Uploader extends \Zend\View\Helper\AbstractHelper
                  . '<a class="gbiliuploader-hide-popup-button">✖</a>'
                  . $this->renderForm() 
                  . $this->renderProgressBar() 
+                 . '<div class="messages"></div>'
              . '</div>';
     }
 
     public function renderProgressBar()
     {
-        return '<div id="gbiliuploader-progress" class="progress help-block">'
-                  . '<div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">'
-                  . '</div>'
-                  . '<p></p>'
-              . '</div>';
+        return '<div id="gbiliuploader-progress">'
+                   . '<div class="progress help-block">'
+                      . '<div class="progress-bar progress-bar-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>'
+                   . '</div>'
+                   . '<p></p>'
+             . '</div>';
     }
 
     public function renderForm()

@@ -73,4 +73,12 @@ return array (
   'Woff, wff!!! No posts match your search, care to write a little one? Some dog may be thankful' => '',
   'sintoma' => 'symptom',
   'You have no dogs in your pack' => '',
+  'Complete!' => '',
+  'Uploading...' => '',
+  'Click the "Upload" button when you are ready.' => '',
+  'You need to click "Browse" button, and select some files to upload.' => '',
+  '---' => '',
+  'The input does not fit the date format \'Y-m-d\'' => '',
+  'The input does not appear to be a float' => '',
+  'The form submitted did not originate from the expected site' => '',
 );

@@ -19,6 +19,7 @@ return array(
         'string'            => __NAMESPACE__ . '\View\Helper\ExpressivePregTransform',
         'scriptalicious'    => __NAMESPACE__ . '\View\Helper\RegisterScript',
         'bulkForm'          => __NAMESPACE__ . '\View\Helper\BulkForm',
+        'formElementStaticValueOptions' => __NAMESPACE__ . '\View\Helper\FormElementStaticValueOptions',
     ),
 
     'factories' => array(

@@ -87,4 +87,8 @@ return array (
   'has one dog' => '',
   '. Her name is: ' => '',
   'You have one dog' => '',
+  'Complete!' => '',
+  'Uploading...' => '',
+  'Click the "Upload" button when you are ready.' => '',
+  'You need to click "Browse" button, and select some files to upload.' => '',
 );

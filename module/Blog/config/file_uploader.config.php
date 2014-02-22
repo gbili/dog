@@ -5,8 +5,7 @@ return array(
     'blog_media_controller' => array(
         'alias' => 'ajax_media_upload',
         'view_helper' => array(
-            //overrides the on success 
-            'include_js_script' => false, 
+            'display_form_as_popup'      => false,
         ),
     ),
 

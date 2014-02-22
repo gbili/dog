@@ -44,4 +44,11 @@ return array (
   'McKenzy' => 'Pozero',
   'Surname' => 'Apellido',
   'Featured Image' => 'Imagen Principal',
+  'Profile Picture' => 'Foto de Perfil',
+  'Complete!' => 'Completado!',
+  'Uploading...' => 'Subiendo...',
+  'Click the "Upload" button when you are ready.' => 'Aprieta el boton "Subir" cuando estés listo.',
+  'You need to click "Browse" button, and select some files to upload.' => 'Debes de apretar el boton "Buscar" y selectionar algun fichero para subir',
+  'has no dogs' => 'no tiene perros',
+  '. Her name is: ' => '. Es una hembra que se llama: ',
 );

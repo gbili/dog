@@ -85,4 +85,6 @@ return array (
   'The post title' => '',
   'Write cool content..' => '',
   'Picture' => '',
+  'Bulk Actions' => '',
+  'Link Translations' => '',
 );

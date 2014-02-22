@@ -1,0 +1,17 @@
+application: dogtoreappengine 
+version: 1
+runtime: php
+api_version: 1
+
+handlers:
+- url: /img
+  static_dir: public/img
+
+- url: /js
+  static_dir: public/js
+
+- url: /css
+  static_dir: public/css
+
+- url: /.*
+  script: public/index.php

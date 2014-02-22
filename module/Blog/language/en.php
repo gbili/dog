@@ -91,4 +91,12 @@ return array (
   'Css Percent' => '',
   'Width (px)' => '',
   'Height (px)' => '',
+  'Complete!' => '',
+  'Uploading...' => '',
+  'Click the "Upload" button when you are ready.' => '',
+  'Click the "Browse" button, and select some files.' => '',
+  'You need to click "Browse" button, and select some files to upload.' => '',
+  'Link to Posts' => '',
+  'Bulk Actions' => '',
+  'Link Translations' => '',
 );

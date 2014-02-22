@@ -13,7 +13,7 @@ namespace Lang\View\Helper;
  */
 class Lang extends \Zend\View\Helper\AbstractHelper
 {
-    private $lang = null;
+    private $lang;
 
     /**
      * Translate a message

@@ -54,8 +54,8 @@ return array (
   ':dog' => ':perro',
   ':owner chose :dog over any other dog because' => ':propietario escojió a :perro entre todos los perros, por que',
   'Add a dog to your pack' => 'Añade un perro a tu manada',
-  'Female' => '',
-  'Value is required and can\'t be empty' => '',
-  'Previous exceptions' => '',
-  'No posts match your search, care to write one? Someone will be thankful.' => '',
+  'Female' => 'Hembra',
+  'Value is required and can\'t be empty' => 'El valor es imprescindible y no puede estar vacío',
+  'Previous exceptions' => 'Exceptiones anteriores',
+  'No posts match your search, care to write one? Someone will be thankful.' => 'Ningún articulo corresponde a tu busqueda. Quieres escribir uno? Alguien te lo agradecerá.',
 );

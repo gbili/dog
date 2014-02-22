@@ -1,8 +1,49 @@
 <?php $__VIEWFILE__ = __FILE__ ?>
-<?php require_once __DIR__ . '/../../partial/entity_form.phtml'; ?> 
+<?php
+if (!isset($__VIEWFILE__)) {
+    throw new \Exception('$__VIEWFILE__ variable must be set with __FILE__ constant from the view file, in order for the partial to work.');
+}
 
+$fileparts = explode('/', $__VIEWFILE__);
+$action = substr(end($fileparts), 0, -6);
+$controller = prev($fileparts); 
+$textDomain = prev($fileparts);
+$route = array(
+    'action' => $action
+);
+if (isset($entityId) && null !== $entityId) {
+    $route['id'] = $entityId;
+}
+$this->formActionPrepare($form) ?>
+
+<?php
+$title = ucfirst($this->translate($action, $textDomain)) . ' ' . ucfirst($this->translate($controller, $textDomain));
+$this->headTitle($title);
+?>
+<header class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <h3><?php echo $this->escapeHtml($title); ?></h3>
+    </div>
+</header>
+<?php $elements = $this->elementsFlatArray($form) ?>
 <div class="row">
-    <div class="col-sm-12 col-md-12 col-lg-12"></div>
-        <?= $this->uploader()?>
+    <div class="col-sm-6 col-md-6 col-lg-6">
+        <div class="row media">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <?= $this->renderElement($elements['media']) ?>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-6 col-lg-6">
+<?php
+        $elementsRenderedExplicitely = array('media',);
+        $elementsNotRenderedExplicitely = array_diff_key($elements, array_flip($elementsRenderedExplicitely)); 
+?>
+        <?= $this->form()->openTag($form) ?>
+        <?php foreach ($elementsNotRenderedExplicitely as $element) : ?>
+            <?= $this->renderElement($element) ?>
+        <?php endforeach ?>
+        <?= $this->form()->closeTag() ?>
     </div>
 </div>
+<?= $this->uploader()?>

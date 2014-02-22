@@ -14,7 +14,6 @@ return array(
             'ViewJsonStrategy',
         ),
     ),
-
     'controller_plugin_repository' => include __DIR__ . '/controller_plugin_repository.config.php',
     'controller_plugins' => include __DIR__ . '/controller_plugins.config.php',
     'controllers'        => include __DIR__ . '/controllers.config.php',

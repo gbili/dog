@@ -17,9 +17,11 @@ $this->notify(((isset($messages))? $messages : array()));
 
 <?php $this->nonce()->setRouteName('blog_media_delete_route') ?>
 
-<div class="row">
+<?php $masonryColumnWidth = 180 ?>
+
+<div id="media_library" class="row">
     <div class="col-sm-12 col-md-12 col-lg-12">
-<ul class="image-library">
+<ul class="please_masonize_<?= $masonryColumnWidth ?>">
     <?php foreach($medias as $media) : ?>
     <li>
     <a href="<?= $this->url('blog_media_view', array('slug' => $media->getSlug()), true) ?>"><img class="img-responsive" src="<?= $this->escapeHtml($media->getFile()->getSrc());?>"></a>
@@ -41,21 +43,21 @@ $this->notify(((isset($messages))? $messages : array()));
                     endforeach;
                     echo implode(', ', $unlinkablePosts);?>
             <?php endif ?>
-            <a class="btn btn-default btn-xs" role="button"href="<?= $this->url(null, array(
+            <a class="glyphicon glyphicon-link" role="button" title="<?= $this->translate('Link to') ?>" href="<?= $this->url(null, array(
                 'lang' => $this->lang(), 
                 'action' => 'link', 
                 'id' => $media->getId(),
-            )); ?>"><?= $this->translate('Link to') ?></a>
-            <a class="btn btn-primary btn-xs" role="button" href="<?= $this->url(null, array(
+            )); ?>"></a>
+            <a class="glyphicon glyphicon-edit" role="button" title="<?= $this->translate('Edit') ?>"  href="<?= $this->url(null, array(
                 'lang' => $this->lang(), 
                 'action' => 'edit', 
                 'id' => $media->getId(),
-            )); ?>"><?= $this->translate('Edit') ?></a>
-            <a class="btn btn-danger btn-xs" role="button" href="<?= $this->url($this->nonce()->getRouteName(), array(
+            )); ?>"></a>
+            <a class="glyphicon glyphicon-trash" role="button" title="<?= $this->translate('Delete') ?>" href="<?= $this->url($this->nonce()->getRouteName(), array(
                 'lang' => $this->lang(), 
                 'id' => $media->getId(),
                 'nonce' => $this->nonce()->getHash($media->getId()),
-            )); ?>" onclick="return confirm('<?= $this->translate('Are you sure?') ?>')"><?= $this->translate('Delete') ?></a>
+            )); ?>" onclick="return confirm('<?= $this->translate('Are you sure?') ?>')"></a>
         </p>
      </div><!-- end caption -->
    </li><!-- end thumbnail -->
@@ -66,19 +68,4 @@ $this->notify(((isset($messages))? $messages : array()));
 <?php if (empty($medias)) : ?>
     <p><?= $this->translate('No medias have been uploaded') ?></p>
 <?php endif ?>
-
-<?php ob_start() ?>
-<?php //TODO make this masonry work ?>
-<script type="text/javascript">
-$('ul.image-library').masonry({
-    columnWidth: 200,
-    itemSelector: 'li',
-});
-</script>
-<?php $initMason = ob_get_clean() ?>
-<?php $this->scriptalicious()->addSrc('jQuery', '/js/jquery-ui-1.10.4.custom.min.js') ?>
-<?php $this->scriptalicious()->addSrc('masonry', '/js/masonry.pkgd.min.js')
-    ->addDependency('masonry', 'jQuery') ?>
-<?php $this->scriptalicious()->addInline('init_image_library_mason', $initMason)
-    ->addDependency('init_image_library_mason', 'masonry')
-    ->addDependency('init_image_library_mason', 'jQuery');
+<?php require_once __DIR__ . '/../../partial/init_masonry.js.phtml' ?> 

@@ -73,7 +73,9 @@ class BulkForm extends \Zend\View\Helper\AbstractHelper
 
     public function renderSelectAllCheckbox()
     {
-        return '<input id="bulk-action-input-all" type="checkbox">&nbsp;' . $this->view->translate('All');
+        return '<label class="checkbox-inline" for="bulk-action-input-all">'
+                 . '<input id="bulk-action-input-all" type="checkbox">' . $this->view->translate('All') 
+             . '</label>';
     }
 
     public function renderElementCheckbox($elementId)

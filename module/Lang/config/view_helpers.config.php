@@ -22,5 +22,12 @@ return array(
             $langHelper->setLang($currentLang);
             return $langHelper;
         },
+        'dateTimeFormat' => function ($viewHelperPluginManager) {
+            $service = $viewHelperPluginManager->getServiceLocator()
+                ->get('lang');
+            $helper = new View\Helper\DateTimeFormat();
+            $helper->setService($service);
+            return $helper;
+        },
     ),
 );

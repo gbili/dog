@@ -95,7 +95,14 @@ div#posts-container .solution {
     top: 25%;
     width: 58%;
     z-index: 2;
+    max-height: 356px;
 }
+
+#gbiliuploader-upload-popup .messages {
+    max-height: 100px;
+    overflow: scroll;
+}
+
 #gbiliuploader-upload-popup.hidden {
     display: none;
 }
@@ -113,6 +120,10 @@ div#posts-container .solution {
 }
 #gbiliuploader-upload-popup > a.gbiliuploader-hide-popup-button:hover {
     color: #EB4A4A;
+}
+
+div.gbiliuploader-show-popup-button {
+    margin-top: 10px;
 }
 
 div.gbiliuploader-show-popup-button > a.btn {
@@ -138,8 +149,44 @@ div.gbiliuploader-show-popup-button > a.btn {
     max-width: 96px;
 }
 
-.image-library > li {
-    max-width: 200px;
+/* make selector scrollable */
+.image_picker_selector {
+    max-height: 500px;
+    overflow: scroll;
+}
+
+/* Image library */
+#media_library ul {
+    padding-left: 0;
+}
+
+#media_library h5 {
+    color: #E0E0E0;
+}
+#media_library li:hover h5 {
+    color: #A0A0A0;
+}
+
+#media_library a.glyphicon {
+    color: #E0E0E0;
+}
+
+#media_library li:hover a.glyphicon {
+    color: #A0A0A0;
+}
+#media_library li a.glyphicon:hover {
+    color: #606060;
+}
+
+#media_library .caption p {
+    margin-bottom: 0;
+    text-align: right;
+}
+/* End Image library */
+
+.please_masonize_200 > li {
+    max-width: 190px;
+    margin: 0 0 10px 10px;
     padding: 10px;
     list-style-type: none;
     border: 1px solid #EEEEEE;
@@ -147,8 +194,22 @@ div.gbiliuploader-show-popup-button > a.btn {
     box-shadow: 2px 7px 10px -9px;
 }
 
-.image-library > li > a > img {
-    max-width: 180px; /* compensate for li padding*/
+.please_masonize_200 > li > a > img {
+    max-width: 170px; /* compensate for li padding -10 -10 = -20*/
+}
+
+.please_masonize_180 > li {
+    max-width: 170px;
+    padding: 10px;
+    margin: 0 0 10px 10px;
+    list-style-type: none;
+    border: 1px solid #EEEEEE;
+    border-radius: 8px;
+    box-shadow: 2px 7px 10px -9px;
+}
+
+.please_masonize_180 > li > a > img {
+    max-width: 150px; /* compensate for li padding -10 -10 = -20*/
 }
 /* End Image Picker */
 

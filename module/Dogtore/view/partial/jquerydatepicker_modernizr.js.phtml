@@ -14,7 +14,7 @@
 //Date Picker
 if (!Modernizr.inputtypes.date) {
     $(document).ready(function (){
-        $("#datepicker").datepicker();
+        $("#datepicker").datepicker({"dateFormat":"<?= $this->dateTimeFormat() ?>"});
     });
 }
 //End Color Picker
