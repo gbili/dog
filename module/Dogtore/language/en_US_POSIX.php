@@ -28,4 +28,5 @@ return array (
   'resolves to %s' => '',
   'My Account' => '',
   'The requested controller was not dispatchable.' => '',
+  'Dogtore' => '',
 );

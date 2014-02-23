@@ -51,4 +51,13 @@ return array (
   'You need to click "Browse" button, and select some files to upload.' => 'Debes de apretar el boton "Buscar" y selectionar algun fichero para subir',
   'has no dogs' => 'no tiene perros',
   '. Her name is: ' => '. Es una hembra que se llama: ',
+  'View' => '',
+  'Home' => '',
+  'Profiles' => '',
+  'Logout' => '',
+  'Register' => '',
+  'register' => '',
+  'Confirm Password' => '',
+  'A user with this email address is already registered, try to login, or use a different email address' => '',
+  'Congratulations! Do you want to tell people what breed of dog you have? You can do that here, in the description. Or you can start searching for dogtore cards.' => '',
 );

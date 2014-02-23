@@ -7,10 +7,12 @@ return array(
             ),
             'auth_login' => array(
                 'label' => 'Login',
+                'iconClass' => 'glyphicon glyphicon-log-in',
                 'route' => 'auth_login',
             ),
             'auth_logout' => array(
                 'label' => 'Logout',
+                'iconClass' => 'glyphicon glyphicon-log-out',
                 'route' => 'auth_logout',
             ),
             'auth_register' => array(
@@ -22,6 +24,7 @@ return array(
         'side_1' => array(
             'profile_private' => array(
                 'label' => 'My Profile',
+                'iconClass' => 'glyphicon glyphicon-user',
                 'route' => 'profile_private',
                 'order' => -1,
             ),

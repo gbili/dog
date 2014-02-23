@@ -4,7 +4,8 @@ namespace Blog;
 return array(
     'default' => array(
         'my_account' => array(
-            'label' => 'My Account',
+            'label' => 'Home',
+            'iconClass' => 'glyphicon glyphicon-home',
             'route' => 'blog_post_route',
             'action' => 'index',
         ),
@@ -18,6 +19,7 @@ return array(
         'post_create' => array(
             'label' => 'New Post',
             'route' => 'blog_post_route',
+            'iconClass' => 'glyphicon glyphicon-pencil',
             'action' => 'create',
         ),
         'category' => array(
@@ -35,6 +37,7 @@ return array(
             'divider' => 'above',
             'header' => 'File Manager',
             'label' => 'Files',
+            'iconClass' => 'glyphicon glyphicon-file',
             //contorller
             'route' => 'blog_file_route',
             'action' => 'index',
@@ -43,18 +46,21 @@ return array(
             'label' => 'Upload Files',
             //contorller
             'route' => 'blog_file_route',
+            'iconClass' => 'glyphicon glyphicon-upload',
             'action' => 'upload',
         ),
         'media' => array(
             'divider' => 'above',
             'label' => 'Media Library',
             'route' => 'blog_media_route',
+            'iconClass' => 'glyphicon glyphicon-picture',
             'action' => 'index',
         ),
         'media_upload' => array(
             'label' => 'Add New Media',
             //contorller
             'route' => 'blog_media_route',
+            'iconClass' => 'glyphicon glyphicon-upload',
             'action' => 'upload',
         ),
     ),

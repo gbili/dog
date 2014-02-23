@@ -11,7 +11,7 @@ $this->notify(((isset($messages))? $messages : array()));
         <p><a class="btn btn-default" href="<?= $this->url(null, array('action'=>'create'), true);?>" title="<?= $this->translate('Media from previously uploaded image') ?>"><?= $this->translate('Create from Existing') ?></a></p>
     </div>
     <div class="col-sm-4 col-md-4 col-4">
-        <p><a class="btn btn-success" href="<?= $this->url(null, array('action'=>'upload'), true);?>"><?= $this->translate('Upload media') ?></a></p>
+        <p><a class="btn btn-success" title="<?= $this->translate('Upload media') ?>" href="<?= $this->url(null, array('action'=>'upload'), true) ?>"><span class="glyphicon glyphicon-upload"></span></a></p>
     </div>
 </header>
 

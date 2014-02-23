@@ -17,15 +17,10 @@ class Media
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\User\Entity\User", inversedBy="posts")
+     * @ORM\ManyToOne(targetEntity="\User\Entity\User", inversedBy="medias")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
-
-    /**
-     * @ORM\Column(name="locale", type="string", length=64)
-     */
-    private $locale;
 
     /**
      * @ORM\Column(name="publicdir", type="string", length=64)
@@ -33,32 +28,16 @@ class Media
     private $publicdir;
 
     /**
-     * @ORM\ManyToOne(targetEntity="TranslatedMedia", inversedBy="translations")
-     * @ORM\JoinColumn(name="translatedmedia_id", referencedColumnName="id")
-     */
-    private $translated;
-
-    /**
-     * @ORM\Column(name="slug", type="string", length=64)
-     */
-    private $slug;
-
-    /**
-     * Title
-     * @ORM\Column(name="alt", type="string", length=64)
-     */
-    private $alt;
-
-    /**
-     * @ORM\Column(name="description", type="string", length=255, nullable=true)
-     */
-    private $description;
-
-    /**
      * The media is linked to this post
      * @ORM\OneToMany(targetEntity="PostData", mappedBy="media", cascade={"persist"})
      */
     private $posts;
+
+    /**
+     * The media is linked to this post
+     * @ORM\OneToMany(targetEntity="MediaMetaData", mappedBy="media", cascade={"persist"})
+     */
+    private $metadatas;
 
     /**
      * @ORM\ManyToOne(targetEntity="File", inversedBy="medias")

@@ -10,7 +10,10 @@
     <?php $this->lang($page) ?>
     <?php if( ! $page->hasPages()): ?>
             <a class="list-group-item<?php if ($page->isActive()) echo ' active' ?>" href="<?= $page->getHref() ?>">
-                <?= $this->translate($page->getLabel(), 'blog') ?>
+                <?php if ($page->iconClass) : ?>
+                    <span class="<?= $page->iconClass ?>"></span>
+                <?php endif ?>
+                <span class="text"><?= $this->translate($page->getLabel(), 'blog') ?></span>
             </a>
     <?php endif ?>
 <?php endforeach ?>

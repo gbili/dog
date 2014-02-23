@@ -81,4 +81,5 @@ return array (
   'The input does not fit the date format \'Y-m-d\'' => '',
   'The input does not appear to be a float' => '',
   'The form submitted did not originate from the expected site' => '',
+  'Dogtore' => '',
 );

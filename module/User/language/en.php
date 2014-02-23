@@ -91,4 +91,8 @@ return array (
   'Uploading...' => '',
   'Click the "Upload" button when you are ready.' => '',
   'You need to click "Browse" button, and select some files to upload.' => '',
+  'View' => '',
+  'Home' => '',
+  'Profiles' => '',
+  'Logout' => '',
 );

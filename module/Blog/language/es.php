@@ -85,4 +85,9 @@ return array (
   'Uploading...' => 'Subiendo...',
   'Click the "Upload" button when you are ready.' => '',
   'You need to click "Browse" button, and select some files to upload.' => '',
+  'My Account' => '',
+  'Profiles' => '',
+  'Logout' => '',
+  'Home' => '',
+  'No medias have been uploaded' => '',
 );

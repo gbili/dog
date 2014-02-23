@@ -26,6 +26,13 @@ class User
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
+     * @ORM\OneToMany(targetEntity="\Blog\Entity\Media", mappedBy="user")
+     */
+    private $medias;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
      * @ORM\OneToMany(targetEntity="\Dogtore\Entity\Dog", mappedBy="owner")
      */
     private $dogs;

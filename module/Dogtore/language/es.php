@@ -64,4 +64,5 @@ return array (
   'You have no dogs in your pack' => '',
   'The input does not fit the date format \'Y-m-d\'' => '',
   '---' => '',
+  'Dogtore' => '',
 );

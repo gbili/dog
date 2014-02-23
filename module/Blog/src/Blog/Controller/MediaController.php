@@ -9,13 +9,29 @@ class MediaController extends \Zend\Mvc\Controller\AbstractActionController
      */
     public function indexAction()
     {
-        $em = $this->em();
-        $medias = $em->getRepository('Blog\Entity\Media')->findBy(array('locale' => $this->locale()), array('date' => 'DESC'));
-
         return new \Zend\View\Model\ViewModel(array(
             'messages' => $this->messenger()->getMessages(),
-            'medias' => $medias,
+            'medias' => $this->getMedias(),
         ));
+    }
+
+    public function getMedias($id = null)
+    {
+        $em = $this->em();
+        $criteria = array(
+            'user' => $this->identity(),
+        );
+
+        if (null !== $id) {
+            $criteria['id'] = $id;
+        }
+
+        $medias = $em->getRepository('Blog\Entity\Media')->findBy(
+            $criteria, 
+            array('date' => 'DESC')
+        );
+
+        return $medias;
     }
 
     /**
@@ -23,13 +39,19 @@ class MediaController extends \Zend\Mvc\Controller\AbstractActionController
      */
     public function editAction()
     {
-        $objectManager = $this->em();
+        $em = $this->em();
 
         // Create the form and inject the object manager
-        $form = new \Blog\Form\MediaEdit($objectManager);
+        $form = new \Blog\Form\MediaEdit($em);
         
         //Get a new entity with the id 
-        $media = $objectManager->find('Blog\Entity\Media', (integer) $this->params('id'));
+        $medias = $this->getMedias($this->params('id'));
+
+        if (empty($medias)) {
+            throw new \Exception('There is no such media');
+        }
+
+        $media = current($medias);
         
         $form->bind($media);
 
@@ -38,7 +60,7 @@ class MediaController extends \Zend\Mvc\Controller\AbstractActionController
 
             if ($form->isValid()) {
                 //Save changes
-                $objectManager->flush();
+                $em->flush();
                 return $this->redirectToMediaView($media);
             }
         }
@@ -54,13 +76,19 @@ class MediaController extends \Zend\Mvc\Controller\AbstractActionController
      */
     public function linkAction()
     {
-        $objectManager = $this->em();
+        $em = $this->em();
 
         // Create the form and inject the object manager
-        $form = new \Blog\Form\MediaLink($objectManager);
+        $form = new \Blog\Form\MediaLink($em);
         
         //Get a new entity with the id 
-        $media = $objectManager->find('Blog\Entity\Media', (integer) $this->params('id'));
+        $medias = $this->getMedias($this->params('id'));
+
+        if (empty($medias)) {
+            throw new \Exception('There is no such media');
+        }
+
+        $media = current($medias);
         $form->bind($media);
 
         if ($this->request->isPost()) {
@@ -68,7 +96,7 @@ class MediaController extends \Zend\Mvc\Controller\AbstractActionController
 
             if ($form->isValid()) {
                 //Save changes
-                $objectManager->flush();
+                $em->flush();
             }
         }
 
@@ -83,21 +111,21 @@ class MediaController extends \Zend\Mvc\Controller\AbstractActionController
      */
     public function unlinkAction()
     {
-        $objectManager = $this->em();
+        $em = $this->em();
 
         // Create the form and inject the object manager
-        $form = new \Blog\Form\MediaLink($objectManager);
+        $form = new \Blog\Form\MediaLink($em);
         
         //Get a new entity with the id 
         $mediaId = (integer) $this->params('id');
         $postId  = (integer) $this->params('fourthparam');
 
-        $media = $objectManager->find('Blog\Entity\Media', $mediaId);
-        $post  = $objectManager->find('Blog\Entity\Post', $postId);
+        $media = $em->find('Blog\Entity\Media', $mediaId);
+        $post  = $em->find('Blog\Entity\Post', $postId);
 
         if ($media && $post) {
             $media->removePost($post);
-            $objectManager->flush();
+            $em->flush();
 
             $this->messenger()->addMessage('Media and post unlinked', 'success');
         }

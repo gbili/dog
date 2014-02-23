@@ -99,4 +99,7 @@ return array (
   'Link to Posts' => '',
   'Bulk Actions' => '',
   'Link Translations' => '',
+  'Home' => '',
+  'Profiles' => '',
+  'Logout' => '',
 );

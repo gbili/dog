@@ -5,4 +5,5 @@ return array (
   'es' => '',
   'fr' => '',
   'it' => '',
+  'Language' => '',
 );

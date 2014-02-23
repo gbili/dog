@@ -13,6 +13,7 @@ return array(
             // And finally, here is where we define our page hierarchy
             'dogtore_dog_add_route' => array(
                 'label' => 'Add Dog',
+                'iconClass' => 'glyphicon glyphicon-plus',
                 'route' => 'dogtore_dog_add_route',
             ),
         ),

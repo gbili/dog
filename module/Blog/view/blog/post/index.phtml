@@ -14,7 +14,7 @@ $this->bulkForm()->prepare();
         <p><a class="btn btn-success" href="<?php echo $this->url(null, array(
             'lang' => $this->lang(),
             'action'=>'create',
-        ), true);?>"><?php echo $this->translate('Add New Post')?></a></p>
+        ), true);?>" title="<?= $this->translate('Add New Post')?>"><span class="glyphicon glyphicon-pencil"></span></a></p>
     </div>
 </header>
 <?php echo $this->form()->openTag($form) ?>
