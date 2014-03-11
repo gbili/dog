@@ -28,7 +28,7 @@ class PostButtonsGenerator extends \Zend\View\Helper\AbstractHelper
     protected function getEditButton(array $post)
     {
         $user = $this->view->identity();
-        if (!$user || $post['owner_uniquename'] !== $user->getUniquename()) {
+        if (!$user || $post['user_uniquename'] !== $user->getUniquename()) {
             return '';
         }
         $url = $this->view->url('blog_post_route', array('action' => 'edit', 'id' => $post['post_id']), true);

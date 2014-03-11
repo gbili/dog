@@ -1,5 +1,5 @@
 <?php
-namespace Dogtore;
+namespace Scs;
 return array(
     'regex_patterns' => array(
         'lang'       => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',

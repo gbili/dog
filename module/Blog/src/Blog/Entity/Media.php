@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="medias")
  */
-class Media 
+class Media implements \User\IsOwnedByInterface
 {
     /**
      * @ORM\Column(name="id", type="integer")
@@ -23,6 +23,11 @@ class Media
     private $user;
 
     /**
+     * @ORM\Column(name="slug", type="string", length=64)
+     */
+    private $slug;
+
+    /**
      * @ORM\Column(name="publicdir", type="string", length=64)
      */
     private $publicdir;
@@ -34,8 +39,20 @@ class Media
     private $posts;
 
     /**
+     * The media is linked to this profile 
+     * @ORM\OneToMany(targetEntity="\User\Entity\Profile", mappedBy="media", cascade={"persist"})
+     */
+    private $profiles;
+
+    /**
+     * The media is linked to these dogs 
+     * @ORM\OneToMany(targetEntity="\Dogtore\Entity\Dog", mappedBy="media", cascade={"persist"})
+     */
+    private $dogs;
+
+    /**
      * The media is linked to this post
-     * @ORM\OneToMany(targetEntity="MediaMetaData", mappedBy="media", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="MediaMetadata", mappedBy="media", cascade={"persist"})
      */
     private $metadatas;
 
@@ -71,11 +88,22 @@ class Media
     public function __construct()
     {
         $this->posts = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->metadatas = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     public function getId()
     {
         return $this->id;
+    }
+
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+    }
+
+    public function getSlug()
+    {
+        return $this->slug;
     }
 
     public function setUser(\User\Entity\User $user)
@@ -88,45 +116,14 @@ class Media
         return $this->user;
     }
 
-
-    public function setSlug($slug)
-    {
-        $this->slug = $slug;
-    }
-
-    public function getSlug()
-    {
-        return $this->slug;
-    }
-
     public function getUri()
     {
         return $this->getFile()->getUri();
     }
 
-    public function setAlt($alt)
-    {
-        $this->alt = $alt;
-    }
-
-    public function getAlt()
-    {
-        return $this->alt;
-    }
-
     public function getType()
     {
         return $this->getFile()->getType();
-    }
-
-    public function setDescription($description = null)
-    {
-        $this->description = $description;
-    }
-
-    public function getDescription()
-    {
-        return $this->description;
     }
 
     public function setWidth($width = null)
@@ -169,30 +166,129 @@ class Media
         return $this->posts;
     }
 
-    public function addPost(Post $post)
+    public function __call($method, $params)
     {
-        $post->setMedia($this);
-        $this->posts->add($post);
+        $allowed = array('Dog', 'Metadata', 'Profile', 'Post');
+        $allowedPlural = array('Dogs', 'Metadatas', 'Profiles', 'Posts');
+
+        $parts = preg_split('/(?=[A-Z])/', $method);
+        $uCFirstWhat = array_pop($parts);
+        $what = strtolower($uCFirstWhat);
+
+        $isSingle = in_array($uCFirstWhat, $allowed);
+        $isPlural = in_array($uCFirstWhat, $allowedPlural);
+
+        if (!$isSingle && !$isPlural) {
+            throw new \Exception("$uCFirstWhat not implemented.");
+        }
+
+        array_push($parts, (($isSingle)? 'Thing':'Things'));
+        $genericMethod = implode('', $parts);
+
+        return call_user_func(array($this, $genericMethod), (($isSingle)? $what . 's' : $what), current($params));
     }
 
-    public function addPosts(\Doctrine\Common\Collections\Collection $posts)
+    public function getThing($what)
     {
-        foreach ($posts as $post) {
-            $this->addPost($post);
+        return $this->$what;
+    }
+
+    public function getThings($what)
+    {
+        return $this->$what;
+    }
+
+    public function addThing($what, $thing)
+    {
+        $thing->setMedia($this);
+        $this->$what->add($thing);
+    }
+
+    public function addThings($what, \Doctrine\Common\Collections\Collection $things)
+    {
+        foreach ($things as $thing) {
+            $this->addThing($what, $thing);
         }
     }
 
-    public function removePost(Post $post)
+    public function removeThing($what, $thing)
     {
-        $this->posts->removeElement($post);
-        $post->setMedia(null);
+        $this->$what->removeElement($thing);
+        $thing->setMedia(null);
     }
 
-    public function removePosts(\Doctrine\Common\Collections\Collection $posts)
+    public function removeThings($what, \Doctrine\Common\Collections\Collection $things)
     {
-        foreach ($posts as $post) {
-            $this->removePost($post);
+        foreach ($things as $thing) {
+            $this->removeThing($what, $thing);
         }
+    }
+
+    public function removeAllThings($what)
+    {
+        $this->removeThings($what, $this->getThings($what));
+        return $this;
+    }
+
+    /**
+     * Heavy: n^2
+     * TODO find a better solution for uniqueness of localized metadata
+     */
+    public function addMetadata(MediaMetadata $metadata)
+    {
+        if ($metadata->hasMedia()) {
+            throw new \Exception((($metadata->getMedia() === $this)?'This metadata already has a different media' : 'addMetadata will set the media so dont set it yourself'));
+        }
+
+        if (!$metadata->hasLocale()) {
+            throw new \Exception('Metadata needs to have a locale');
+        }
+
+        if ($this->hasLocalizedMetadata($metadata->getLocale())) {
+            throw new \Exception('Only one metadata per locale');
+        }
+
+        $metadata->setMedia($this);
+        $this->metadatas->add($metadata);
+    }
+
+    public function addMetadatas(\Doctrine\Common\Collections\Collection $metadatas)
+    {
+        foreach ($metadatas as $metadata) {
+            $this->addMetadata($metadata);
+        }
+    }
+
+    public function removeAllMetadatas()
+    {
+        $this->removeMetadatas($this->getMetadatas());
+    }
+
+    public function removeMetadatas(\Doctrine\Common\Collections\Collection $metadatas)
+    {
+        foreach ($metadatas as $metadata) {
+            $this->removeMetadata($metadata);
+        }
+    }
+
+    public function getMetadatas()
+    {
+        return $this->metadatas;
+    }
+
+    public function getLocalizedMetadata($locale)
+    {
+        foreach ($this->metadatas->toArray() as $existingMeta)  {
+            if ($existingMeta->getLocale() === $locale) {
+                return $existingMeta;
+            }
+        }
+        return null;
+    }
+
+    public function hasLocalizedMetadata($locale)
+    {
+        return null !== $this->getLocalizedMetadata($locale);
     }
 
    /**
@@ -203,7 +299,7 @@ class Media
         $this->date = $time;
     }
 
-    /**
+   /**
     * Get Created Date
     *
     * @return \DateTime

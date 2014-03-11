@@ -6,7 +6,7 @@ if (!isset($__VIEWFILE__)) {
 $fileparts = explode('/', $__VIEWFILE__);
 $action = substr(end($fileparts), 0, -6);
 $singular = $controller = prev($fileparts); 
-$textDomain = prev($fileparts);
+$textdomain = prev($fileparts);
 
 $plural   = 'Categories';
 
@@ -86,7 +86,7 @@ $form->prepare();
                     array(
                         'action'=>'delete', 
                         'id' => $category['id'],
-                        'fourthparam' => $nonce,
+                        'nonce' => $nonce,
                     ),
                     true
                 ); ?>" onclick="return confirm('Are you sure?')"><?php echo $this->translate('Delete') ?></a>

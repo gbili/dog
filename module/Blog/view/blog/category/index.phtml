@@ -57,17 +57,14 @@ $this->bulkForm()->prepare();
             <td><?= ((isset($category['translated_category_id']))? $category['translated_category_id'] : $this->translate('N/A')) ?></td>
 <?php endif ?>
 	        <td>
-                <a href="<?= $this->url(null, array('action'=>'edit', 'id' => $category['id']), true); ?>"><?= $this->translate('Edit') ?></a>
+                <a href="<?= $this->url(null, array('action'=>'edit', 'id' => $category['id'], 'lang' => $category['locale']), true); ?>"><?= $this->translate('Edit') ?></a>
 	        </td>
 	        <td>
-                <a href="<?= $this->url(
-                    $this->nonce()->getRouteName(),
-                    array(
-                        'id'          => $category['id'],
-                        'nonce' => $this->nonce()->getHash($category['id']),
-                    ),
-                    true
-                ); ?>" onclick="return confirm('Are you sure?')"><?= $this->translate('Delete') ?></a>
+            <a class="glyphicon glyphicon-trash" role="button" title="<?= $this->translate('Delete') ?>" href="<?= $this->url($this->nonce()->getRouteName(), array(
+                'lang' => $this->lang(), 
+                'id' => $category['id'],
+                'nonce' => $this->nonce()->getHash($category['id']),
+            )); ?>" onclick="return confirm('<?= $this->translate('Are you sure?') ?>')"></a>
 	        </td>
 	    </tr>
     <?php endforeach; ?>

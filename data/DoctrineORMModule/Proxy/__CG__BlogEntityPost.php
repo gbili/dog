@@ -191,6 +191,17 @@ class Post extends \Blog\Entity\Post implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
+    public function isOwnedBy(\User\Entity\User $user)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'isOwnedBy', array($user));
+
+        return parent::isOwnedBy($user);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function setSlug($slug)
     {
 
@@ -213,7 +224,7 @@ class Post extends \Blog\Entity\Post implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function setData(\Blog\Entity\PostData $postData)
+    public function setData(\Blog\Entity\PostData $postData = NULL)
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setData', array($postData));

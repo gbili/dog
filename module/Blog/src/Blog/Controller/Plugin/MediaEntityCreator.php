@@ -30,12 +30,16 @@ class MediaEntityCreator extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
         $createdMedias = array();
         foreach ($files as $file) {
             $media = new \Blog\Entity\Media();
+            $metadata = new \Blog\Entity\MediaMetadata();
+
             $basename = $file->getBasename();
+            $metadata->setAlt($basename);
+            $metadata->setLocale($locale);
+
+            $media->addMetadata($metadata);
             $media->setSlug($basename);
-            $media->setAlt($basename);
             $media->setFile($file);
             $media->setPublicdir($publicDir);
-            $media->setLocale($locale);
             $media->setDate(new \DateTime());
             $media->setUser($controller->identity());
 

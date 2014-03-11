@@ -9,61 +9,51 @@ class FileController extends \Zend\Mvc\Controller\AbstractActionController
     */
     public function indexAction()
     {
-        $em = $this->em();
-        $files = $em->getRepository('Blog\Entity\File')->findBy(array(), array('date' => 'ASC'));
-
         return new \Zend\View\Model\ViewModel(array(
-            'files' => $files,
-            'form'       => new \Blog\Form\FileBulk('bulk-action'),
+            'files' => $this->getEntities(),
+            'form'  => new \Blog\Form\FileBulk('bulk-action'),
         ));
     }
 
     public function bulkAction()
     {
-        if (!$this->request->isPost()) {
-            return $this->redirect()->toRoute('blog_file_route', array('controller' => 'blog_file_controller', 'action' => 'index'));
-        }
-
-        $form = new \Blog\Form\FileBulk('bulk-action');
-
-        $em = $this->em();
-        $files = $em->getRepository('Blog\Entity\File')->findBy(array(), array('date' => 'DESC'));
-
-        $form->hydrateValueOptions($files);
-
-        $form->setData($formData = $this->request->getPost());
-
-        if (!$form->isValid()) {
-            return $this->redirect()->toRoute('blog_file_route', array('controller' => 'blog_file_controller', 'action' => 'index'));
-        }
-
-        $formValidData = $form->getData();
-        $action = $form->getSelectedAction();
-
-        $this->$action($formValidData['files']);
-
-        $this->flashMessenger()->addMessage($action . ' succeed');
-        return $this->redirectToCategoriesList();
+        return $this->actionBulk('blog_file_route', array('action' => 'index'));
     }
 
-    public function deleteFiles(array $filesIds)
+    /**
+     * @note called by bulkForm plugin
+     */
+    public function getEntities()
     {
-        //translations is limited to admin
+        return $this->repository()->findBy(array(), array('date' => 'ASC'));
+    }
+
+    /**
+     * @note mentioned in bulk form and called actionBulk plugin
+     */
+    public function deleteFiles(array $fileIds)
+    {
         if (!$this->identity()->isAdmin()) {
-            return $this->redirect()->toRoute('blog_file_route', array('controller' => 'blog_file_controller', 'action' => 'index'));
+            throw new \Exception('Access denied, cannot delete files if not admin');
+        }
+        $this->deleteEntitiesByIds($fileIds);
+    }
+
+
+    /**
+     * @note called by : 
+     *     -actionNonceDelete plugin
+     *     -deleteEntitiesByIds plugin
+     */
+    public function deleteEntity($file)
+    {
+        if (!$file->delete()) {
+            throw new \Exception('Could not delete the actual file');
         }
 
         $em = $this->em();
-        foreach ($filesIds as $id) {
-            $file = $this->em()->getRepository('Blog\Entity\File')->find($id);
-            if ($file && $file->delete()) {
-                $em = $this->em();
-                $em->remove($file);
-                $em->flush();
-            }
-        }
-        $this->flashMessenger()->addSuccessMessage('Files Deleted');
-        return $this->redirect()->toRoute('blog_file_route', array('controller' => 'blog_file_controller', 'action' => 'index'));
+        $em->remove($file);
+        $em->flush();
     }
 
     /**
@@ -72,13 +62,13 @@ class FileController extends \Zend\Mvc\Controller\AbstractActionController
      */
     public function editAction()
     {
-        $objectManager = $this->em();
+        $em = $this->em();
 
         // Create the form and inject the object manager
-        $form = new \Blog\Form\FileEdit($objectManager);
+        $form = new \Blog\Form\FileEdit($em);
         
         //Get a new entity with the id 
-        $file = $objectManager->find('Blog\Entity\File', (integer) $this->params('id'));
+        $file = $em->find('Blog\Entity\File', (integer) $this->params('id'));
         
         $form->bind($file);
 
@@ -88,7 +78,7 @@ class FileController extends \Zend\Mvc\Controller\AbstractActionController
             if ($form->isValid()) {
                 //Save changes
                 $file->move($file->getName());
-                $objectManager->flush();
+                $em->flush();
             }
         }
         return new \Zend\View\Model\ViewModel(array(
@@ -104,12 +94,10 @@ class FileController extends \Zend\Mvc\Controller\AbstractActionController
     }
 
    /**
-    * Delete action
-    *
+    * Delete file from get request non-idempotent get violation
     */
-    public function deleteAction()
+    public function noncedeleteAction()
     {
-        $file = $this->em()->getRepository('Blog\Entity\File')->find($this->params('id'));
-        return $this->deleteFiles(array($id));
+        return $this->actionNonceDelete('blog_file_route', array('action' => 'index'));
     }
 }

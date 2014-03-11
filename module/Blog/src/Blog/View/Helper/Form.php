@@ -11,7 +11,7 @@ namespace Blog\View\Helper;
 /**
  * View helper for translating messages.
  */
-class Form extends \Zend\View\Helper\AbstractHelper
+class Form extends \Zend\I18n\View\Helper\AbstractTranslatorHelper
 {
     /**
      * Translate a message

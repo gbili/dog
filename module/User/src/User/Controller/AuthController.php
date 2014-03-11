@@ -48,6 +48,27 @@ class AuthController extends \Zend\Mvc\Controller\AbstractActionController
         return $this->logged();
     }
 
+    public function recoverpasswordAction()
+    {
+        //TODO create a form that allows the user to insert
+        // its username or email
+        // 
+        // Add user to Lost passwords db records
+        //
+        // Then send an email to the user's email with a token
+        // that will allow to change password
+        //
+        // Validate the token (nonce?)
+        //
+        // Create a form that allows to reset passord 
+        //
+        // Remove toke from db or set as reset.
+        //
+        // Login user
+        //
+        // Send email confirmation
+    }
+
     public function getUserEmail($data)
     {
         $formUniquename = new \User\Form\LoginUniquename();

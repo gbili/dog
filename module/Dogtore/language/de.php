@@ -45,4 +45,8 @@ return array (
   'Uploading...' => '',
   'Click the "Upload" button when you are ready.' => '',
   'You need to click "Browse" button, and select some files to upload.' => '',
+  'A 404 error occurred' => '',
+  'The requested controller was unable to dispatch the request.' => '',
+  'Controller' => '',
+  'No Exception available' => '',
 );

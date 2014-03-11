@@ -1,6 +1,14 @@
 <?php
 namespace Lang;
 return array(
+    'initializers' => array(
+        'injectTranslatorTextDomain' => function ($helper, $vhp) {
+            if ($helper instanceof \Zend\I18n\Translator\TranslatorAwareInterface) {
+                $helper->setTranslatorTextDomain($vhp->getServiceLocator()->get('textdomain')->getTextdomain());
+            }
+        }
+    ),
+
     'invokables' => array(
         'patternTranslate' => __NAMESPACE__ . '\View\Helper\PatternTranslate',
     ),
@@ -8,10 +16,11 @@ return array(
     'factories' => array(
         'langSelector' => __NAMESPACE__ . '\View\Helper\LangSelectorFactory',
 
+        //translateWriter
         'translate'        => function ($vhp) {
             $sm = $vhp->getServiceLocator();
             $translate = new View\Helper\TranslateWriter;
-            $translate->setTextDomainService($sm->get('textdomain'));
+            $translate->setTranslationStorageService($sm->get('translationStorage'));
             return $translate;
         },
 

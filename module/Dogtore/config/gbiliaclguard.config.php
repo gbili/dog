@@ -12,6 +12,7 @@ return array(
                 'profile_publicly_available',
                 'auth_login',
                 'auth_register',
+                'auth_recoverpassword',
             ),
         ),
         'blacklist' => array(
@@ -22,6 +23,8 @@ return array(
                 'admin_index',
                 'admin_delete',
                 'admin_edit',
+                'lang_translation_index_route',
+                'lang_translation_bulk_route',
                 //empty blacklist allowed everything
             ),
             'admin' => array(

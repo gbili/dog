@@ -6,7 +6,7 @@ if (!isset($__VIEWFILE__)) {
 $fileparts = explode('/', $__VIEWFILE__);
 $action = substr(end($fileparts), 0, -6);
 $controller = prev($fileparts); 
-$textDomain = prev($fileparts);
+$textdomain = prev($fileparts);
 $route = array(
     'action' => $action
 );
@@ -16,7 +16,7 @@ if (isset($entityId) && null !== $entityId) {
 $this->formActionPrepare($form) ?>
 
 <?php
-$title = ucfirst($this->translate($action, $textDomain)) . ' ' . ucfirst($this->translate($controller, $textDomain));
+$title = ucfirst($this->translate($action, $textdomain)) . ' ' . ucfirst($this->translate($controller, $textdomain));
 $this->headTitle($title);
 ?>
 <header class="row">

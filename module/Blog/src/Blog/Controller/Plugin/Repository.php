@@ -11,7 +11,7 @@
 namespace Blog\Controller\Plugin;
 
 /**
- *
+ * Get the repository based on controller or __invoke param
  */
 class Repository extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
 {
@@ -57,7 +57,7 @@ class Repository extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
             return $this->controllerToRepository[$controllerClass]; 
         }
 
-        $entityClass = $this->getEntityClass($controllerClass);
+        $entityClass = $this->controller->guessControllerEntityClassname();
         $repository = $this->getRepository($entityClass);
 
         $this->controllerToRepository[$controllerClass] = $repository;
@@ -67,12 +67,6 @@ class Repository extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
     protected function alreadyGuessed($controllerClass)
     {
         return isset($this->controllerToRepository[$controllerClass]);
-    }
-
-    public function getEntityClass($controllerClass)
-    {
-        $controllerClassNoTrailingController = substr($controllerClass, 0, -(strlen('Controller')));
-        return preg_replace('#Controller#', 'Entity', $controllerClassNoTrailingController);
     }
 
     public function getRepository($entityClass)

@@ -64,10 +64,10 @@ class Media extends \Blog\Entity\Media implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'id', 'user', 'locale', 'publicdir', 'translated', 'slug', 'alt', 'description', 'posts', 'file', 'width', 'height', 'csspercent', 'date');
+            return array('__isInitialized__', 'id', 'user', 'slug', 'publicdir', 'posts', 'profiles', 'dogs', 'metadatas', 'file', 'width', 'height', 'csspercent', 'date');
         }
 
-        return array('__isInitialized__', 'id', 'user', 'locale', 'publicdir', 'translated', 'slug', 'alt', 'description', 'posts', 'file', 'width', 'height', 'csspercent', 'date');
+        return array('__isInitialized__', 'id', 'user', 'slug', 'publicdir', 'posts', 'profiles', 'dogs', 'metadatas', 'file', 'width', 'height', 'csspercent', 'date');
     }
 
     /**
@@ -191,28 +191,6 @@ class Media extends \Blog\Entity\Media implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function setUser(\User\Entity\User $user)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setUser', array($user));
-
-        return parent::setUser($user);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getUser()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getUser', array());
-
-        return parent::getUser();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function setSlug($slug)
     {
 
@@ -235,6 +213,28 @@ class Media extends \Blog\Entity\Media implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
+    public function setUser(\User\Entity\User $user)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setUser', array($user));
+
+        return parent::setUser($user);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getUser()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getUser', array());
+
+        return parent::getUser();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getUri()
     {
 
@@ -246,56 +246,12 @@ class Media extends \Blog\Entity\Media implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function setAlt($alt)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setAlt', array($alt));
-
-        return parent::setAlt($alt);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getAlt()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getAlt', array());
-
-        return parent::getAlt();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function getType()
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getType', array());
 
         return parent::getType();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setDescription($description = NULL)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setDescription', array($description));
-
-        return parent::setDescription($description);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getDescription()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getDescription', array());
-
-        return parent::getDescription();
     }
 
     /**
@@ -389,45 +345,166 @@ class Media extends \Blog\Entity\Media implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function addPost(\Blog\Entity\Post $post)
+    public function __call($method, $params)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addPost', array($post));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, '__call', array($method, $params));
 
-        return parent::addPost($post);
+        return parent::__call($method, $params);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function addPosts(\Doctrine\Common\Collections\Collection $posts)
+    public function getThing($what)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addPosts', array($posts));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getThing', array($what));
 
-        return parent::addPosts($posts);
+        return parent::getThing($what);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function removePost(\Blog\Entity\Post $post)
+    public function getThings($what)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removePost', array($post));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getThings', array($what));
 
-        return parent::removePost($post);
+        return parent::getThings($what);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function removePosts(\Doctrine\Common\Collections\Collection $posts)
+    public function addThing($what, $thing)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removePosts', array($posts));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addThing', array($what, $thing));
 
-        return parent::removePosts($posts);
+        return parent::addThing($what, $thing);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addThings($what, \Doctrine\Common\Collections\Collection $things)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addThings', array($what, $things));
+
+        return parent::addThings($what, $things);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeThing($what, $thing)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeThing', array($what, $thing));
+
+        return parent::removeThing($what, $thing);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeThings($what, \Doctrine\Common\Collections\Collection $things)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeThings', array($what, $things));
+
+        return parent::removeThings($what, $things);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeAllThings($what)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeAllThings', array($what));
+
+        return parent::removeAllThings($what);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addMetadata(\Blog\Entity\MediaMetadata $metadata)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addMetadata', array($metadata));
+
+        return parent::addMetadata($metadata);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addMetadatas(\Doctrine\Common\Collections\Collection $metadatas)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addMetadatas', array($metadatas));
+
+        return parent::addMetadatas($metadatas);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeAllMetadatas()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeAllMetadatas', array());
+
+        return parent::removeAllMetadatas();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeMetadatas(\Doctrine\Common\Collections\Collection $metadatas)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeMetadatas', array($metadatas));
+
+        return parent::removeMetadatas($metadatas);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getMetadatas()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getMetadatas', array());
+
+        return parent::getMetadatas();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getLocalizedMetadata($locale)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getLocalizedMetadata', array($locale));
+
+        return parent::getLocalizedMetadata($locale);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function hasLocalizedMetadata($locale)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'hasLocalizedMetadata', array($locale));
+
+        return parent::hasLocalizedMetadata($locale);
     }
 
     /**

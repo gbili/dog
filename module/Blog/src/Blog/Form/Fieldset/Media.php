@@ -17,22 +17,6 @@ class Media extends \Zend\Form\Fieldset
         ));
 
         $this->add(array(
-            'name' => 'file',
-            'type' => 'DoctrineModule\Form\Element\ObjectSelect',
-            'options' => array(
-                'label' => 'Represented file',
-                'property' => 'name',
-                'target_class' => 'Blog\Entity\File',
-                'object_manager' => $objectManager,
-                'display_empty_item' => true,
-                'empty_item_label' => 'Choose a file...',
-            ),
-            'attributes' => array(
-                'class' => 'form-control',
-            )
-        ));
-
-        $this->add(array(
             'name' => 'slug',
             'type'  => 'Zend\Form\Element\Text',
             'options' => array(
@@ -41,31 +25,6 @@ class Media extends \Zend\Form\Fieldset
             'attributes' => array(
                 'placeholder' => 'Enter Slug',
                 'class' => 'form-control',
-            )
-        ));
-
-        $this->add(array(
-            'name' => 'alt',
-            'type'  => 'Zend\Form\Element\Text',
-            'options' => array(
-                'label' => 'Alt'
-            ),
-            'attributes' => array(
-                'placeholder' => 'Alternate text',
-                'class' => 'form-control',
-            )
-        ));
-
-        $this->add(array(
-            'name' => 'description',
-            'type'  => 'Zend\Form\Element\Textarea',
-            'options' => array(
-                'label' => 'Description',
-            ),
-            'attributes' => array(
-                'placeholder' => 'Descriptions are usefull for search engines...',
-                'class' => 'form-control',
-                'rows' => '3',
             )
         ));
 
@@ -92,6 +51,7 @@ class Media extends \Zend\Form\Fieldset
                 'class' => 'form-control',
             )
         ));
+
         $this->add(array(
             'name' => 'height',
             'type'  => 'Zend\Form\Element\Text',
@@ -155,40 +115,6 @@ class Media extends \Zend\Form\Fieldset
                 'required' => true,
             ),
 
-            'alt' => array(
-                'required' => true,
-                'filters'  => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array(
-                    array(
-                        'name'    => 'StringLength',
-                        'options' => array(
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-                            'max'      => 255,
-                        ),
-                    ),
-                ),
-            ),
-
-            'description' => array(
-                'required' => false,
-                'filters'  => array(
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array(
-                    array(
-                        'name'    => 'StringLength',
-                        'options' => array(
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-                        ),
-                    ),
-                ),
-            ),
-
             'width' => array(
                 'required' => false,
                 'filters'  => array(
@@ -208,10 +134,6 @@ class Media extends \Zend\Form\Fieldset
                 'filters'  => array(
                     array('name' => 'Int'),
                 ),
-            ),
-
-            'file' => array(
-                'required' => true,
             ),
         );
     }

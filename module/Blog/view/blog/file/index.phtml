@@ -4,6 +4,8 @@ $this->headTitle($title);
 
 $this->bulkForm()->prepare();
 ?>
+<?php $this->nonce()->setRouteName('blog_file_delete_route') ?>
+
 <h1><?= $this->escapeHtml($title); ?></h1>
 <p><a href="<?= $this->url(null , array(
     'lang' => $this->lang(),
@@ -60,12 +62,11 @@ $this->bulkForm()->prepare();
 
 	        </td>
 	        <td>
-                <a href="<?= $this->url(null, array(
-                    'lang' => $this->lang(),
-                    'controller' => 'blog_file_controller', 
-                    'action' => 'delete',
-                    'id' => $file->getId()
-                )); ?>" onclick="return confirm('Are you sure?')"><?= $this->translate('Delete')?></a>
+                <a class="glyphicon glyphicon-trash" role="button" title="<?= $this->translate('Delete') ?>" href="<?= $this->url($this->nonce()->getRouteName(), array(
+                    'lang' => $this->lang(), 
+                    'id' => $file->getId(),
+                    'nonce' => $this->nonce()->getHash($file->getId()),
+                )); ?>" onclick="return confirm('<?= $this->translate('Are you sure?') ?>')"></a>
 	        </td>
 	    </tr>
     <?php endforeach; ?>

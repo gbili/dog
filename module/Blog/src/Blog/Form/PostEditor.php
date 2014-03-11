@@ -7,6 +7,7 @@ class PostEditor extends \Zend\Form\Form
     {
         parent::__construct('form-post-editor');
 
+        $this->setAttribute('class', 'slugicize');
         //Add the user fieldset, and set it as the base fieldset
         $postFieldset = new Fieldset\Post($sm);
         $postFieldset->setUseAsBaseFieldset(true);

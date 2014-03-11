@@ -41,7 +41,6 @@ function gbiliUploaderHideAndResetPopup () {
 function gbiliUploaderInitImagePicker() {
     $("select.image-picker").imagepicker();
     var $container = $("select.image-picker.masonry").next('ul.thumbnails');
-    //TODO find out why there is no imagesLoaded method in $container
     $container.imagesLoaded(function () {
         $container.masonry({
             itemSelector: 'li',
@@ -90,7 +89,7 @@ function gbiliUploaderSetEventListenerClickHidePopupButton() {
     var hidePopupButton = $('#<?= $this->popupDivId ?> > a.gbiliuploader-hide-popup-button')[0];
     if (hidePopupButton.addEventListener) {
         hidePopupButton.addEventListener('click', gbiliUploaderHideAndResetPopup, false); 
-    } else if (buttonAddMedia.attachEvent)  {
+    } else if (hidePopupButton.attachEvent)  {
         hidePopupButton.attachEvent('onclick', gbiliUploaderHideAndResetPopup);
     }
 }
@@ -105,8 +104,13 @@ function gbiliUploaderSetEventListenerClickHidePopupButton() {
 function gbiliUploaderAddImageToSelectForm(response) {
     var options = '';
     var callbackReturn = response.callbackReturn;
+    var lastItemKey = callbackReturn.length-1;
     for( key in  callbackReturn) {
-        options = options + '<option data-img-src="' + callbackReturn[key].mediaSrc + '" value="' + callbackReturn[key].mediaId + '" >';
+        if (lastItemKey == key) {
+            options = options + '<option data-img-src="' + callbackReturn[key].mediaSrc + '" value="' + callbackReturn[key].mediaId + '" selected="selected">';
+        } else {
+            options = options + '<option data-img-src="' + callbackReturn[key].mediaSrc + '" value="' + callbackReturn[key].mediaId + '" >';
+        }
     }
     var selectElement = $('select.image-picker');
     selectElement.html(selectElement.html() + options);

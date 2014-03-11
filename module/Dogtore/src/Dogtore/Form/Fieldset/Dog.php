@@ -8,11 +8,12 @@ implements \Zend\InputFilter\InputFilterProviderInterface
 
     public function __construct($sm)
     {
-        parent::__construct('name');
+        parent::__construct('dog');
 
         $objectManager = $sm->get('Doctrine\ORM\EntityManager');
-        $this->langService = $sm->get('lang');
-        $lang = $this->langService->getLang();
+        $authService   = $sm->get('Zend\Authentication\AuthenticationService');
+        $this->langService = $sm->get('Lang');
+        $user = $authService->getIdentity();
 
         $this->setHydrator(new \DoctrineModule\Stdlib\Hydrator\DoctrineObject($objectManager))
              ->setObject(new \Blog\Entity\PostData());
@@ -133,7 +134,7 @@ implements \Zend\InputFilter\InputFilterProviderInterface
                 'find_method' => array(
                     'name' => 'findBy',
                     'params' => array(
-                        'criteria' => array('locale' => $lang),
+                        'criteria' => array('user' => $user),
                     ),
                 ),
                 'display_empty_item' => true,

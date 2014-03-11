@@ -312,6 +312,17 @@ class PostData extends \Blog\Entity\PostData implements \Doctrine\ORM\Proxy\Prox
     /**
      * {@inheritDoc}
      */
+    public function hasPosts()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'hasPosts', array());
+
+        return parent::hasPosts();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function removePost(\Blog\Entity\Post $post)
     {
 

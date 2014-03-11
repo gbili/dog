@@ -28,21 +28,6 @@ $this->notify(((isset($messages))? $messages : array()));
       <div class="caption">
         <h5><?= $this->escapeHtml($media->getSlug());?></h5>
         <p>
-            <?php if (!$media->getPosts()->isEmpty()) : ?>
-                <?php $linkedPosts = array();
-                    foreach ($media->getPosts() as $post) :
-                        $unlinkPostActionHref = $this->url(null, 
-                            array(
-                                'action' => 'unlink', 
-                                'id' => $media->getId(),
-                                'fourthparam' => $post->getId(),
-                            ),
-                            true
-                        );
-                        $unlinkablePosts[] = $post->getTitle() . ':<a href="' . $unlinkPostActionHref . '">' . $this->translate('unlink') .'</a>';
-                    endforeach;
-                    echo implode(', ', $unlinkablePosts);?>
-            <?php endif ?>
             <a class="glyphicon glyphicon-link" role="button" title="<?= $this->translate('Link to') ?>" href="<?= $this->url(null, array(
                 'lang' => $this->lang(), 
                 'action' => 'link', 

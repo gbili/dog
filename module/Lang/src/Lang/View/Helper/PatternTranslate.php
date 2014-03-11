@@ -3,9 +3,9 @@ namespace Lang\View\Helper;
 
 class PatternTranslate extends \Zend\View\Helper\AbstractHelper
 {
-    public function __invoke($patterns, $replacements, $phrase, $textDomain = null)
+    public function __invoke($patterns, $replacements, $phrase, $textdomain = null)
     {
-        if (null !== $textDomain) {
+        if (null !== $textdomain) {
             throw new \Exception('Sorry, some changes were made to this helper signature, remove text domain; last param');
         }
 

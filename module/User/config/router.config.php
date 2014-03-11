@@ -16,6 +16,20 @@ return array(
                 ),
             ),
         ),
+        'auth_recoverpassword' => array(
+            'type' => 'segment',
+            'options' => array(
+                'route' => '[/:lang]/recover',
+                'constraints' => array(
+                    'lang' => $preConfig['regex_patterns']['lang'],
+                ),
+                'defaults' => array(
+                    'lang' => 'en',
+                    'controller' => 'auth',
+                    'action' => 'recoverpassword',
+                ),
+            ),
+        ),
         'auth_register' => array(
             'type' => 'segment',
             'options' => array(

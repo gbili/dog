@@ -24,9 +24,9 @@
             <li><?= $this->translate('Color') ?>: <strong><?= $dog['dog_color'] ?></strong></li>
             <li><?= $this->translate('Born in') ?>: <strong><?= $dog['dog_birthdate'] ?></strong></li>
         </ul>
-        <?php $patterns = array(':owner', ':dog') ?>
-        <?php $replacements = array($dog['owner_uniquename'], $dog['dog_name']) ?>
-        <h3><?= $this->patternTranslate($patterns, $replacements, ":owner chose :dog over any other dog because") ?></h3>
+        <?php $patterns = array(':user', ':dog') ?>
+        <?php $replacements = array($dog['user_uniquename'], $dog['dog_name']) ?>
+        <h3><?= $this->patternTranslate($patterns, $replacements, ":user chose :dog over any other dog because") ?></h3>
         <p><?= $dog['dog_whythisdog'] ?></p>
     </div>
     <div class="col-sm-1 col-md-2 col-lg-2"></div>

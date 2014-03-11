@@ -21,6 +21,50 @@
     } else if (selectAllInput.attachEvent)  {
         selectAllInput.attachEvent('onclick', bulkSelectAll);
     }
+
+    //Prevent form submition if no items or no action is selected
+    var bulkSubmit = $('#bulk-action input[name="submit"]');
+    bulkSubmit.on('click', function (e) {
+        // Make sure at least one checkbox is checked
+        var checkboxes  = $("#bulk-action input[name|='<?= $form->getOption('multicheck_element_name')?>[]']");
+        var checkAll    = document.getElementById('bulk-action-input-all');
+        var noneChecked = true;
+
+        if (checkAll.checked) {
+            noneChecked = false;
+        }
+
+        for (var i=0, n=checkboxes.length; i<n; i++) {
+            if(checkboxes[i].checked) {
+                noneChecked = false;
+                break;
+            }
+        }
+        
+        if (noneChecked) {
+            alert('<?= $this->translate('Please check at least one item') ?>');
+            e.preventDefault();
+            return;
+        }
+
+        // Make sure at least one non empty action is selected 
+        var selectOptions = $('#bulk-action select[name*="action-"] option');
+        var noneSelected  = true;
+
+        for (var i=0, n=selectOptions.length; i<n; i++) {
+            if("" !== selectOptions[i].value && selectOptions[i].selected) {
+                noneSelected = false;
+                break;
+            }
+        }
+
+        if (noneSelected) {
+            alert('<?= $this->translate('Please select an action') ?>');
+            e.preventDefault();
+            return;
+        }
+        //TODO alert, "Are you sure" with a cancel button
+    });
 })();
 </script>
 

@@ -94,9 +94,6 @@ class PostData
 
     public function setMedia(Media $media = null)
     {
-        if ($media !== null) {
-            $this->reuseLocales($media, $this);
-        }
         $this->media = $media;
     }
 
@@ -145,6 +142,11 @@ class PostData
         foreach ($posts as $post) {
             $this->addPost($post);
         }
+    }
+
+    public function hasPosts()
+    {
+        $this->posts->isEmpty();
     }
 
     /**

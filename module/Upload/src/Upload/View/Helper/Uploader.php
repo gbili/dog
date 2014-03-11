@@ -113,21 +113,9 @@ class Uploader extends \Zend\View\Helper\AbstractHelper
         }
         $form->prepare();
 
-        $html = '';
-        $html .= $view->form()->openTag($form);
-        // File upload progress input
-        $html .= $view->formFileUploadProgress();
-        foreach ($form->getElements() as $element) {
-            $html .= '<div class="form-group">';
-                $html .= ((null !== $element->getLabel())? $view->translate($view->formLabel($element), 'blog') : '');
-                $html .= $view->formElement($element); 
-            $html .= '</div>';
-        }
-        $html .=  $view->form()->closeTag(); 
+        $this->formHtml = $view->renderForm($form);
 
-        $this->formHtml = $html;
-
-        return $html;
+        return $this->formHtml;
     }
 
     public function setService($service)

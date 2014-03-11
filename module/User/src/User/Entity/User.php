@@ -19,9 +19,23 @@ class User
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
+     * @ORM\OneToMany(targetEntity="RecoverPassword", mappedBy="user")
+     */
+    private $recoveredpasswords;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
      * @ORM\OneToMany(targetEntity="\Blog\Entity\Post", mappedBy="user")
      */
     private $posts;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="\Blog\Entity\Category", mappedBy="user")
+     */
+    private $categories;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -33,7 +47,7 @@ class User
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\OneToMany(targetEntity="\Dogtore\Entity\Dog", mappedBy="owner")
+     * @ORM\OneToMany(targetEntity="\Dogtore\Entity\Dog", mappedBy="user")
      */
     private $dogs;
 
@@ -73,8 +87,9 @@ class User
 
     public function __construct()
     {
-        $this->posts = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->dogs  = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->posts      = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->categories = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->dogs       = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     public function isAdmin()
@@ -161,110 +176,72 @@ class User
         }
     }
 
-    public function getPosts()
+    public function __call($method, $params)
     {
-        return $this->posts;
+        $allowed = array('Dog', 'Post', 'Category');
+        $allowedPlural = array('Dogs',  'Posts', 'Categories');
+
+        $parts = preg_split('/(?=[A-Z])/', $method);
+        $uCFirstWhat = array_pop($parts);
+        $what = strtolower($uCFirstWhat);
+
+        $isSingle = in_array($uCFirstWhat, $allowed);
+        $isPlural = in_array($uCFirstWhat, $allowedPlural);
+
+        if (!$isSingle && !$isPlural) {
+            throw new \Exception('Not implemented');
+        }
+
+        array_push($parts, (($isSingle)? 'Thing':'Things'));
+        $genericMethod = implode('', $parts);
+
+        return call_user_func(array($this, $genericMethod), (($isSingle)? $what . 's' : $what), current($params));
     }
 
-    /**
-     * Add post
-     * @param \Blog\Entity\Post $posts
-     */
-    public function addPost(\Blog\Entity\Post $post)
+    public function getThing($what)
     {
-        $post->setCategory($this);
-        $this->posts->add($post);
+        return $this->$what;
     }
 
-    /**
-     * Add post
-     * @param \Doctrine\Common\Collections\Collection $posts
-     */
-    public function addPosts(\Doctrine\Common\Collections\Collection $posts)
+    public function getThings($what)
     {
-        foreach ($posts as $post) {
-            $this->addPost($post);
+        return $this->$what;
+    }
+
+    public function hasthings($what)
+    {
+        return !$this->$what->isEmpty();
+    }
+
+    public function addThing($what, $thing)
+    {
+        $thing->setUser($this);
+        $this->$what->add($thing);
+    }
+
+    public function addThings($what, \Doctrine\Common\Collections\Collection $things)
+    {
+        foreach ($things as $thing) {
+            $this->addThing($what, $thing);
         }
     }
 
-    /**
-     * Remove posts
-     * @param \Blog\Entity\Post $posts
-     */
-    public function removePost(\Blog\Entity\Post $post)
+    public function removeThing($what, $thing)
     {
-        $this->posts->removeElement($post);
-        $post->setUser(null);
+        $this->$what->removeElement($thing);
+        $thing->setUser(null);
     }
 
-    /**
-     * Remove posts
-     * @param \Blog\Entity\Post $posts
-     */
-    public function removePosts(\Doctrine\Common\Collections\Collection $posts)
+    public function removeThings($what, \Doctrine\Common\Collections\Collection $things)
     {
-        foreach ($posts as $post) {
-            $this->removePost($post);
+        foreach ($things as $thing) {
+            $this->removeThing($what, $thing);
         }
     }
 
-    /**
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getDogs()
+    public function removeAllThings($what)
     {
-        return $this->dogs;
-    }
-
-    /**
-     * @return boolean 
-     */
-    public function hasDogs()
-    {
-        return !$this->dogs->isEmpty();
-    }
-
-    /**
-     * Add dog
-     * @param \Dogtore\Entity\Dog $dogs
-     */
-    public function addDog(\Dogtore\Entity\Dog $dog)
-    {
-        if (!$dog->hasOwner()) {
-            $dog->setOwner($this);
-        }
-        $this->dogs->add($dog);
-    }
-
-    /**
-     * Add dog
-     * @param \Doctrine\Common\Collections\Collection $dogs
-     */
-    public function addDogs(\Doctrine\Common\Collections\Collection $dogs)
-    {
-        foreach ($dogs as $dog) {
-            $this->addDog($dog);
-        }
-    }
-
-    /**
-     * Remove dogs
-     * @param \Dogtore\Entity\Dog $dogs
-     */
-    public function removeDog(\Dogtore\Entity\Dog $dog)
-    {
-        $this->dogs->removeElement($dog);
-        $dog->setOwner(null);
-    }
-
-    /**
-     * Remove dogs
-     * @param \Dogtore\Entity\Dog $dogs
-     */
-    public function removeDogs(\Doctrine\Common\Collections\Collection $dogs)
-    {
-        foreach ($dogs as $dog) {
-            $this->removeDog($dog);
-        }
+        $this->removeThings($what, $this->getThings($what));
+        return $this;
     }
 }

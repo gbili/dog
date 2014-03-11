@@ -9,9 +9,11 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @Gedmo\Tree(type="nested")
  * @ORM\Table(name="categories")
+ *
  * @ORM\Entity(repositoryClass="Blog\Entity\Repository\NestedTreeFlat")
  */
 class Category
+    implements \User\IsOwnedByInterface
 {
     /**
      * @var integer
@@ -21,6 +23,12 @@ class Category
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="\User\Entity\User", inversedBy="categories")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $user;
 
     /**
      * @ORM\Column(name="locale", type="string", length=64)
@@ -46,6 +54,14 @@ class Category
      * @ORM\Column(name="slug", type="string", length=64, precision=0, scale=0, nullable=false, unique=false)
      */
     private $slug;
+
+    /**
+     * @var string
+     *
+     * @Gedmo\Slug(fields={"slug"}, unique=true, unique_base="locale")
+     * @ORM\Column(name="uniqueslug", type="string", length=64)
+     */
+    private $uniqueslug;
 
     /**
      * @var string
@@ -119,6 +135,26 @@ class Category
         $this->children = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
+    public function setUser(\User\Entity\User $user)
+    {
+        $this->user = $user;
+    }
+
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    public function hasUser()
+    {
+        return null !== $this->user;
+    }
+
+    public function isOwnedBy(\User\Entity\User $user)
+    {
+        return $this->user === $user;
+    }
+
     /**
      * Get id
      *
@@ -173,6 +209,16 @@ class Category
     public function getSlug()
     {
         return $this->slug;
+    }
+
+    public function setUniqueslug($uniqueslug)
+    {
+        $this->uniqueslug = $uniqueslug;
+    }
+
+    public function getUniqueslug()
+    {
+        return $this->uniqueslug;
     }
 
     /**

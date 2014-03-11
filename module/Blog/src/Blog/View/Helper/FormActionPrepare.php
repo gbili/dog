@@ -56,7 +56,9 @@ class FormActionPrepare extends \Zend\View\Helper\AbstractHelper
 
     public function addClasses(\Zend\Form\Form $form, array $classes)
     {
-        $classes = array_unique($classes);
-        $form->setAttribute('class', implode(' ', $classes));
+        $formClasses = explode(' ', $form->getAttribute('class'));
+        $allClasses = array_merge($classes, $formClasses);
+        $allClasses = array_unique($allClasses);
+        $form->setAttribute('class', implode(' ', $allClasses));
     }
 }

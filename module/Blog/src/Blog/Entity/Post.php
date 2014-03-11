@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  *  use repository for handy tree functions
  * @ORM\Entity(repositoryClass="Blog\Entity\Repository\NestedTreeFlat")
  */
-class Post
+class Post implements \User\IsOwnedByInterface
 {
     /**
      * @ORM\Column(name="id", type="integer")
@@ -25,6 +25,14 @@ class Post
     private $slug;
 
     /**
+     * @var string
+     * @Gedmo\Slug(fields={"slug"}, unique=true, unique_base="locale")
+     * @ORM\Column(name="uniqueslug", type="string", length=64)
+     */
+    private $uniqueslug;
+
+    /**
+     * @var string
      * @ORM\Column(name="locale", type="string", length=64)
      */
     private $locale;
@@ -100,6 +108,11 @@ class Post
         return $this->id;
     }
 
+    public function isOwnedBy(\User\Entity\User $user)
+    {
+        return $this->user === $user;
+    }
+
     public function setSlug($slug)
     {
         $this->slug = $slug;
@@ -110,9 +123,20 @@ class Post
         return $this->slug;
     }
 
-    public function setData(PostData $postData)
+    public function setUniqueslug($uniqueslug)
+    {
+        $this->uniqueslug = $uniqueslug;
+    }
+
+    public function getUniqueslug()
+    {
+        return $this->uniqueslug;
+    }
+
+    public function setData(PostData $postData=null)
     {
         $this->data = $postData;
+        return $this;
     }
 
     public function getData()

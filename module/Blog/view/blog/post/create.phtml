@@ -7,7 +7,7 @@ if (!isset($__VIEWFILE__)) {
 $fileparts = explode('/', $__VIEWFILE__);
 $action = substr(end($fileparts), 0, -6);
 $controller = prev($fileparts); 
-$textDomain = prev($fileparts);
+$textdomain = prev($fileparts);
 $route = array(
     'action' => $action
 );
@@ -17,7 +17,7 @@ if (isset($entityId) && null !== $entityId) {
 $this->formActionPrepare($form) ?>
 
 <?php
-$title = ucfirst($this->translate($action, $textDomain)) . ' ' . ucfirst($this->translate($controller, $textDomain));
+$title = ucfirst($this->translate($action, $textdomain)) . ' ' . ucfirst($this->translate($controller, $textdomain));
 $this->headTitle($title);
 ?>
 <header class="row">
@@ -26,24 +26,24 @@ $this->headTitle($title);
     </div>
 </header>
 <?php $elements = $this->elementsFlatArray($form) ?>
-<div class="row">
-    <div class="col-sm-6 col-md-6 col-lg-6">
-        <div class="row media">
-            <div class="col-sm-12 col-md-12 col-lg-12">
-                <?= $this->renderElement($elements['media']) ?>
+<?= $this->form()->openTag($form) ?>
+    <div class="row">
+        <div class="col-sm-6 col-md-6 col-lg-6">
+            <div class="row media">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <?= $this->renderElement($elements['post[data][media]']) ?>
+                </div>
             </div>
         </div>
+        <div class="col-sm-6 col-md-6 col-lg-6">
+      <?php $elementsRenderedExplicitely = array('post[data][media]',);
+            $elementsNotRenderedExplicitely = array_diff_key($elements, array_flip($elementsRenderedExplicitely))?>
+            <?php foreach ($elementsNotRenderedExplicitely as $element) : ?>
+                <?= $this->renderElement($element) ?>
+            <?php endforeach ?>
+        </div>
     </div>
-    <div class="col-sm-6 col-md-6 col-lg-6">
-<?php
-        $elementsRenderedExplicitely = array('media',);
-        $elementsNotRenderedExplicitely = array_diff_key($elements, array_flip($elementsRenderedExplicitely)); 
-?>
-        <?= $this->form()->openTag($form) ?>
-        <?php foreach ($elementsNotRenderedExplicitely as $element) : ?>
-            <?= $this->renderElement($element) ?>
-        <?php endforeach ?>
-        <?= $this->form()->closeTag() ?>
-    </div>
-</div>
+<?= $this->form()->closeTag() ?>
 <?= $this->uploader()?>
+<?php require_once __DIR__ . '/../../partial/slugicize.js.phtml' ?>
+

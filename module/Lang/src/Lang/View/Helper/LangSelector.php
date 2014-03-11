@@ -17,12 +17,7 @@ class LangSelector extends \Zend\View\Helper\AbstractHelper
     protected $application = null;
 
     /**
-     * Translate a message
      *
-     * @param  string $message
-     * @param  string $textDomain
-     * @param  string $locale
-     * @throws Exception\RuntimeException
      * @return string
      */
     public function __invoke($param = null)

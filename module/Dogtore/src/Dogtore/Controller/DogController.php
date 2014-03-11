@@ -101,7 +101,7 @@ class DogController extends \Zend\Mvc\Controller\AbstractActionController
 
         if ($dogname) {
             $dogname = preg_replace();
-            $dogs = $em->getRepository('Dogtore\Entity\Dog')->findBy(array('owner' => $user, 'name' => $dogname));
+            $dogs = $em->getRepository('Dogtore\Entity\Dog')->findBy(array('user' => $user, 'name' => $dogname));
         }
 
         if (empty($dogs)) {
@@ -142,9 +142,11 @@ class DogController extends \Zend\Mvc\Controller\AbstractActionController
         if (!$dog->hasMedia()) {
             //TODO fix this, make sure there is allways the default media.
             // should it be a non displayable media?
-            $media = $em->getRepository('Blog\Entity\Media')->findBySlug('profile-thumbnail.jpg');
-            throw new \Exception(var_dump($media));
-            $dog->setMedia(current($media));
+            $medias = $em->getRepository('Blog\Entity\Media')->findBySlug('profile-thumbnail.jpg');
+            if (empty($medias)) {
+                throw new \Exception('The default media does not exist');
+            }
+            $dog->setMedia(current($medias));
         }
 
         $em->persist($dog);
@@ -159,7 +161,7 @@ class DogController extends \Zend\Mvc\Controller\AbstractActionController
         $req = new \Dogtore\Req\Dog();
         $conditions = [];
 
-        $conditions[] = array('owner_uniquename' => array('=' => $userUniquename));
+        $conditions[] = array('user_uniquename' => array('=' => $userUniquename));
         if (null !== $dogname) {
             $conditions[] = array('dog_name' => array('=' => $dogname));
         }

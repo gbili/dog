@@ -90,16 +90,29 @@ class ConditionalNavigation extends \Zend\View\Helper\AbstractHelper
         }
         $containerConfig = $navigationConfig[$containerName];
 
-        $containerRouteNames = array_map(function ($itemConfig) {
-            if (!is_array($itemConfig) || !isset($itemConfig['route'])) {
-                return null;
-            }
-            return $itemConfig['route'];
-        }, $containerConfig);
+        $containerRouteNames = $this->getContainerRouteNamesRecursive($containerConfig);
 
         $this->containedRouteNames[$containerName] = $containerRouteNames;
         return $containerRouteNames;
     }
+
+    /**
+     * @param array $container a navigation config 
+     */
+    protected function getContainerRouteNamesRecursive($container)
+    {
+        $routenames = array();
+        foreach ($container as $containedItem) {
+            if (!(is_array($containedItem) && isset($containedItem['route']))) {
+                throw new \Exception('Navigation config not properly formatted');
+            }
+            $routenames[] = $containedItem['route'];
+            if (isset($containedItem['pages'])) {
+                $routenames = array_merge($routenames, $this->getContainerRouteNamesRecursive($containedItem['pages']));
+            }
+        }
+        return $routenames;
+    } 
 
     protected function getMatchedRouteName()
     {

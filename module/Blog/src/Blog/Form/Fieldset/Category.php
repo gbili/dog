@@ -11,6 +11,9 @@ class Category extends \Zend\Form\Fieldset
         $objectManager = $sm->get('Doctrine\ORM\EntityManager');
         $lang = $sm->get('lang')->getLang();
 
+        $authService   = $sm->get('Zend\Authentication\AuthenticationService');
+        $user = $authService->getIdentity();
+
         $this->setHydrator(new \DoctrineModule\Stdlib\Hydrator\DoctrineObject($objectManager))
              ->setObject(new \Blog\Entity\Category());
 
@@ -18,13 +21,30 @@ class Category extends \Zend\Form\Fieldset
             'name' => 'parent',
             'type' => 'Blog\Form\Element\ObjectSelectNested',
             'options' => array(
-                'label' => 'Parent',
+                'label' => 'Category',
                 'property' => 'name',
                 'target_class' => 'Blog\Entity\Category',
                 'object_manager' => $objectManager,
-                'query_param' => array('locale' => $lang),
+                'query_param' => array('locale' => $lang, 'lvl'),
+                'query_builder_callback' => function ($queryBuilder, $paramNum) use ($user) {
+                    if ($user->isAdmin()) {
+                        return $paramNum;
+                    }
+                    $queryBuilder->andWhere('node.lvl > ?' . $paramNum)
+                        ->setParameter($paramNum, 0);
+                    return ++$paramNum;
+                },
                 'indent_chars' => '-',
                 'indent_multiplyer' => 3,
+                // Because we are skipping the lvl 0, it makes sense to start indenting from lvl 2 instead of 1
+                'indent_multiplyer_callback' => function ($multiplyBy, $node, $indentMultiplyer, $elementObjectSelectNested) use ($user) {
+                    if ($user->isAdmin()) {
+                        return $multiplyBy;
+                    }
+                    //Because lvl 0 is skipped, we make as if lvl 1 where 0, by resting 1
+                    $multiplyBy = ($node['lvl']-1) * $indentMultiplyer;
+                    return $multiplyBy;
+                },
             ),
             'attributes' => array(
                 'class' => 'form-control'
@@ -44,20 +64,13 @@ class Category extends \Zend\Form\Fieldset
             ),
             'attributes' => array(
                 'placeholder' => 'Category Name',
-                'class' => 'form-control',
+                'class' => 'form-control slugicize',
             )
         ));
 
         $this->add(array(
             'name' => 'slug',
-            'type'  => 'Zend\Form\Element\Text',
-            'options' => array(
-                'label' => 'Slug'
-            ),
-            'attributes' => array(
-                'class' => 'form-control',
-                'placeholder' => 'the-slug-is-a-lowercase-representation-of-the-name-with-dashes',
-            )
+            'type'  => 'Zend\Form\Element\Hidden',
         ));
 
         $this->add(array(
@@ -84,6 +97,14 @@ class Category extends \Zend\Form\Fieldset
             ),
             'slug' => array(
                 'required' => true,
+                'validators' => array(
+                    array(
+                        'name'    => 'Regex',
+                        'options' => array(
+                            'pattern'      => '/\\A[a-z0-9](:?[-]?[a-z0-9]+)*\\z/',
+                        ),
+                    ),
+                ),
             ),
             'description' => array(
                 'required' => false,

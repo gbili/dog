@@ -28,12 +28,12 @@ class Scs extends \Gbili\Db\Req\AbstractReq
                 'post_date' => 'pd.date',
                 'post_locale' => 'p.locale',
 
-                'media_alt' => 'm.alt',
+                'media_src' => 'concat(m.publicdir, "/", m.slug)',
 
                 'file_dirpath' => 'f.dirpath',
                 'file_basename' => 'f.basename',
                 
-                'owner_uniquename' => 'u.uniquename',
+                'user_uniquename' => 'u.uniquename',
         );
     }
 

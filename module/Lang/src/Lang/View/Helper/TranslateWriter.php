@@ -13,93 +13,50 @@ namespace Lang\View\Helper;
  */
 class TranslateWriter extends \Zend\I18n\View\Helper\AbstractTranslatorHelper
 {
-    protected $textDomainService;
+    protected $translationStorageService;
 
     /**
      * Translate a message
      *
      * @param  string $message
-     * @param  string $textDomain
+     * @param  string $textdomain
      * @param  string $locale
      * @throws Exception\RuntimeException
      * @return string
      */
-    public function __invoke($message, $textDomain = null, $locale = null)
+    public function __invoke($message, $textdomain = null, $locale = null)
     {
         $translator = $this->getTranslator();
         if (null === $translator) {
             throw new \Zend\I18n\Exception\RuntimeException('Translator has not been set');
         }
-        if (null === $textDomain) {
-            $textDomain = $this->getTranslatorTextDomain();
+        if (null === $textdomain) {
+            $textdomain = $this->getTranslatorTextdomain();
         }
 
         if (null === $locale) {
             $locale = $this->getTranslator()->getLocale();
         }
-        if ($textDomain === 'default') {
+        if ($textdomain === 'default') {
             throw new \Exception('Default text domain will result in a bad directory being used. grep this string and change the text domain in that call to translate:' . $message);
         }
-        $this->addString($message, $textDomain, $locale);
-        return $translator->translate($message, $textDomain, $locale);
+        $this->translationStorageService->setTranslation($textdomain, $locale, $message, $translation='', $overwrite=false);
+
+        return $translator->translate($message, $textdomain, $locale);
     }
 
-    public function getTranslatorTextDomain()
+    /**
+     * Every string passed to __invoke is passed to the storage service
+     * @return \Lang\Service\TranslationStorage
+     */
+    public function getTranslationStorageService()
     {
-        $textDomain = parent::getTranslatorTextDomain();
-        if ('default' === $textDomain) {
-            $service = $this->getTextDomainService();
-            $textDomain = $service->getTextDomain();
-        }
-        return $textDomain;
+        return $this->translationStorageService;
     }
 
-    public function getTextDomainService()
+    public function setTranslationStorageService($service)
     {
-        return $this->textDomainService;
-    }
-
-    public function setTextDomainService($service)
-    {
-        $this->textDomainService = $service;
+        $this->translationStorageService = $service;
         return $this;
-    }
-
-    public function addString($string, $lcModuleName, $locale)
-    {
-        $this->addStringToFile($string, $this->getFilename($lcModuleName, $locale));
-    }
-
-    public function getFilename($lcModuleName, $locale)
-    {
-        $dir = realpath(__DIR__ . '/../../../../../' . ucfirst($lcModuleName) . '/language');
-        if (!is_dir($dir)) {
-            throw new \Exception('The directory does not exist. Param $lcModuleName: ' . $lcModuleName);
-        }
-        return $filename = $dir . '/' . $locale . '.php';
-    }
-    
-    public function getFileContents($filename)
-    {
-        if (!file_exists($filename)) {
-            return array();
-        }
-        return include $filename;
-    }
-
-    public function addStringToFile($string, $filename)
-    {
-        $strings = $this->getFileContents($filename);
-        if (isset($strings[$string])) {
-            return;
-        }
-        $strings[$string] = '';
-
-        if (!is_writable(dirname($filename))) {
-            throw new \Exception('Cannot write in : ' . $filename);
-        }
-
-        $contents = "<?php\nreturn " . var_export($strings, true) . ";";
-        return file_put_contents($filename, $contents);
     }
 }

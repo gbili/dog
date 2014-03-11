@@ -1,20 +1,40 @@
 <?php $aclGuard = $this->layout()->aclGuard ?>
 <?php $acl = $aclGuard->getAcl() ?>
 <?php $role = $aclGuard->getRole() ?>
-<div class="list-group">
+<ul class="list-group gbili-sidenav">
 <?php foreach ($this->container as $page): ?>
     <?php /* @var $page Zend\Navigation\Page\Mvc */ ?>
     <?php // when using partials we need to manually check for ACL conditions ?>
     <?php $isAllowed = $acl->isAllowed($role, $page->getRoute()) ?>
     <?php if( !$isAllowed || ! $page->isVisible() || !$this->navigation()->accept($page)) continue; ?>
     <?php $this->lang($page) ?>
-    <?php if( ! $page->hasPages()): ?>
-            <a class="list-group-item<?php if ($page->isActive()) echo ' active' ?>" href="<?= $page->getHref() ?>">
-                <?php if ($page->iconClass) : ?>
-                    <span class="<?= $page->iconClass ?>"></span>
-                <?php endif ?>
-                <span class="text"><?= $this->translate($page->getLabel(), 'blog') ?></span>
-            </a>
+    <li class="list-group-item <?php if ($page->hasPages()) echo ' has-children'?><?php if ($page->isActive(true)) echo ' active' ?>">
+    <?php if ($page->hasPages()) : ?>
+        <a class="dropdown-toggle pull-right" href="#" data-toggle="dropdown">
+            <span class="caret"></span>
+        </a>
     <?php endif ?>
+        <a class="list-group-base-item" href="<?= (($page->isActive())? '#' : $page->getHref()) ?>">
+            <?php if ($page->iconClass) : ?>
+                <span class="<?= $page->iconClass ?>"></span>
+            <?php endif ?>
+            <span class="text"><?= $this->translate($page->getLabel()) ?></span>
+        </a>
+    <?php if($page->hasPages()) : ?>
+        <ul class="dropdown-menu">
+            <?php foreach ($page->getPages() as $child): ?>
+            <?php $this->lang($child) ?>
+            <li class="<?php if ($child->isActive()) echo ' active' ?>">
+                <a href="<?= (($child->isActive())? '#' : $child->getHref()) ?>">
+                    <?php if ($child->iconClass) : ?>
+                        <span class="<?= $child->iconClass ?>"></span>
+                    <?php endif ?>
+                    <span class="text"><?= $this->translate($child->getLabel()) ?></span>
+                </a>
+            </li>
+            <?php endforeach ?>
+        </ul>
+    <?php endif ?>
+    </li>
 <?php endforeach ?>
-</div><!-- End Side nav -->
+</ul><!-- End Side nav -->

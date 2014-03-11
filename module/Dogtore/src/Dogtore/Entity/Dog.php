@@ -29,12 +29,13 @@ class Dog
     private $name;
 
     /**
-     * One dog has one owner, One owner has Many dogs
+     * One dog has one user, One user has Many dogs
+     * Owner
      *
      * @ORM\ManyToOne(targetEntity="\User\Entity\User", inversedBy="dogs")
-     * @ORM\JoinColumn(name="owner_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $owner;
+    private $user;
 
     /**
      * @var string
@@ -76,7 +77,7 @@ class Dog
     private $birthdate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\Blog\Entity\Media", inversedBy="posts")
+     * @ORM\ManyToOne(targetEntity="\Blog\Entity\Media", inversedBy="dogs")
      * @ORM\JoinColumn(name="media_id", referencedColumnName="id")
      */
     private $media;
@@ -112,20 +113,20 @@ class Dog
         return $this->name;
     }
 
-    public function setOwner(\User\Entity\User $user)
+    public function setUser(\User\Entity\User $user)
     {
-        $this->owner = $user;
+        $this->user = $user;
         return $this;
     }
 
-    public function hasOwner()
+    public function hasUser()
     {
-        return $this->owner instanceof \User\Entity\User;
+        return $this->user instanceof \User\Entity\User;
     }
 
-    public function getOwner()
+    public function getUser()
     {
-        return $this->owner;
+        return $this->user;
     }
 
     public function setWhythisdog($whythisdog = null)

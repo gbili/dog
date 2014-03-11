@@ -15,25 +15,21 @@ class PostController extends \Zend\Mvc\Controller\AbstractActionController
         $paginator->setTotalItemsCount($this->repository()->getNestedTreeTotalCount());
 
         return new \Zend\View\Model\ViewModel(array(
-            'posts' => $this->getPosts(),
-            'form'  => $this->getBulkForm(),
+            'posts' => $this->getEntities(),
+            'form'  => $this->bulkForm(),
             'paginator' => $paginator,
         ));
     }
 
-    public function getPosts()
+    public function getEntities()
     {
         if (null !== $this->posts) {
             return $this->posts;
         }
         $paginator = $this->paginator();
         $this->posts = $this->repository()->findBy(
-            array(
-                'user' => $this->identity()->getId(),
-            ),
-            array(
-                'slug' => 'ASC',
-            ),
+            array('user' => $this->identity()->getId()),
+            array('slug' => 'ASC'),
             $paginator->getItemsPerPage(),
             $paginator->getPageFirstItem()
         );
@@ -42,29 +38,13 @@ class PostController extends \Zend\Mvc\Controller\AbstractActionController
 
     public function bulkAction()
     {
-        if (!$this->request->isPost()) {
-            return $this->redirectToIndex();
-        }
-
-        $form = $this->getBulkForm(true);
-        $form->setData($formData = $this->request->getPost());
-
-        if (!$form->isValid()) {
-            return $this->redirectToIndex();
-        }
-
-        $formValidData = $form->getData();
-        $action = $form->getSelectedAction();
-        $this->$action($formValidData['posts']);
-
-        $this->flashMessenger()->addMessage($action . ' succeed');
-        return $this->redirectToIndex();
+        return $this->actionBulk('blog_post_route', array('action' => 'index'));
     }
 
     public function linkTranslations(array $formPostsData)
     {
         $selectedPosts = array();
-        foreach ($this->getPosts() as $post) {
+        foreach ($this->getEntities() as $post) {
             if (!in_array($post->getId(), $formPostsData)) continue;
             $selectedPosts[] = $post;
         }
@@ -92,21 +72,6 @@ class PostController extends \Zend\Mvc\Controller\AbstractActionController
     }
 
 
-    public function getBulkForm($populateMulticheck = false)
-    {
-        $bulkForm = new \Blog\Form\PostBulk('bulk-action');
-
-        if (!$populateMulticheck) {
-            return $bulkForm;
-        }
-
-        $valueOptions = array();
-        foreach ($this->getPosts() as $post) {
-            $valueOptions[] = array('label' => '', 'value' => $post->getId());
-        }
-        $bulkForm->get('posts')->setValueOptions($valueOptions);
-        return $bulkForm;
-    }
 
     /**
      * Edit action
@@ -114,12 +79,8 @@ class PostController extends \Zend\Mvc\Controller\AbstractActionController
      */
     public function editAction()
     {
-        $objectManager = $this->em();
-
-        //Create a new, empty entity and bind it to the form
-        $blogPost = $this->getBlogPost();
-        
-        // Create the form and inject the object manager
+        $em           = $this->em();
+        $blogPost     = $this->getEntityFromParamIdOrNew();
         $combinedForm = new \Blog\Form\PostEditor($this->getServiceLocator());
         $combinedForm->bind($blogPost);
 
@@ -148,43 +109,27 @@ class PostController extends \Zend\Mvc\Controller\AbstractActionController
             $blogPostData->setLocale($this->locale());
         }
 
-        $objectManager->persist($blogPostData);
-        $objectManager->flush();
+        $em->persist($blogPostData);
+        $em->flush();
 
         $blogPost->setUser($this->identity());
 
+        if (!$blogPost->hasLocale()) {
+            $blogPost->setLocale($this->locale());
+        }
+
         if (!$blogPost->hasMedia()) {
-            $medias = $objectManager->getRepository('Blog\Entity\Media')->findBy(array('slug' => 'symptom-thumbnail.jpg', 'locale' => $this->locale()));
+            $medias = $em->getRepository('Blog\Entity\Media')->findBy(array('slug' => 'default-thumbnail.jpg'));
+            if (empty($medias)) {
+                throw new \Exception('The generic media does not exist');
+            }
             $blogPost->setMedia(current($medias));
         }
 
-        $objectManager->persist($blogPost);
-        $objectManager->flush();
+        $em->persist($blogPost);
+        $em->flush();
 
         return $this->redirect()->toRoute(null, array('controller' => 'blog_post_controller', 'action' => 'index', 'id' => null), true);
-    }
-
-    public function badRequest($type)
-    {
-        $reuseMatchedParams = true;
-        $this->redirect()->toRoute('auth_logout', array(), $reuseMatchedParams);
-    }
-
-    public function getBlogPost()
-    {
-        $objectManager = $this->em();
-        $blogPostId = $this->params()->fromRoute('id');
-        $blogPost = null;
-
-        if (null !== $blogPostId) {
-            $blogPost = $objectManager->find('Blog\Entity\Post', (integer) $blogPostId);
-        }
-
-        if (null === $blogPost) {
-            return new \Blog\Entity\Post();
-        }
-
-        return $blogPost;
     }
 
     /**
@@ -203,8 +148,8 @@ class PostController extends \Zend\Mvc\Controller\AbstractActionController
     public function linkAction()
     {
 
-        $objectManager = $this->em();
-        $postDatas = $objectManager->getRepository('Blog\Entity\PostData')->findAll();
+        $em = $this->em();
+        $postDatas = $em->getRepository('Blog\Entity\PostData')->findAll();
         if (empty($postDatas)) {
             $reuseMatchedParams = true;
             return $this->redirect()->toRoute(null, array('controller' => 'blog_post_controller', 'action' => 'create'), $reuseMatchedParams);
@@ -234,42 +179,48 @@ class PostController extends \Zend\Mvc\Controller\AbstractActionController
             ));
         }
 
-        $objectManager->persist($blogPost);
-        $objectManager->flush();
+        $em->persist($blogPost);
+        $em->flush();
 
-        return $this->redirectToIndex();
+        return $this->redirect()->toRoute(null, array('controller' => 'blog_post_controller', 'action' => 'index'), false);
     }
 
-    public function deletePosts(array $ids)
+   /**
+    * Delete action
+    * @note: if you were thinking of renaming the actionNoncePlugin
+    * to a real action name, thus removing the proxy, remember
+    * that plugin needs parameters.
+    */
+    public function noncedeleteAction()
     {
-        foreach ($ids as $id) {
-            $this->deletePost($id);
-        }
-    }
-
-    public function deletePost($id)
-    {
-        $post = $this->em()->getRepository('Blog\Entity\Post')->find($id);
-        if ($post) {
-            $em = $this->em();
-            $em->remove($post);
-            $em->flush();
-        }
+        return $this->actionNonceDelete('blog_post_route', array('action' => 'index'));
     }
 
     /**
-    * Delete action
-    *
-    */
-    public function deleteAction()
+     * @note mentionned in bulk form and called
+     * from actionBulk
+     */
+    public function deletePosts(array $ids)
     {
-        $this->deletePost($this->params('id'));
-        return $this->redirectToIndex();
+        return $this->deleteEntitiesByIds($ids);
     }
 
-    public function redirectToIndex()
+    /**
+     * @note called by : 
+     *     -actionNonceDelete plugin
+     *     -deleteEntitiesByIds plugin
+     */
+    public function deleteEntity($post)
     {
-        $reuseMatchedParams = true;
-        return $this->redirect()->toRoute(null, array('controller' => 'blog_post_controller', 'action' => 'index'), $reuseMatchedParams);
+        $em = $this->em();
+        $postData = $post->getData();
+        $postData->removePost($post);
+
+        if (!$postData->hasPosts()) {
+            $em->remove($postData);
+        }
+
+        $em->remove($post);
+        $em->flush();
     }
 }

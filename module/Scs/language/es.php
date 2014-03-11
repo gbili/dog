@@ -58,4 +58,7 @@ return array (
   'Value is required and can\'t be empty' => 'El valor es imprescindible y no puede estar vacío',
   'Previous exceptions' => 'Exceptiones anteriores',
   'No posts match your search, care to write one? Someone will be thankful.' => 'Ningún articulo corresponde a tu busqueda. Quieres escribir uno? Alguien te lo agradecerá.',
+  'category' => '',
+  'View category' => '',
+  'Dogtore Comprende tu perro' => '',
 );

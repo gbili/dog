@@ -32,12 +32,14 @@ class ProfileController extends \Zend\Mvc\Controller\AbstractActionController
     {
         $profile = $user->getProfile();        
         $media = $profile->getMedia();
+        $mediaMetadata = $media->getLocalizedMetadata($this->lang());
 
         $messages = $this->messenger()->getMessages();
 
         $viewVars = array(
             'profile', 
             'media', 
+            'mediaMetadata', 
             'user', 
             'messages',
         );
@@ -161,8 +163,11 @@ class ProfileController extends \Zend\Mvc\Controller\AbstractActionController
         $profile->setUser($user);
         
         if (!$profile->hasMedia()) {
-            $media = $objectManager->getRepository('Blog\Entity\Media')->findBySlug('profile-thumbnail.jpg');
-            $profile->setMedia(current($media));
+            $genericMedia = $objectManager->getRepository('Blog\Entity\Media')->findBySlug('default-thumbnail.jpg');
+            if (!$genericMedia) {
+                throw new \Exception('There is no generic media');
+            }
+            $profile->setMedia(current($genericMedia));
         }
 
         $objectManager->persist($profile);

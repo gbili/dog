@@ -11,7 +11,7 @@ namespace Blog\View\Helper;
 /**
  * View helper for translating messages.
  */
-class FormElement extends \Zend\View\Helper\AbstractHelper
+class FormElement extends \Zend\I18n\View\Helper\AbstractTranslatorHelper
 {
     /**
      * Has this element been already presented to user?
@@ -40,14 +40,23 @@ class FormElement extends \Zend\View\Helper\AbstractHelper
 
     public function render(\Zend\Form\Element $element)
     {
+        if ($element instanceof \Zend\Form\Element\Hidden) {
+            return $this->view->formHidden($element);
+        }
+
         $this->translatePlaceholderAttribute($element);
-        $errors = $this->renderTranslatedErrors($element);
-        $hasErrors = ('' !== ($errors));
-        $statusClass = (($hasErrors)? ' has-error' : (($this->firstRendering)? '' : ' has-success'));
-        $formGroupClass = $this->getElementOption($element, 'form_group_class', '');
+        $errors           = $this->renderTranslatedErrors($element);
+        $hasErrors        = ('' !== ($errors));
+        $statusClass      = (($hasErrors)? ' has-error' : (($this->firstRendering)? '' : ' has-success'));
+        $formGroupClass   = $this->getElementOption($element, 'form_group_class', '');
 
         $controlsDivClass = $this->getElementOption($element, 'controls_div_class', '');
-        $helperMethod = $this->getElementOption($element, 'helper_method', 'formElement');
+        $helperMethod     = $this->getElementOption($element, 'helper_method', 'formElement');
+
+        $helperMethodIsSameAsThisHelper = ('renderElement' === $helperMethod);
+        if ($helperMethodIsSameAsThisHelper) {
+            throw new \Exception('You cannot set the helper method to "renderElement" which returns this helper causing infinite recursion.');
+        }
 
         return "<div class=\"form-group$statusClass $formGroupClass\">"
                     . $this->renderTranslatedLabel($element)
@@ -100,7 +109,11 @@ class FormElement extends \Zend\View\Helper\AbstractHelper
         if (null === $element->getLabel()) { 
             return '';
         }
-        $element->setLabel($this->view->translate($element->getLabel()));
+        $translatedLabel = $this->view->translate($element->getLabel());
+        if (empty($translatedLabel)) {
+            return '';
+        }
+        $element->setLabel($translatedLabel);
         return $this->view->formLabel($element);
     }
 }

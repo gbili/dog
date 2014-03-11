@@ -96,11 +96,18 @@ class Nonce extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
     public function getProvidedNonce()
     {
         $controller = $this->getController();
-        $nonce = $controller->params()->fromRoute($this->nonceParamName, null);
-        if (null === $nonce) {
-            throw new Exception\BadRequestException('Missing nonce param, using param name:' . $this->nonceParamName);
+        $valueIfNotProvidedNonce = null;
+        $nonce = $controller->params()->fromRoute($this->nonceParamName, $valueIfNotProvidedNonce);
+        if ($nonce === $valueIfNotProvidedNonce) {
+            throw new \Exception('Missing nonce param, using param name:' . $this->nonceParamName);
         }
         return $nonce;
+    }
+
+    public function isNonceProvided()
+    {
+        $valueIfNotProvidedNonce=null;
+        return $valueIfNotProvidedNonce !== $this->controller->params()->fromRoute($this->nonceParamName, $valueIfNotProvidedNonce);
     }
 
     public function getHash()

@@ -30,6 +30,20 @@ class Lang
         return $langParam;
     }
 
+    public function getAllLangs()
+    {
+        return $this->getLangsAvailable();
+    }
+
+    public function getLangsAvailable()
+    {
+        $config = $this->application->getServiceManager()->get('config');
+        if (isset($config['lang']) && isset($config['lang']['langs_available'])) {
+            return $config['lang']['langs_available'];
+        }
+        return array($this->getLang());
+    }
+
     /**
      * Return the date time format for the current lang
      */

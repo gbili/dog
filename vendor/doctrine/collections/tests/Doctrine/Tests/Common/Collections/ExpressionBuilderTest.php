@@ -119,4 +119,3 @@ class ExpressionBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Comparison::CONTAINS, $expr->getOperator());
     }
 }
-

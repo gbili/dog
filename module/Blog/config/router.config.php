@@ -5,12 +5,12 @@ return array(
             'blog_post_route' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '[/:lang]/post[/:action][/:id][/:fourthparam]',
+                    'route' => '[/:lang]/post[/:action][/:id][/:nonce]',
                     'constraints' => array(
                         'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id' => '[0-9]+',
-                        'fourthparam' => '[a-zA-Z0-9_-]+',
+                        'nonce' => '[a-zA-Z0-9_-]+',
                     ),
                     'defaults' => array(
                         'lang' => 'en',
@@ -19,15 +19,32 @@ return array(
                     ),
                 ),
             ),
-            'blog_category_route' => array(
+            'blog_post_delete_route' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '[/:lang]/category[/:action][/:id][/:fourthparam]',
+                    'route' => '[/:lang]/post/delete/:id/:nonce',
                     'constraints' => array(
                         'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id' => '[0-9]+',
-                        'fourthparam' => '[a-zA-Z0-9_-]+',
+                        'nonce' => '[a-zA-Z0-9_-]+',
+                    ),
+                    'defaults' => array(
+                        'lang' => 'en',
+                        'controller' => 'blog_post_controller',
+                        'action' => 'noncedelete',
+                    ),
+                ),
+            ),
+            'blog_category_route' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '[/:lang]/category[/:action][/:id][/:nonce]',
+                    'constraints' => array(
+                        'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]+',
+                        'nonce' => '[a-zA-Z0-9_-]+',
                     ),
                     'defaults' => array(
                         'lang' => 'en',
@@ -49,19 +66,19 @@ return array(
                     'defaults' => array(
                         'lang' => 'en',
                         'controller' => 'blog_category_controller',
-                        'action' => 'delete',
+                        'action' => 'noncedelete',
                     ),
                 ),
             ),
             'blog_media_route' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '[/:lang]/media[/:action[/:id[/:fourthparam]]]',
+                    'route' => '[/:lang]/media[/:action[/:id[/:post_id]]]',
                     'constraints' => array(
                         'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id' => '[0-9]+',
-                        'fourthparam' => '[a-zA-Z0-9_-]+',
+                        'nonce' => '[a-zA-Z0-9_-]+',
                     ),
                     'defaults' => array(
                         'lang' => 'en',
@@ -71,7 +88,7 @@ return array(
                 ),
             ),
 
-            'blog_media_delete_route' => array(
+            'blog_media_delete_route' => array( //using nonce
                 'type' => 'segment',
                 'options' => array(
                     'route' => '[/:lang]/media/delete/:id/:nonce',
@@ -84,7 +101,7 @@ return array(
                     'defaults' => array(
                         'lang' => 'en',
                         'controller' => 'blog_media_controller',
-                        'action' => 'delete',
+                        'action' => 'noncedelete',
                     ),
                 ),
             ),
@@ -107,17 +124,33 @@ return array(
             'blog_file_route' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '[/:lang]/file[/:action][/:id][/:fourthparam]',
+                    'route' => '[/:lang]/file[/:action][/:id][/:nonce]',
                     'constraints' => array(
                         'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id' => '[0-9]+',
-                        'fourthparam' => '[a-zA-Z0-9_-]+',
+                        'nonce' => '[a-zA-Z0-9_-]+',
                     ),
                     'defaults' => array(
                         'lang' => 'en',
                         'controller' => 'blog_file_controller',
                         'action' => 'index',
+                    ),
+                ),
+            ),
+            'blog_file_delete_route' => array( //delete using nonce
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '[/:lang]/file/delete/:id/:nonce',
+                    'constraints' => array(
+                        'lang' => '(?:en)|(?:es)|(?:fr)|(?:de)|(?:it)',
+                        'id' => '[0-9]+',
+                        'nonce' => '[a-zA-Z0-9_-]+',
+                    ),
+                    'defaults' => array(
+                        'lang' => 'en',
+                        'controller' => 'blog_file_controller',
+                        'action' => 'noncedelete',
                     ),
                 ),
             ),

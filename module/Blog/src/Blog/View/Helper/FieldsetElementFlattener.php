@@ -14,12 +14,7 @@ namespace Blog\View\Helper;
 class FieldsetElementFlattener extends \Zend\View\Helper\AbstractHelper
 {
     /**
-     * Translate a message
      *
-     * @param  string $message
-     * @param  string $textDomain
-     * @param  string $locale
-     * @throws Exception\RuntimeException
      * @return string
      */
     public function __invoke(\Zend\Form\Fieldset $formOrFieldset)
@@ -27,12 +22,22 @@ class FieldsetElementFlattener extends \Zend\View\Helper\AbstractHelper
         return $this->getFlattenedElementsArray($formOrFieldset);
     }
 
-    public function getFlattenedElementsArray(\Zend\Form\Fieldset $formOrFieldset)
+    public function getFlattenedElementsArray($fieldset)
     {
-        $elements = (($formOrFieldset instanceof \Zend\Form\Form)? array() : $formOrFieldset->getElements());
-        foreach ($formOrFieldset->getFieldsets() as $fieldset) {
-            $elements += $this->getFlattenedElementsArray($fieldset);
+        $elements = array();
+        foreach ($fieldset->getFieldsets() as $innerFieldset) {
+            $elements += $this->getFlattenedElementsArray($innerFieldset);
         }
-        return $elements + (($formOrFieldset instanceof \Zend\Form\Fieldset)? $formOrFieldset->getElements() : array());
+        $fieldsetElements = $this->getElementsIndexedByName($fieldset->getElements());
+        return (($fieldset instanceof \Zend\Form\Form)? $elements + $fieldsetElements : $fieldsetElements + $elements);
+    }
+
+    public function getElementsIndexedByName($elements)
+    {
+        $elementsIndexedByName = array();
+        foreach ($elements as $element) {
+            $elementsIndexedByName[$element->getAttribute('name')] = $element;
+        }
+        return $elementsIndexedByName;
     }
 }

@@ -8,10 +8,21 @@
     <?php $isAllowed = $acl->isAllowed($role, $page->getRoute()) ?>
     <?php if( !$isAllowed || ! $page->isVisible() || !$this->navigation()->accept($page)) continue; ?>
     <?php $this->lang($page) ?>
-    <?php if( ! $page->hasPages()): ?>
-            <a class="list-group-item<?php if ($page->isActive()) echo ' active' ?>" href="<?= $page->getHref() ?>">
-                <?= $this->translate($page->getLabel(), 'blog') ?>
-            </a>
-    <?php endif ?>
+        <a class="list-group-item<?php if ($page->isActive()) echo ' active' ?>" href="<?= $page->getHref() ?>">
+            <?= $this->translate($page->getLabel(), 'blog') ?>
+        </a>
+    <?php if(! $page->hasPages()) continue; ?>
+        <a class="dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            <?php foreach ($page->getPages() as $child): ?>
+            <li>
+                <a href="<?= $child->getHref() ?>">
+                    <?= $this->translate($child->getLabel()) ?>
+                </a>
+            </li>
+            <?php endforeach ?>
+        </ul>
 <?php endforeach ?>
 </div><!-- End Side nav -->

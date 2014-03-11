@@ -6,6 +6,7 @@ return array(
        'orm_default' => array(
            'subscribers' => array(
                'Gedmo\Tree\TreeListener',
+               'Gedmo\Sluggable\SluggableListener',
            ),
        ),
    ),

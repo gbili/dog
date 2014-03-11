@@ -6,9 +6,9 @@ class Dog extends \Gbili\Db\Req\AbstractReq
     public function loadKeyedFields()
     {
         return array(
-                'owner_uniquename' => 'u.uniquename',
+                'user_uniquename' => 'u.uniquename',
 
-                'owner_id' => 'd.owner_id',
+                'user_id' => 'd.user_id',
                 'dog_name' => 'd.name',
                 'dog_locale' => 'd.locale', 
                 'dog_breed' => 'd.breed', 
@@ -18,8 +18,8 @@ class Dog extends \Gbili\Db\Req\AbstractReq
                 'dog_birthdate' => 'd.birthdate', 
                 'dog_whythisdog' => 'd.whythisdog',
 
-                'media_alt' => 'm.alt',
-                'media_src' => 'concat(m.publicdir, "/", m.alt)',
+                'media_alt' => 'mm.alt',
+                'media_src' => 'concat(m.publicdir, "/", m.slug)',
         );
     }
 
@@ -28,8 +28,9 @@ class Dog extends \Gbili\Db\Req\AbstractReq
         return 'SELECT ' 
                 . $this->getFieldAsKeyString() 
             . ' FROM users u '
-                . ' RIGHT JOIN dogs AS d ON u.id = d.owner_id '
-                . ' LEFT JOIN medias AS m ON d.media_id = m.id ';
+                . ' RIGHT JOIN dogs AS d ON u.id = d.user_id '
+                . ' LEFT JOIN medias AS m ON d.media_id = m.id '
+                . ' LEFT JOIN media_metadatas AS mm ON m.id = mm.media_id ';
     }
 
     public function getTrailingSql()

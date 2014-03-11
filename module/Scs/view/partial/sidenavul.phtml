@@ -1,0 +1,40 @@
+<?php $aclGuard = $this->layout()->aclGuard ?>
+<?php $acl = $aclGuard->getAcl() ?>
+<?php $role = $aclGuard->getRole() ?>
+<ul class="nav nav-pills nav-stacked">
+<?php foreach ($this->container as $page): ?>
+    <?php /* @var $page Zend\Navigation\Page\Mvc */ ?>
+    <?php // when using partials we need to manually check for ACL conditions ?>
+    <?php $isAllowed = $acl->isAllowed($role, $page->getRoute()) ?>
+    <?php if( !$isAllowed || ! $page->isVisible() || !$this->navigation()->accept($page)) continue; ?>
+    <?php $this->lang($page) ?>
+    <?php $hasPages = $page->hasPages() ?>
+    <li class="<?= (($page->isActive())? 'active' : '' )?><?= (($hasPages)? ' dropdown' : '' )?>">
+    <?php if(!$hasPages) : ?>
+        <a href="<?= $page->getHref() ?>">
+            <?php if ($page->iconClass) : ?>
+                <span class="<?= $page->iconClass ?>"></span>
+            <?php endif ?>
+            <span class="text"><?= $this->translate($page->getLabel(), 'blog') ?></span>
+        </a>
+    <?php else : ?>
+        <a class="dropdown-toggle<?= (($page->isActive())? ' active' : '')?>" data-toggle="dropdown" href="<?= $page->getHref() ?>">
+            <?php if ($page->iconClass) : ?>
+                <span class="<?= $page->iconClass ?>"></span>
+            <?php endif ?>
+            <span class="text"><?= $this->translate($page->getLabel(), 'blog') ?></span>
+            <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            <?php foreach ($page->getPages() as $child): ?>
+            <li>
+                <a href="<?= $child->getHref() ?>">
+                    <?= $this->translate($child->getLabel()) ?>
+                </a>
+            </li>
+            <?php endforeach ?>
+        </ul>
+    <?php endif ?>
+    </li>
+<?php endforeach ?>
+</ul><!-- End Side nav -->

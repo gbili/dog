@@ -64,10 +64,10 @@ class Category extends \Blog\Entity\Category implements \Doctrine\ORM\Proxy\Prox
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'id', 'locale', 'translated', 'name', 'slug', 'description', 'lft', 'lvl', 'rgt', 'root', 'posts', 'parent', 'children');
+            return array('__isInitialized__', 'id', 'user', 'locale', 'translated', 'name', 'slug', 'uniqueslug', 'description', 'lft', 'lvl', 'rgt', 'root', 'posts', 'parent', 'children');
         }
 
-        return array('__isInitialized__', 'id', 'locale', 'translated', 'name', 'slug', 'description', 'lft', 'lvl', 'rgt', 'root', 'posts', 'parent', 'children');
+        return array('__isInitialized__', 'id', 'user', 'locale', 'translated', 'name', 'slug', 'uniqueslug', 'description', 'lft', 'lvl', 'rgt', 'root', 'posts', 'parent', 'children');
     }
 
     /**
@@ -176,6 +176,50 @@ class Category extends \Blog\Entity\Category implements \Doctrine\ORM\Proxy\Prox
     /**
      * {@inheritDoc}
      */
+    public function setUser(\User\Entity\User $user)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setUser', array($user));
+
+        return parent::setUser($user);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getUser()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getUser', array());
+
+        return parent::getUser();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function hasUser()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'hasUser', array());
+
+        return parent::hasUser();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isOwnedBy(\User\Entity\User $user)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'isOwnedBy', array($user));
+
+        return parent::isOwnedBy($user);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getId()
     {
         if ($this->__isInitialized__ === false) {
@@ -230,6 +274,28 @@ class Category extends \Blog\Entity\Category implements \Doctrine\ORM\Proxy\Prox
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getSlug', array());
 
         return parent::getSlug();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setUniqueslug($uniqueslug)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setUniqueslug', array($uniqueslug));
+
+        return parent::setUniqueslug($uniqueslug);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getUniqueslug()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getUniqueslug', array());
+
+        return parent::getUniqueslug();
     }
 
     /**

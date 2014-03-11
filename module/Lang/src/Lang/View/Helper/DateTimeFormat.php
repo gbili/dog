@@ -16,12 +16,6 @@ class DateTimeFormat extends \Zend\View\Helper\AbstractHelper
     protected $service;
 
     /**
-     * Translate a message
-     *
-     * @param  string $message
-     * @param  string $textDomain
-     * @param  string $locale
-     * @throws Exception\RuntimeException
      * @return string
      */
     public function __invoke()

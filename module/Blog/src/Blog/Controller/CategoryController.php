@@ -3,8 +3,10 @@ namespace Blog\Controller;
 
 class CategoryController extends \Zend\Mvc\Controller\AbstractActionController
 {
+    /**
+     * Avoids recalculating it on every call to getCategoriesTreeAsFlatArray()
+     */
     protected $categoriesTreeAsFlatArray = null;
-    protected $categoryRepository = null;
 
     /**
      * Index action
@@ -26,40 +28,58 @@ class CategoryController extends \Zend\Mvc\Controller\AbstractActionController
 
     public function bulkAction()
     {
-        if (!$this->request->isPost()) {
-            return $this->redirectToCategoriesList();
+        return $this->actionBulk('blog_category_route', array('action' => 'index'));
+    }
+
+    public function noncedeleteAction()
+    {
+        return $this->actionNonceDelete('blog_category_route', array('action' => 'index'));
+    }
+
+    /**
+     * @note mentioned in bulk form as action value, therefor
+     * called by actionBulk plugin
+     */
+    public function deleteCategories(array $categoriesIds)
+    {
+        return $this->deleteEntitiesByIds($categoriesIds);
+    }
+
+    /**
+     * @note called by : 
+     *     -actionNonceDelete plugin
+     *     -deleteEntitiesByIds plugin
+     */
+    public function deleteEntity($category)
+    {
+        $user = $this->identity();
+        if ($category->getUser() !== $user && !$user->isAdmin()) {
+            throw new \Exception('You must own the category in order to delete it');
         }
+        $em = $this->em();
+        $em->remove($category);
+        $em->flush();
+    }
 
-        $form = new \Blog\Form\CategoryBulk('bulk-action');
-        $form->hydrateValueOptions($this->getCategoriesTreeAsFlatArray());
-
-        $form->setData($formData = $this->request->getPost());
-
-        if (!$form->isValid()) {
-            return $this->redirectToCategoriesList();
-        }
-
-        $formValidData = $form->getData();
-        $action = $form->getSelectedAction();
-
-        $this->$action($formValidData['categories']);
-
-        $this->flashMessenger()->addMessage($action . ' succeed');
-        return $this->redirectToCategoriesList();
+    /**
+     * @note called by bulkForm plugin
+     */
+    public function getEntities()
+    {
+        return $this->getCategoriesTreeAsFlatArray();
     }
 
     public function linkTranslations(array $categoriesIds)
     {
-        //translations is limited to admin
         if (!$this->identity()->isAdmin()) {
-            $this->redirectToCategoriesList();
+            return $this->redirect()->toRoute('blog_category_route', array(), true);
         }
 
-        $repo = $this->em()->getRepository('Blog\Entity\Category');
+        $em         = $this->em();
+        $repo       = $this->repository();
         $categories = $repo->getFromIds($categoriesIds);
         $translated = $repo->getNewOrUniqueReusedTranslated($categories);
 
-        $em = $this->em();
         foreach ($categories as $category) {
             $category->setTranslated($translated);
             $em->persist($category);
@@ -75,62 +95,26 @@ class CategoryController extends \Zend\Mvc\Controller\AbstractActionController
         return $this->categoriesTreeAsFlatArray;
     }
 
+    /**
+     * Edit action
+     *
+     */
     public function editAction()
     {
-        $objectManager = $this->em();
-
+        $em = $this->em();
         // Create the form and inject the object manager
-        $form = new \Blog\Form\CategoryEdit($this->getServiceLocator());
-        
-        //Get a new entity with the id 
-        $category = $objectManager->find('Blog\Entity\Category', (integer) $this->params('id'));
-        
-        //TODO should the user own the category to be able to edit it? add an owner to the category and control that
-
-        if (empty($category)) {
-            throw new Exception\BadRequest('There is no category with that id. Please use links, dont try to be too creative');
-        }
-
-        if ($category->hasLocale() && $category->getLocale() !== $this->locale()) {
-            throw new Exception\BadRequest('Cannot edit a category in a different editor locale than the category\'s locale, it would break parent relationship');
-        }
-
-        $form->bind($category);
-
-        if ($this->request->isPost()) {
-            $form->setData($this->request->getPost());
-
-            if ($form->isValid()) {
-                //Save changes
-                if (!$category->hasLocale()) {
-                    $category->setLocale($this->locale());
-                }
-                $objectManager->persist($category);
-                $objectManager->flush();
-            }
-        }
-
-        return new \Zend\View\Model\ViewModel(array(
-            'form' => $form,
-            'entityId' => $category->getId(),
-        ));
-    }
-
-    public function createAction()
-    {
-        $objectManager = $this->em();
-        // Create the form and inject the object manager
-        $form = new \Blog\Form\CategoryCreate($this->getServiceLocator());
+        $form = new \Blog\Form\CategoryEditor($this->getServiceLocator());
 
         //Create a new, empty entity and bind it to the form
-        $blogCategory = new \Blog\Entity\Category();
-        $form->bind($blogCategory);
+        $category = $this->getEntityFromParamIdOrNew();
+
+        $form->bind($category);
 
         if (!$this->request->isPost()) {
             return new \Zend\View\Model\ViewModel(array(
                 'firstRendering' => true,
                 'form' => $form,
-                'entityId' => $blogCategory->getId(),
+                'entityId' => $category->getId(),
             ));
         }
 
@@ -140,44 +124,32 @@ class CategoryController extends \Zend\Mvc\Controller\AbstractActionController
             return new \Zend\View\Model\ViewModel(array(
                 'firstRendering' => false,
                 'form' => $form,
-                'entityId' => $blogCategory->getId(),
+                'entityId' => $category->getId(),
             ));
         }
 
-        $blogCategory->setLocale($this->locale());
-        $objectManager->persist($blogCategory);
-        $objectManager->flush();
+        if (!$category->hasLocale()) {
+            $category->setLocale($this->locale());
+        }
+        if ($category->getLocale() !== $this->locale()) {
+            throw new Exception\BadRequest('Cannot edit a category in a different editor locale than the category\'s locale, it would break parent relationship');
+        }
 
-        return $this->redirectToCategoriesList();
+        if (!$category->hasUser()) {
+            $category->setUser($this->identity());
+        }
+        if (!$category->isOwnedBy($this->identity())) {
+            throw new \Exception('Cannot edit a category that belongs to someone else');
+        }
 
+        $em->persist($category);
+        $em->flush();
+
+        return $this->redirect()->toRoute('blog_category_route', array('id' => null), true);
     }
 
-    public function deleteAction()
+    public function createAction()
     {
-        $this->nonce()->setNonceParamName('fourthparam');
-        if (!$this->nonce()->isValid()) {
-            throw new \Exception('500 access denied');
-        }
-        $category = $this->em()->getRepository('Blog\Entity\Category')->find($this->params('id'));
-
-        if ($category) {
-            $em = $this->em();
-            $em->remove($category);
-            $em->flush();
-
-            $this->flashMessenger()->addSuccessMessage('Category Deleted');
-        }
-        return $this->redirectToCategoriesList($overrideParams);
-    }
-
-    public function redirectToCategoriesList(array $overrideParams=array())
-    {
-        $params = array(
-            'action' => 'index', 
-        );
-        if (!empty($overrideParams)) {
-            $params = array_merge($params, $overrideParams);
-        }
-        return $this->redirect()->toRoute(null, $params, true);
+        return $this->editAction();
     }
 }

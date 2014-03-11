@@ -118,7 +118,7 @@ class MediaController extends \Zend\Mvc\Controller\AbstractActionController
         
         //Get a new entity with the id 
         $mediaId = (integer) $this->params('id');
-        $postId  = (integer) $this->params('fourthparam');
+        $postId  = (integer) $this->params('post_id');
 
         $media = $em->find('Blog\Entity\Media', $mediaId);
         $post  = $em->find('Blog\Entity\Post', $postId);
@@ -130,7 +130,7 @@ class MediaController extends \Zend\Mvc\Controller\AbstractActionController
             $this->messenger()->addMessage('Media and post unlinked', 'success');
         }
 
-        return $this->redirectToMediaLibrary();
+        return $this->redirect()->toRoute('blog_media_route', array('action'=>'index', 'lang'=>$this->locale()), false);
     }
 
     public function uploadAction()
@@ -149,7 +149,8 @@ class MediaController extends \Zend\Mvc\Controller\AbstractActionController
         }
         $this->mediaEntityCreator($this->em()->getRepository('Blog\Entity\File')->findById( (integer) $id));
 
-        return $this->redirectToMediaLibrary();
+        return $this->redirect()->toRoute('blog_media_route', array('action'=>'index', 'lang'=>$this->locale()), false);
+ 
     }
 
     public function redirectToMediaView(\Blog\Entity\Media $media)
@@ -160,53 +161,49 @@ class MediaController extends \Zend\Mvc\Controller\AbstractActionController
         ), true);
     }
 
-    public function redirectToMediaLibrary()
-    {
-        return $this->redirect()->toRoute('blog_media_route', array(
-            'action'     => 'index', 
-            'lang' => $this->locale(),
-        ), false);
-    }
-
     /**
      * Delete action
      */
-    public function deleteAction()
+    public function noncedeleteAction()
     {
-        if (!$this->nonce()->isValid()) {
-            $this->messenger()->addMessage(implode(', ', $this->nonce()->getLastValidator()->getMessages()), 'danger');
-            return $this->redirectToMediaLibrary();
-        }
+        return $this->actionNonceDelete('blog_media_route', array('action' => 'index'));
+    }
 
-        $media = $this->em()->getRepository('Blog\Entity\Media')->find($this->params()->fromRoute('id'));
-        $genericMedia = current($this->em()->getRepository('Blog\Entity\Media')->findBy(array('slug' => 'symptom-thumbnail.jpg', 'locale' => $this->lang())));
-
-        if (!$media) {
-            $this->messenger()->addMessage('Media does not exist', 'danger');
-            return $this->redirectToMediaLibrary();
-        }
-
-        $loggedInUser = $this->identity();
-        if (!$media->isOwnedBy($loggedInUser) && !$loggedInUser->isAdmin()) {
-            $this->messenger()->addMessage('You don\'t have the right to delete something that does not belong to you', 'danger');
-            return $this->redirectToMediaLibrary();
-        }
-
+    public function deleteEntity($media)
+    {
         $em = $this->em();
-        $posts = $media->getPosts();
+
+        $media->removeAllMetadatas();
+        $this->giveBackMediaDependenciesToDefaultMedia($media);
 
         $em->remove($media);
+        $em->flush();
+    }
 
-        foreach ($posts as $post) {
-            $post->setMedia($genericMedia);
-            $em->persist($post);
+    /**
+     * When media is removed we need to change each dependant's media
+     * otherwise deletion is not allowed, or it will cascade
+     */
+    protected function giveBackMediaDependenciesToDefaultMedia($media)
+    {
+        $em = $this->em();
+        $genericMedia = current($this->em()->getRepository('Blog\Entity\Media')->findBy(array('slug' => 'default-thumbnail.jpg')));
+        if (!$genericMedia) {
+            throw new \Exception('Missing generic media');
         }
 
-        $em->flush();
+        if ($media === $genericMedia) {
+            throw new \Exception('You are trying to delete the generic media. If we did so there would be no media to give back dependencies to. Thereafter all dependencies would be deleted.');
+        }
 
-        $this->messenger()->addMessage('Media Deleted', 'success');
-
-        return $this->redirectToMediaLibrary();
+        $mediaDependingPropertiesUCFirstNames = array('Dog', 'Metadata', 'Profile', 'Post');
+        foreach ($mediaDependingPropertiesUCFirstNames as $dependantName) {
+            $dependants = $media->{"get{$dependantName}s"}();
+            foreach ($dependants as $dependant) {
+                $dependant->setMedia($genericMedia);
+                $em->persist($dependant);
+            }
+        }
     }
 
     public function viewAction()

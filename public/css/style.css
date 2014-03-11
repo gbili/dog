@@ -20,6 +20,136 @@ header h3 {
     margin-top:0;
 }
 /*End header*/
+/* */
+p.hint {
+    font-size: 0.9em;
+    text-align: right;
+    color: #A0A0A0;
+    margin-bottom: 2px;
+}
+
+/* Sidenav */
+ul.list-group.gbili-sidenav > li.list-group-item.active > a > span {
+    color: #FFFFFF;
+}
+
+ul.list-group.gbili-sidenav > li.list-group-item.active,
+ul.list-group.gbili-sidenav > li.list-group-item.active:hover,
+ul.list-group.gbili-sidenav > li.list-group-item.active:focus {
+    color: #FFFFFF;
+    text-shadow: none;
+}
+
+ul.list-group.gbili-sidenav .dropdown-menu {
+    top: 95%;
+}
+
+ul.list-group.gbili-sidenav > li.list-group-item, 
+ul.list-group.gbili-sidenav > li.list-group-item:hover, 
+ul.list-group.gbili-sidenav > li.list-group-item:focus {
+    min-height: 3em;
+    overflow: visible;
+    padding: 0;
+}
+
+ul.list-group.gbili-sidenav > li.list-group-item.active > a, 
+ul.list-group.gbili-sidenav > li.list-group-item.active:hover > a, 
+ul.list-group.gbili-sidenav > li.list-group-item.active:focus > a,
+ul.list-group.gbili-sidenav > li.list-group-item > a, 
+ul.list-group.gbili-sidenav > li.list-group-item:hover > a, 
+ul.list-group.gbili-sidenav > li.list-group-item:focus > a {
+    text-decoration: none;
+}
+
+ul.list-group.gbili-sidenav > li.list-group-item.active > a.list-group-base-item, 
+ul.list-group.gbili-sidenav > li.list-group-item.active:hover > a.list-group-base-item, 
+ul.list-group.gbili-sidenav > li.list-group-item.active:focus > a.list-group-base-item,
+ul.list-group.gbili-sidenav > li.list-group-item > a.list-group-base-item, 
+ul.list-group.gbili-sidenav > li.list-group-item:hover > a.list-group-base-item, 
+ul.list-group.gbili-sidenav > li.list-group-item:focus > a.list-group-base-item {
+    display: block;
+    width: 100%;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    padding-left: 10px;
+}
+
+ul.list-group.gbili-sidenav > li.list-group-item.active.has-children > a.list-group-base-item, 
+ul.list-group.gbili-sidenav > li.list-group-item.active.has-children:hover > a.list-group-base-item, 
+ul.list-group.gbili-sidenav > li.list-group-item.active.has-children:focus > a.list-group-base-item,
+ul.list-group.gbili-sidenav > li.list-group-item.has-children > a.list-group-base-item, 
+ul.list-group.gbili-sidenav > li.list-group-item.has-children:hover > a.list-group-base-item, 
+ul.list-group.gbili-sidenav > li.list-group-item.has-children:focus > a.list-group-base-item {
+    width: 78%;
+}
+
+ul.list-group.gbili-sidenav > li.list-group-item.active:hover > ul.dropdown-menu > li.active > a, 
+ul.list-group.gbili-sidenav > li.list-group-item.active:focus > ul.dropdown-menu > li.active > a, 
+ul.list-group.gbili-sidenav > li.list-group-item.active > ul.dropdown-menu > li.active > a, 
+ul.list-group.gbili-sidenav > li.list-group-item.active > ul.dropdown-menu > li.active:hover > a, 
+ul.list-group.gbili-sidenav > li.list-group-item.active > ul.dropdown-menu > li.active:focus > a,
+ul.list-group.gbili-sidenav > li.list-group-item.active > ul.dropdown-menu > li:hover > a, 
+ul.list-group.gbili-sidenav > li.list-group-item.active > ul.dropdown-menu > li:focus > a {
+    color: #FFFFFF;
+}
+
+ul.list-group.gbili-sidenav > li.list-group-item.active > ul.dropdown-menu > li > a,
+ul.list-group.gbili-sidenav > li.list-group-item.active:hover > ul.dropdown-menu > li > a, 
+ul.list-group.gbili-sidenav > li.list-group-item.active:focus > ul.dropdown-menu > li > a {
+    color: #000000;
+}
+
+ul.list-group.gbili-sidenav > li.list-group-item > ul.dropdown-menu > li > a:hover, 
+ul.list-group.gbili-sidenav > li.list-group-item > ul.dropdown-menu > li > a:focus {
+    color: #000000;
+}
+
+ul.list-group.gbili-sidenav > li.list-group-item > ul.dropdown-menu > li:hover, 
+ul.list-group.gbili-sidenav > li.list-group-item > ul.dropdown-menu > li:focus {
+    background: #000000;
+}
+
+ul.list-group.gbili-sidenav > li.list-group-item a.dropdown-toggle {
+    border-left: 1px solid #DDDDDD;
+    text-align: right;
+    display: block;
+    padding: 10px;
+    width: 22%;
+}
+ul.list-group.gbili-sidenav > li.list-group-item.active a.dropdown-toggle {
+    border-left: 1px solid #367BB6;
+}
+
+ul.list-group.gbili-sidenav > li.list-group-item.open > ul.dropdown-menu > li > a:hover, 
+ul.list-group.gbili-sidenav > li.list-group-item.open > ul.dropdown-menu > li > a:focus {
+    background-color: #EEEEEE;
+    color: #444444;
+    background-image:none;
+}
+ul.list-group.gbili-sidenav > li.list-group-item:hover > a, 
+ul.list-group.gbili-sidenav > li.list-group-item:focus > a {
+    background-color: #EEEEEE;
+    color: #444444;
+}
+
+ul.list-group.gbili-sidenav > li.list-group-item.active:hover > a, 
+ul.list-group.gbili-sidenav > li.list-group-item.active:focus > a {
+    background-color: #3278B3;
+}
+
+ul.list-group.gbili-sidenav > li.list-group-item.active.open > ul.dropdown-menu > li > a:hover, 
+ul.list-group.gbili-sidenav > li.list-group-item.active.open > ul.dropdown-menu > li > a:focus {
+    background-color: #3278B3;
+    color: #FFFFFF;
+    background-image:none;
+}
+
+ul.list-group.gbili-sidenav > li.list-group-item a span.caret {
+    border-color: #CCCCCC rgba(0, 0, 0, 0) -moz-use-text-color;
+}
+ul.list-group.gbili-sidenav > li.list-group-item.active a span.caret {
+    border-color: #FFFFFF rgba(0, 0, 0, 0) -moz-use-text-color;
+}
 
 /* Bulk action form */
 /* Adjust margins */

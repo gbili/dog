@@ -37,6 +37,11 @@ class ObjectSelectNested extends \Zend\Form\Element\Select
     protected $queryParam;
 
     /**
+     * Allows a user to further refine the query builder construction, and make a better query
+     */
+    protected $queryBuilderCallback;
+
+    /**
      * @var string 
      */
     protected $property;
@@ -52,6 +57,11 @@ class ObjectSelectNested extends \Zend\Form\Element\Select
     protected $indentChars = '-';
 
     /**
+     * Allow user to decide what the multiplyer should be
+     */
+    protected $indentMultiplyerCallback;
+
+    /**
      * @var array 
      */
     protected $requiredOptions = array(
@@ -64,6 +74,8 @@ class ObjectSelectNested extends \Zend\Form\Element\Select
     protected $optionalOptions = array(
         'indent_multiplyer',
         'indent_chars',
+        'indent_multiplyer_callback',
+        'query_builder_callback',
     );
 
     public function getObjectManager()
@@ -138,6 +150,31 @@ class ObjectSelectNested extends \Zend\Form\Element\Select
         return $this;
     }
 
+    public function setIndentMultiplyerCallback($callback)
+    {
+        if (!is_callable($callback)) {
+            throw new \Exception('Indent multiplyer callback is not callable');
+        }
+        $this->indentMultiplyerCallback = $callback;
+        return $this;
+    }
+
+    public function doQueryBuilderCallback($queryBuilder, $nextParamNum)
+    {
+        if (null !== $this->queryBuilderCallback) {
+            return call_user_func($this->queryBuilderCallback, $queryBuilder, $nextParamNum);
+        }
+    }
+
+    public function setQueryBuilderCallback($callback)
+    {
+        if (!is_callable($callback)) {
+            throw new \Exception('The passed callback is not callable');
+        }
+        $this->queryBuilderCallback = $callback;
+        return $this;
+    }
+
     /**
      * @param  array|\Traversable $options
      * @return ObjectSelect
@@ -187,19 +224,10 @@ class ObjectSelectNested extends \Zend\Form\Element\Select
     public function getIndentedLabel($node)
     {
         $multiplyBy = $node['lvl'] * $this->getIndentMultiplyer();
+        if (null !== $this->indentMultiplyerCallback) {
+            $multiplyBy = call_user_func($this->indentMultiplyerCallback, $multiplyBy, $node, $this->getIndentMultiplyer(), $this);
+        }
         return str_repeat($this->getIndentChars(), $multiplyBy) . ' ' . $node[$this->getProperty()];
-    }
-
-    public function getTreeQuery()
-    {
-        return $this->getObjectManager()
-            ->createQueryBuilder()
-                ->select('node')
-                ->from($this->getTargetClass(), 'node')
-                    ->where('node.' . $this->getQueryParam('name') . ' = ?1')
-                ->orderBy('node.root, node.lft', 'ASC')
-                ->setParameter(1, $this->getQueryParam('value'))
-                ->getQuery();
     }
 
     public function getTree()
@@ -207,6 +235,20 @@ class ObjectSelectNested extends \Zend\Form\Element\Select
         $queryArray = $this->getTreeQuery()->getArrayResult();
         $repo = $this->getObjectManager()->getRepository($this->getTargetClass());
         return $repo->buildTree($queryArray);
+    }
+
+    public function getTreeQuery()
+    {
+        $paramNum = 1;
+        $queryBuilder = $this->getObjectManager()->createQueryBuilder();
+        $queryBuilder->select('node')
+            ->from($this->getTargetClass(), 'node');
+        $queryBuilder->where('node.' . $this->getQueryParam('name') . ' = ?' . $paramNum)
+            ->orderBy('node.root, node.lft', 'ASC')
+            ->setParameter($paramNum, $this->getQueryParam('value'));
+        //Allow user to specify further query refinement
+        $this->doQueryBuilderCallback($queryBuilder, ++$paramNum);
+        return $queryBuilder->getQuery();
     }
 
     public function getTreeAsFlatArray(array $nodes, $depth = null)

@@ -64,10 +64,10 @@ class User extends \User\Entity\User implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'id', 'posts', 'dogs', 'uniquename', 'email', 'profile', 'password', 'role');
+            return array('__isInitialized__', 'id', 'posts', 'categories', 'medias', 'dogs', 'uniquename', 'email', 'profile', 'password', 'role');
         }
 
-        return array('__isInitialized__', 'id', 'posts', 'dogs', 'uniquename', 'email', 'profile', 'password', 'role');
+        return array('__isInitialized__', 'id', 'posts', 'categories', 'medias', 'dogs', 'uniquename', 'email', 'profile', 'password', 'role');
     }
 
     /**
@@ -345,122 +345,100 @@ class User extends \User\Entity\User implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function getPosts()
+    public function __call($method, $params)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPosts', array());
+        $this->__initializer__ && $this->__initializer__->__invoke($this, '__call', array($method, $params));
 
-        return parent::getPosts();
+        return parent::__call($method, $params);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function addPost(\Blog\Entity\Post $post)
+    public function getThing($what)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addPost', array($post));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getThing', array($what));
 
-        return parent::addPost($post);
+        return parent::getThing($what);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function addPosts(\Doctrine\Common\Collections\Collection $posts)
+    public function getThings($what)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addPosts', array($posts));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getThings', array($what));
 
-        return parent::addPosts($posts);
+        return parent::getThings($what);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function removePost(\Blog\Entity\Post $post)
+    public function hasthings($what)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removePost', array($post));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'hasthings', array($what));
 
-        return parent::removePost($post);
+        return parent::hasthings($what);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function removePosts(\Doctrine\Common\Collections\Collection $posts)
+    public function addThing($what, $thing)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removePosts', array($posts));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addThing', array($what, $thing));
 
-        return parent::removePosts($posts);
+        return parent::addThing($what, $thing);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getDogs()
+    public function addThings($what, \Doctrine\Common\Collections\Collection $things)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getDogs', array());
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addThings', array($what, $things));
 
-        return parent::getDogs();
+        return parent::addThings($what, $things);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function hasDogs()
+    public function removeThing($what, $thing)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'hasDogs', array());
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeThing', array($what, $thing));
 
-        return parent::hasDogs();
+        return parent::removeThing($what, $thing);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function addDog(\Dogtore\Entity\Dog $dog)
+    public function removeThings($what, \Doctrine\Common\Collections\Collection $things)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addDog', array($dog));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeThings', array($what, $things));
 
-        return parent::addDog($dog);
+        return parent::removeThings($what, $things);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function addDogs(\Doctrine\Common\Collections\Collection $dogs)
+    public function removeAllThings($what)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addDogs', array($dogs));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeAllThings', array($what));
 
-        return parent::addDogs($dogs);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function removeDog(\Dogtore\Entity\Dog $dog)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeDog', array($dog));
-
-        return parent::removeDog($dog);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function removeDogs(\Doctrine\Common\Collections\Collection $dogs)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeDogs', array($dogs));
-
-        return parent::removeDogs($dogs);
+        return parent::removeAllThings($what);
     }
 
 }
