@@ -21,7 +21,7 @@ $form->setAttribute('class', 'form-horizontal');
 $form->prepare();
 ?>
 <?php
-$title = ucfirst($this->translate($action, $textdomain)) . ' ' . ucfirst($this->translate($controller, $textdomain));
+$title = ucfirst($action) . ' ' . ucfirst($controller);
 $this->headTitle($title);
 ?>
 <?php $this->notify(((isset($messages))? $messages : array())) ?>

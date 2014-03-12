@@ -4,7 +4,7 @@ namespace Blog;
 return array(
     'default' => array(
         'my_account' => array(
-            'label' => 'Home',
+            'label' => 'My Account',
             'iconClass' => 'glyphicon glyphicon-home',
             'route' => 'profile_private',
             'action' => 'index',

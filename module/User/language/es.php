@@ -82,4 +82,7 @@ return array (
   'Already member?' => '',
   'Medias' => 'Imagenes',
   'Dogtore Comprende tu perro' => '',
+  'Nombre de usuario o Correo electronico' => '',
+  'Contraseña' => '',
+  'Conexión' => '',
 );

@@ -21,7 +21,6 @@ class Bulk extends \Zend\Form\Form
             'name' => 'action-top',
             'type'  => 'Blog\Form\Element\Select',
             'options' => array(
-                'helper_method' => 'formElementStaticValueOptions',
                 'empty_option' => 'Bulk Actions',
                 'value_options' => $bulkActionValueOptions,
             ),
@@ -34,7 +33,6 @@ class Bulk extends \Zend\Form\Form
             'name' => 'action-bottom',
             'type'  => 'Blog\Form\Element\Select',
             'options' => array(
-                'helper_method' => 'formElementStaticValueOptions',
                 'empty_option' => 'Bulk Actions',
                 'value_options' => $bulkActionValueOptions,
             ),

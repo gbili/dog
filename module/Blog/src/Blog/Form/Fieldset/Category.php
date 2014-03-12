@@ -21,6 +21,9 @@ class Category extends \Zend\Form\Fieldset
             'name' => 'parent',
             'type' => 'Blog\Form\Element\ObjectSelectNested',
             'options' => array(
+                'translate' => array(
+                    'label' => false,
+                ),
                 'label' => 'Category',
                 'property' => 'name',
                 'target_class' => 'Blog\Entity\Category',

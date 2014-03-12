@@ -110,4 +110,10 @@ return array (
   'Translations' => '',
   'Medias' => '',
   'Dogtore Comprende tu perro' => '',
+  'Nombre de usuario o Correo electronico' => '',
+  'Contraseña' => '',
+  'Not member already?' => '',
+  'Forgot Password?' => '',
+  'Recover Password' => '',
+  'Conexión' => '',
 );

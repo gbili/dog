@@ -51,7 +51,6 @@ implements \Zend\InputFilter\InputFilterProviderInterface
             'name' => 'gender',
             'type'  => 'Blog\Form\Element\Select',
             'options' => array(
-                'helper_method' => 'formElementStaticValueOptions',
                 'label' => 'Gender',
                 'empty_option' => '---',
                 'value_options' => array(
@@ -121,6 +120,9 @@ implements \Zend\InputFilter\InputFilterProviderInterface
             'name' => 'media',
             'type' => 'Blog\Form\Element\ObjectSelect',
             'options' => array(
+                'translate' => array(
+                    'label' => false,
+                ),
                 'label' => 'Picture',
                 'property' => 'slug',
                 'attributes' => array(

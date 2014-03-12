@@ -4,25 +4,19 @@ return array(
     'initializers' => array(
         'injectTranslatorTextDomain' => function ($helper, $vhp) {
             if ($helper instanceof \Zend\I18n\Translator\TranslatorAwareInterface) {
-                $helper->setTranslatorTextDomain($vhp->getServiceLocator()->get('textdomain')->getTextdomain());
+                //$vhp->getServiceLocator()->get('textdomain')->getTextdomain();
+                $helper->setTranslatorTextDomain('lang');
             }
         }
     ),
 
     'invokables' => array(
         'patternTranslate' => __NAMESPACE__ . '\View\Helper\PatternTranslate',
+        'renderSelectOptionalTranslation' => __NAMESPACE__ . '\View\Helper\FormSelect',
     ),
 
     'factories' => array(
         'langSelector' => __NAMESPACE__ . '\View\Helper\LangSelectorFactory',
-
-        //translateWriter
-        'translate'        => function ($vhp) {
-            $sm = $vhp->getServiceLocator();
-            $translate = new View\Helper\TranslateWriter;
-            $translate->setTranslationStorageService($sm->get('translationStorage'));
-            return $translate;
-        },
 
         'lang' => function ($viewHelperPluginManager) {
             $currentLang = $viewHelperPluginManager->getServiceLocator()
@@ -31,6 +25,7 @@ return array(
             $langHelper->setLang($currentLang);
             return $langHelper;
         },
+
         'dateTimeFormat' => function ($viewHelperPluginManager) {
             $service = $viewHelperPluginManager->getServiceLocator()
                 ->get('lang');

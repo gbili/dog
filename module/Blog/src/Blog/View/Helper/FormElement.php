@@ -51,7 +51,12 @@ class FormElement extends \Zend\I18n\View\Helper\AbstractTranslatorHelper
         $formGroupClass   = $this->getElementOption($element, 'form_group_class', '');
 
         $controlsDivClass = $this->getElementOption($element, 'controls_div_class', '');
-        $helperMethod     = $this->getElementOption($element, 'helper_method', 'formElement');
+        $elementOptions   = $element->getOptions();
+        if ($element instanceof \Zend\Form\Element\Select) {
+            $helperMethod = 'renderSelectOptionalTranslation';
+        } else {
+            $helperMethod = $this->getElementOption($element, 'helper_method', 'formElement');
+        }
 
         $helperMethodIsSameAsThisHelper = ('renderElement' === $helperMethod);
         if ($helperMethodIsSameAsThisHelper) {
@@ -59,7 +64,7 @@ class FormElement extends \Zend\I18n\View\Helper\AbstractTranslatorHelper
         }
 
         return "<div class=\"form-group$statusClass $formGroupClass\">"
-                    . $this->renderTranslatedLabel($element)
+                    . $this->renderLabel($element)
                     . "<div class=\"controls $controlsDivClass\">"
                         . $this->view->$helperMethod($element)
                     . '</div>'
@@ -78,6 +83,7 @@ class FormElement extends \Zend\I18n\View\Helper\AbstractTranslatorHelper
 
     public function translatePlaceholderAttribute(\Zend\Form\Element $element)
     {
+       return;
        $attributes = $element->getAttributes();
        if (!isset($attributes['placeholder'])) {
            return;
@@ -104,16 +110,11 @@ class FormElement extends \Zend\I18n\View\Helper\AbstractTranslatorHelper
         return "<label class=\"control-label\" for=\"$labelFor\">$errorsString</label>";
     }
 
-    public function renderTranslatedLabel(\Zend\Form\Element $element)
+    public function renderLabel(\Zend\Form\Element $element)
     {
         if (null === $element->getLabel()) { 
             return '';
         }
-        $translatedLabel = $this->view->translate($element->getLabel());
-        if (empty($translatedLabel)) {
-            return '';
-        }
-        $element->setLabel($translatedLabel);
         return $this->view->formLabel($element);
     }
 }

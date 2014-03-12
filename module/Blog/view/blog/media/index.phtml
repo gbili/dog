@@ -1,11 +1,11 @@
 <?php
-$title = $this->translate('Media Library');
+$title = 'Media Library';
 $this->headTitle($title);
 $this->notify(((isset($messages))? $messages : array()));
 ?>
 <header class="row">
     <div class="col-sm-4 col-md-4 col-4">
-        <h3><?= $this->escapeHtml($title); ?></h3>
+        <h3><?= $this->escapeHtml($this->translate($title)); ?></h3>
     </div>
     <div class="col-sm-4 col-md-4 col-4">
         <p><a class="btn btn-default" href="<?= $this->url(null, array('action'=>'create'), true);?>" title="<?= $this->translate('Media from previously uploaded image') ?>"><?= $this->translate('Create from Existing') ?></a></p>

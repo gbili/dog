@@ -22,6 +22,14 @@ class Textdomain
         }
         return $this->getDefaultTextdomain();
     }
+    /**
+     * @return manually set textdomain
+     */
+    public function setTextdomain($textdomain)
+    {
+        $this->textdomain = $textdomain;
+        return $this;
+    }
 
     public function getServiceManager()
     {
@@ -51,6 +59,7 @@ class Textdomain
         }, $this->getRegisteredModules());
         return $textdomains;
     }
+
 
     public function setController($controller)
     {

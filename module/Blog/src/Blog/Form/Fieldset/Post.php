@@ -33,6 +33,9 @@ implements \Zend\InputFilter\InputFilterProviderInterface
             'name' => 'parent',
             'type' => 'DoctrineModule\Form\Element\ObjectSelect',
             'options' => array(
+                'translate' => array(
+                    'label' => false,
+                ),
                 'label' => 'Parent Post',
                 'property' => 'slug',
                 'target_class' => 'Blog\Entity\Post',
@@ -57,6 +60,9 @@ implements \Zend\InputFilter\InputFilterProviderInterface
             'name' => 'category',
             'type' => 'Blog\Form\Element\ObjectSelectNested',
             'options' => array(
+                'translate' => array(
+                    'label' => false,
+                ),
                 'label' => 'Category',
                 'property' => 'name',
                 'target_class' => 'Blog\Entity\Category',

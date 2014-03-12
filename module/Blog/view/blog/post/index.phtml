@@ -1,5 +1,5 @@
 <?php
-$title = $this->translate('Posts');
+$title = 'Posts';
 $this->headTitle($title);
 
 $this->bulkForm()->prepare();
@@ -8,7 +8,7 @@ $this->bulkForm()->prepare();
 
 <header class="row">
     <div class="col-sm-4 col-md-4 col-4">
-        <h3><?php echo $this->escapeHtml($title); ?></h3>
+        <h3><?php echo $this->escapeHtml($this->translate($title)); ?></h3>
     </div>
     <div class="col-sm-4 col-md-4 col-4">
     </div>

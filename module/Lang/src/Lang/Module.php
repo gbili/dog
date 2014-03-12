@@ -22,8 +22,9 @@ class Module
 
     public function onBootstrap(\Zend\Mvc\MvcEvent $e)
     {
+        //$this->populateTranslations($e);
         $this->injectLang($e);
-        $this->injectTextdomain($e);
+        $this->manualTextdomain('lang', $e);//$this->injectTextdomain($e);
         $this->missingTranslationListener($e);
     }
 
@@ -38,6 +39,7 @@ class Module
             $translator                = $e->getTarget();
             $translationStorageService = $sm->get('translationStorage');
             $translationStorageService->setTranslation($params['text_domain'], $params['locale'], $params['message'], $translation='', $overwrite=false);
+            $translationStorageService->persistFlushCache();
         });
     }
     
@@ -54,6 +56,13 @@ class Module
         });
     }
 
+    public function manualTextdomain($textdomain, $e)
+    {
+        $sm = $e->getApplication()->getServiceManager();
+        $textdomainService = $sm->get('textdomain');
+        $textdomainService->setTextdomain($textdomain);
+    }
+
     public function injectTextdomain($e)
     {
         $eventManager = $e->getApplication()->getEventManager();
@@ -62,5 +71,33 @@ class Module
             $textdomainService = $sm->get('textdomain');
             $textdomainService->setController($e->getTarget());
         });
+    }
+
+    /**
+     * Get backedmodue translations and populate lang translations module with them
+     */
+    public function populateTranslations($e)
+    {
+        $sm = $e->getApplication()->getServiceManager();
+        $translationStorageService = $sm->get('translationStorage');
+        $langService = $sm->get('lang');
+        $textdomainToPopulate = 'lang';
+        $textdomainService = $sm->get('textdomain');
+        foreach ($langService->getLangsAvailable() as $lang) {
+            foreach ($translationStorageService->getTranslations($textdomainToPopulate, $lang) as $string => $translation) {
+                foreach ($textdomainService->getTextdomains() as $textdomain) {
+                    echo "toPop: $textdomainToPopulate, lang: $lang,  string: $string, toPopTranslation: $translation\n";
+                    //If no translation available skip
+                    if (!$translationStorageService->isTranslated($textdomain, $lang, $string)) 
+                        continue;
+                    //If textdomainToPopulate has already a translation, skip
+                    if ($translationStorageService->isTranslated($textdomainToPopulate, $lang, $string)) 
+                        continue;
+                    $translation = $translationStorageService->getTranslation($textdomain, $lang, $string);
+                    $translationStorageService->setTranslation($textdomainToPopulate, $lang, $string, $translation);
+                }
+            }
+        }
+        $translationStorageService->persistFlushCache();
     }
 }

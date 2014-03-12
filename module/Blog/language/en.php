@@ -139,4 +139,7 @@ return array (
   'Crear Categoría' => '',
   'Subir Imagen' => '',
   'Subir Fichero' => '',
+  'Articulos' => '',
+  'Categorías' => '',
+  'Libreria de Imagenes' => '',
 );

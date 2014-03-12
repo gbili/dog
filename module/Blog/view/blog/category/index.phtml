@@ -1,5 +1,5 @@
 <?php
-$title = $this->translate('Categories');
+$title = 'Categories';
 $this->headTitle($title);
 
 $this->bulkForm()->prepare();
@@ -7,7 +7,7 @@ $this->bulkForm()->prepare();
 <!-- Add New Category Button Row -->
 <header class="row">
     <div class="col-sm-4 col-md-4 col-4">
-        <h3><?= $this->escapeHtml($title); ?></h3>
+        <h3><?= $this->escapeHtml($this->translate($title)); ?></h3>
     </div>
     <div class="col-sm-4 col-md-4 col-4">
     </div>

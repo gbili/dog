@@ -18,6 +18,13 @@ class TranslationStorage
      */
     protected $cache = array();
 
+    protected $modulesDir;
+
+    public function __construct()
+    {
+        $this->setModulesDir(__DIR__ . '/../../../../');
+    }
+
     public function isTranslated($textdomain, $locale, $string)
     {
         $translations = $this->getCache($textdomain, $locale);
@@ -53,10 +60,23 @@ class TranslationStorage
         return $onlyTranslated;
     }
 
+    public function setModulesDir($dir)
+    {
+        if (!is_dir($dir)) {
+            throw new \Exception('Directory does not exist: ' . $dir);
+        }
+        $this->modulesDir = $dir;
+        return $this;
+    }
+
+    public function getModulesDir()
+    {
+        return $this->modulesDir;
+    }
+
     public function getLocalizedFilename($lcModuleName, $locale)
     {
-        $modulesDir = __DIR__ . '/../../../../';
-        $dir = realpath($modulesDir . ucfirst($lcModuleName) . '/language');
+        $dir = realpath($this->getModulesDir() . ucfirst($lcModuleName) . '/language');
         return $filename = $dir . '/' . $locale . '.php';
     }
     

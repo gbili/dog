@@ -5,7 +5,7 @@ if (!isset($__VIEWFILE__)) {
 $fileparts = explode('/', $__VIEWFILE__);
 $action = substr(end($fileparts), 0, -6);
 $controller = prev($fileparts); 
-$title = ucfirst($this->translate($action)) . ' ' . ucfirst($this->translate($controller));
+$title = ucfirst($action) . ' ' . ucfirst($controller);
 
 $this->headTitle($title);
 ?>

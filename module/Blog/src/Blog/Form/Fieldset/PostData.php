@@ -49,6 +49,9 @@ implements \Zend\InputFilter\InputFilterProviderInterface
             'name' => 'media',
             'type' => 'Blog\Form\Element\ObjectSelect',
             'options' => array(
+                'translate' => array(
+                    'label' => false,
+                ),
                 'label' => 'Picture',
                 'property' => 'slug',
                 'attributes' => array(
