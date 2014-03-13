@@ -27,7 +27,9 @@ class DeleteEntitiesByIds extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
            ->where($qb->expr()->in('e.id', $ids));
         $entities = $qb->getQuery()->getResult();
 
+        $identity = $controller->identity();
         foreach ($entities as $entity) {
+            if ((!$identity->isAdmin()) || ($identity !== $entity->getUser())) continue;
             $controller->deleteEntity($entity);
         }
     }

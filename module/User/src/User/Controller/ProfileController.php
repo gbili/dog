@@ -163,11 +163,8 @@ class ProfileController extends \Zend\Mvc\Controller\AbstractActionController
         $profile->setUser($user);
         
         if (!$profile->hasMedia()) {
-            $genericMedia = $objectManager->getRepository('Blog\Entity\Media')->findBySlug('default-thumbnail.jpg');
-            if (!$genericMedia) {
-                throw new \Exception('There is no generic media');
-            }
-            $profile->setMedia(current($genericMedia));
+            $genericMedia = $this->repository('Blog\Entity\Media')->getDefaultMedia($profile);
+            $profile->setMedia($genericMedia);
         }
 
         $objectManager->persist($profile);

@@ -356,23 +356,23 @@ class File extends \Blog\Entity\File implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function removeMedias(\Doctrine\Common\Collections\Collection $medias)
+    public function unlinkMedias(\Doctrine\Common\Collections\Collection $medias, $newFile = NULL)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeMedias', array($medias));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'unlinkMedias', array($medias, $newFile));
 
-        return parent::removeMedias($medias);
+        return parent::unlinkMedias($medias, $newFile);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function removeMedia(\Blog\Entity\Media $media)
+    public function unlinkMedia(\Blog\Entity\Media $media, $newFile = NULL)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeMedia', array($media));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'unlinkMedia', array($media, $newFile));
 
-        return parent::removeMedia($media);
+        return parent::unlinkMedia($media, $newFile);
     }
 
     /**

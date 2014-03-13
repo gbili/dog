@@ -151,17 +151,20 @@ class File
         }
     }
 
-    public function removeMedias(\Doctrine\Common\Collections\Collection $medias)
+    public function unlinkMedias(\Doctrine\Common\Collections\Collection $medias, $newFile=null)
     {
+        $medias = array();
         foreach ($medias as $media) {
-            $this->removeMedia($media);
+            $medias[] = $this->unlinkMedia($media, $newFile);
         }
+        return $medias;
     }
 
-    public function removeMedia(Media $media)
+    public function unlinkMedia(Media $media, $newFile=null)
     {
         $this->medias->removeElement($media);
-        $media->setFile(null);
+        $media->setFile($newFile);
+        return $media;
     }
 
    /**

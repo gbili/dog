@@ -50,8 +50,9 @@ class FileController extends \Zend\Mvc\Controller\AbstractActionController
         if (!$file->delete()) {
             throw new \Exception('Could not delete the actual file');
         }
-
         $em = $this->em();
+        $defaultFileReplacingUnlinkedMediasFile = $this->repository('Blog\Entity\Media')->getDefaultFile();
+        $file->unlinkMedias($file->getMedias(), $defaultFileReplacingUnlinkedMediasFile);
         $em->remove($file);
         $em->flush();
     }

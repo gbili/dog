@@ -52,10 +52,6 @@ class CategoryController extends \Zend\Mvc\Controller\AbstractActionController
      */
     public function deleteEntity($category)
     {
-        $user = $this->identity();
-        if ($category->getUser() !== $user && !$user->isAdmin()) {
-            throw new \Exception('You must own the category in order to delete it');
-        }
         $em = $this->em();
         $em->remove($category);
         $em->flush();

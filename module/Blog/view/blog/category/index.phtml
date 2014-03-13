@@ -6,19 +6,19 @@ $this->bulkForm()->prepare();
 ?>
 <!-- Add New Category Button Row -->
 <header class="row">
-    <div class="col-sm-4 col-md-4 col-4">
+    <div class="col-xs-6 col-sm-4 col-md-4 col-4">
         <h3><?= $this->escapeHtml($this->translate($title)); ?></h3>
     </div>
-    <div class="col-sm-4 col-md-4 col-4">
+    <div class="col-xs-0 col-sm-4 col-md-4 col-4">
     </div>
-    <div class="col-sm-4 col-md-4 col-4">
-        <p><a class="btn btn-success" href="<?= $this->url(
+    <div class="col-xs-6 col-sm-4 col-md-4 col-4">
+        <p><a class="btn btn-success pull-right" href="<?= $this->url(
             null, 
             array(
                 'action'=>'create',
             ),
             true
-        )?>"><?= $this->translate('Add New Category') ?></a></p>
+        )?>"><span class="glyphicon glyphicon-plus"></span>&nbsp;<span class="text"><?= $this->translate('Add Category') ?></span></a></p>
     </div>
 </header><!-- ENDOF Add New Category Button Row-->
 
@@ -31,7 +31,7 @@ $this->bulkForm()->prepare();
     </div>
     <div class="col-sm-4 col-md-4 col-lg-4">
 <!-- Page selector -->
-    <?= $this->paginator($paginator) ?>
+        <?= $this->paginator($paginator)->pull('right') ?>
 <!-- ENDOF Page selector -->
     </div>
 </div><!-- ENDOF Form action dropdown and submit Row -->
@@ -57,14 +57,18 @@ $this->bulkForm()->prepare();
             <td><?= ((isset($category['translated_category_id']))? $category['translated_category_id'] : $this->translate('N/A')) ?></td>
 <?php endif ?>
 	        <td>
+                <?php if ($category['user_id'] === $this->identity()->getId()) : ?>
                 <a href="<?= $this->url(null, array('action'=>'edit', 'id' => $category['id'], 'lang' => $category['locale']), true); ?>"><?= $this->translate('Edit') ?></a>
+                <?php endif ?>
 	        </td>
 	        <td>
-            <a class="glyphicon glyphicon-trash" role="button" title="<?= $this->translate('Delete') ?>" href="<?= $this->url($this->nonce()->getRouteName(), array(
-                'lang' => $this->lang(), 
-                'id' => $category['id'],
-                'nonce' => $this->nonce()->getHash($category['id']),
-            )); ?>" onclick="return confirm('<?= $this->translate('Are you sure?') ?>')"></a>
+                <?php if ($category['user_id'] === $this->identity()->getId()) : ?>
+                <a class="glyphicon glyphicon-trash" role="button" title="<?= $this->translate('Delete') ?>" href="<?= $this->url($this->nonce()->getRouteName(), array(
+                    'lang' => $this->lang(), 
+                    'id' => $category['id'],
+                    'nonce' => $this->nonce()->getHash($category['id']),
+                )); ?>" onclick="return confirm('<?= $this->translate('Are you sure?') ?>')"></a>
+                <?php endif ?>
 	        </td>
 	    </tr>
     <?php endforeach; ?>
@@ -81,7 +85,7 @@ $this->bulkForm()->prepare();
     </div>
     <div class="col-sm-4 col-md-4 col-lg-4">
 <!-- Page selector -->
-    <?= $this->paginator($paginator) ?>
+        <?= $this->paginator($paginator)->pull('right') ?>
 <!-- ENDOF Page selector -->
     </div>
 </div><!-- ENDOF Form action dropdown and submit Row -->

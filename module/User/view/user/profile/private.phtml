@@ -9,20 +9,21 @@
                 <h3><?= $this->patternTranslate($patterns, $replacements, "firstname surname<small>'s Profile</small>") ?></h3>
             </div>
             <div class="col-sm-4 col-md-4 col-4">
-                <a class="btn btn-success pull-right" href="<?php echo $this->url('profile_edit', array(
-                    'controller' => 'gbiliuser_profile_controller', 
-                    'action'=>'edit',
-                    'uniquename'=> $user->getUniquename(),
-                ), true);?>"><?php echo $this->translate('Edit Profile') ?></a>
             </div>
         </header>
         <div class="row">
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3">
-                <img src="<?php echo $media->getSrc()?>" class="img-rounded img-responsive" alt="<?= ((null !== $mediaMetadata)? $mediaMetadata->getAlt() : '')?>"/>
+                <img src="<?= $media->getSrc()?>" class="img-rounded img-responsive" alt="<?= ((null !== $mediaMetadata)? $mediaMetadata->getAlt() : '')?>"/>
             </div>
             <div class="col-xs-8 col-sm-8 col-md-8 col-lg-9">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><?= $this->translate('Info')?></div>
+                    <div class="panel-heading"><?= $this->translate('Info')?>
+                        <a class="btn btn-success btn-xs pull-right" title="<?=$this->translate('Edit Profile') ?>" href="<?= $this->url('profile_edit', array(
+                            'controller' => 'gbiliuser_profile_controller', 
+                            'action'=>'edit',
+                            'uniquename'=> $user->getUniquename(),
+                        ), true);?>"><span class="glyphicon glyphicon-pencil"></span></a>
+                    </div>
                     <ul class="list-group">
                         <li class="list-group-item"><strong><?= $this->translate('Username')?></strong> : <?= $user->getUniquename()?></li>
                     </ul>

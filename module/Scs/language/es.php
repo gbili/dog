@@ -59,6 +59,6 @@ return array (
   'Previous exceptions' => 'Exceptiones anteriores',
   'No posts match your search, care to write one? Someone will be thankful.' => 'Ningún articulo corresponde a tu busqueda. Quieres escribir uno? Alguien te lo agradecerá.',
   'category' => '',
-  'View category' => '',
+  'View category' => 'Ver categoría',
   'Dogtore Comprende tu perro' => '',
 );

@@ -26,20 +26,32 @@ class Paginator extends \Zend\View\Helper\AbstractHelper
     protected $paginatorPlugin;
 
     /**
+     * @var string 
+     */
+    protected $currentRenderingPullWay;
+
+    /**
      *
      * @return string
      */
     public function __invoke($param = null)
     {
-        if (null !== $param) {
+        if ($param instanceof \Blog\Controller\Plugin\Paginator) {
             $this->setPaginatorPlugin($param);
         }
-        return $this->getRendering();
+        return $this;
     }
 
-    public function getRendering()
+
+    public function pull($rightOrLeft)
     {
-        if (null === $this->rendering) {
+        return $this->getRendering($rightOrLeft);
+    }
+
+    public function getRendering($pullRightOrLeft=null)
+    {
+        if ((null === $this->rendering) || ($pullRightOrLeft !== $this->currentRenderingPullWay)) {
+            $this->currentRenderingPullWay = $pullRightOrLeft;
             ob_start();
             $this->renderPagination();
             $this->rendering = ob_get_clean();
@@ -68,7 +80,7 @@ class Paginator extends \Zend\View\Helper\AbstractHelper
         $page       = (integer) $plugin->getCurrentPage();
         $pagesCount = (integer) $plugin->getPagesCount();
 ?>
-        <ul class="pagination">
+    <ul class="pagination<?php if (null !== $this->currentRenderingPullWay) echo ' ' . (($this->currentRenderingPullWay === 'left')? 'pull-left' : 'pull-right')?>">
 <?php if (1 === $page) :?>
             <li class="disabled">
                 <span>&laquo;</span>

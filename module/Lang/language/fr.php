@@ -135,4 +135,6 @@ return array (
   ':firstname :phrase' => ':prénom :phrase',
   'Upload file' => '',
   'My Account' => 'Mon Compte',
+  'Add Category' => '',
+  '---' => '',
 );

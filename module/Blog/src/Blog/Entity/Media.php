@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="medias")
+ *
+ * @ORM\Entity(repositoryClass="Blog\Entity\Repository\Media")
  */
 class Media implements \User\IsOwnedByInterface
 {
@@ -315,7 +317,7 @@ class Media implements \User\IsOwnedByInterface
      */
     public function getSrc()
     {
-        return $this->getPublicdir() . '/' . $this->getSlug();
+        return $this->getPublicdir() . '/' . $this->getFile()->getBasename();
     }
 
     /**
