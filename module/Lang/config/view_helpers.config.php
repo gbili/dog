@@ -3,7 +3,7 @@ namespace Lang;
 return array(
     'initializers' => array(
         'injectTranslatorTextDomain' => function ($helper, $vhp) {
-            if ($helper instanceof \Zend\I18n\Translator\TranslatorAwareInterface) {
+            if (($helper instanceof \Zend\I18n\Translator\TranslatorAwareInterface)) {
                 //$vhp->getServiceLocator()->get('textdomain')->getTextdomain();
                 $helper->setTranslatorTextDomain('lang');
             }
@@ -13,6 +13,7 @@ return array(
     'invokables' => array(
         'patternTranslate' => __NAMESPACE__ . '\View\Helper\PatternTranslate',
         'renderSelectOptionalTranslation' => __NAMESPACE__ . '\View\Helper\FormSelect',
+        'renderCustomizableOptionsRadio' => __NAMESPACE__ . '\View\Helper\FormRadio',
     ),
 
     'factories' => array(

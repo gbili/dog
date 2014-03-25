@@ -13,11 +13,10 @@
 /* File: <?= __FILE__ ?>*/
 (function () {
     var $container = $(".please_masonize_<?= $masonryColumnWidth ?>");
-    //TODO find out why there is no imagesLoaded method in $container
     $container.imagesLoaded(function () {
         $container.masonry({
-        itemSelector: 'li',
-        columnWidth: <?= $masonryColumnWidth ?>,
+            itemSelector: 'li',
+            columnWidth: <?= $masonryColumnWidth ?>,
         })
     });
 })();

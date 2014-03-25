@@ -35,7 +35,7 @@ class AuthController extends \Zend\Mvc\Controller\AbstractActionController
         }
 
         $formData = $form->getData();
-        $userEmail = $this->getUserEmail($formData);
+        $userEmail = $this->getUserOrEmail($formData);
 
         if (!$userEmail || !$this->authenticate($userEmail, $formData['user']['password'])) {
             return new ViewModel(array(
@@ -52,9 +52,42 @@ class AuthController extends \Zend\Mvc\Controller\AbstractActionController
     {
         //TODO create a form that allows the user to insert
         // its username or email
-        // 
+        $form = new \User\Form\RecoverPassword();
+        if (!$this->request->isPost()) {
+            return new \Zend\View\Model\ViewModel(array(
+                'form' => $form,
+            ));
+        }
+
+        $form->setData($this->request->getPost());
+
+        if (!$form->isValid()) {
+            return new \Zend\View\Model\ViewModel(array(
+                'form' => $form,
+            ));
+        }
+
+        $formValidData = $form->getData();
+        $user = $this->getUserOrEmail($formValidData, $returnEmail=false);
+
+        if (!$user) {
+            return new \Zend\View\Model\ViewModel(array(
+                'form' => $form,
+                'messages' => array(array('danger' => 'No such user')),
+            ));
+        }
+
         // Add user to Lost passwords db records
-        //
+        $remoteAddress   = new \Zend\Http\PhpEnvironement\RemoteAddress();
+        $recoverPassword = new \User\Entity\RecoverPassword();
+        $recoverPassword->setIpaddress($remoteAddress->getIpAddress());
+        $recoverPassword->setUser($user);
+        $recoverPassword->setDatecreated(new \DateTime('now', new \DateTimeZone('UTC')));
+
+        $em = $this->em();
+        $em->persist($recoverPassword);
+        $em->flush();
+
         // Then send an email to the user's email with a token
         // that will allow to change password
         //
@@ -69,26 +102,31 @@ class AuthController extends \Zend\Mvc\Controller\AbstractActionController
         // Send email confirmation
     }
 
-    public function getUserEmail($data)
+    public function getUserOrEmail($dirtyData, $returnEmail=true)
     {
-        $formUniquename = new \User\Form\LoginUniquename();
-        $data['user']['uniquename'] = $data['user']['uniquenameoremail'];
-        $formUniquename->setData($data);
-        if ($formUniquename->isValid()) {
-            $validData = $formUniquename->getData();
-            $users = $this->em()->getRepository('User\Entity\User')->findByUniquename($validData['user']['uniquename']);
+        $uniquenameOrEmail = $dirtyData['user']['uniquenameoremail'];
+        $uniquenamePattern = '/(?:\\A(?:[A-Za-z0-9]+(?:[-_.]?[A-Za-z0-9]+)*){4,}\\z)/';
+        $uniquenameValidator = new \Zend\Validator\Regex($uniquenamePattern);
+        if ($uniquenameValidator->isValid($uniquenameOrEmail)) {
+            $users = $this->em()->getRepository('User\Entity\User')->findByUniquename($uniquenameOrEmail);
             if (empty($users)) {
                 return false;
             }
-            return current($users)->getEmail();
+            $user = current($users);
+            return ($returnEmail)? $user->getEmail() : $user;
         }
 
-        $formEmail = new \User\Form\LoginEmail();
-        $data['user']['email'] = $data['user']['uniquenameoremail'];
-        $formEmail->setData($data);
-        if ($formEmail->isValid()) {
-            $validData = $formEmail->getData();
-            return $validData['user']['email'];
+        $emailValidator = new \Zend\Validator\EmailAddress();
+        if ($emailValidator->isValid($uniquenameOrEmail)) {
+            if ($returnEmail) {
+                return $uniquenameOrEmail;
+            }
+            $users = $this->em()->getRepository('User\Entity\User')->findByEmail($uniquenameOrEmail);
+            if (empty($users)) {
+                return false;
+            }
+            $user = current($users);
+            return $user;
         }
         throw new \Exception('Neither uniquename nor email are valid, this is weird');
     }

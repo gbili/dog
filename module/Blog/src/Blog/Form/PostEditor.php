@@ -14,6 +14,9 @@ class PostEditor extends \Zend\Form\Form
 
         $this->add($postFieldset);
 
+        $postParentFieldset = new Fieldset\PostParentSlug('post_parent');
+        $this->add($postParentFieldset);
+
         $this->add(array(
             'type' => 'Zend\Form\Element\Csrf',
             'name' => 'security',

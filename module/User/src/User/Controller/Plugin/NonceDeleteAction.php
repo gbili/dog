@@ -14,7 +14,7 @@ class NonceDeleteAction extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
      * Nonce based delete action
      * @return mixed
      */
-    public function __invoke($onFinishRedirectToRoute, $routeParams)
+    public function __invoke($onFinishRedirectToRoute, $routeParams=array(), $findEntityCallback=null)
     {
         $controller = $this->controller;
 
@@ -25,7 +25,11 @@ class NonceDeleteAction extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
             return $controller->redirect()->toRoute($onFinishRedirectToRoute, $routeParams, true);
         }
 
-        $entity = $controller->repository()->find($controller->params()->fromRoute('id'));
+        if (null === $findEntityCallback) {
+            $entity = $controller->repository()->find($controller->params()->fromRoute('id'));
+        } else {
+            $entity = call_user_func($findEntityCallback, $controller);
+        }
 
         if (!$entity) {
             $routeParams['id'] = null;

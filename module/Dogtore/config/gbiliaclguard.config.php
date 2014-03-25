@@ -20,6 +20,7 @@ return array(
                 'auth_login',
                 'auth_register',
                 'blog_file_route',
+                'blog_category_route',
                 'admin_index',
                 'admin_delete',
                 'admin_edit',

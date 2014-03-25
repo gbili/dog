@@ -48,10 +48,13 @@ class Module
         $eventManager = $e->getApplication()->getEventManager();
         $eventManager->attach(\Zend\Mvc\MvcEvent::EVENT_DISPATCH, function ($e) {
             $sm = $e->getApplication()->getServiceManager();
-            $currentLang = $sm->get('lang')->getLang();
+            $defaultLang = 'en';
+            $langService = $sm->get('lang');
+            $translator  = $sm->get('MvcTranslator');
+            $currentLang = $langService->getLang();
 
-            $translator = $sm->get('MvcTranslator');
-            $translator->setFallbackLocale('en');
+            $translator->setFallbackLocale($defaultLang);
+            $langService->setDefault($defaultLang);
             $translator->setLocale($currentLang);
         });
     }

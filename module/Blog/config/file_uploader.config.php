@@ -13,8 +13,8 @@ return array(
         'alias' => 'ajax_media_upload',
         'controller_plugin' => array(
             'route_success' => array(
-                'route'                => 'blog_post_route',
-                'params'               => array(
+                'route'  => 'blog_post_route',
+                'params' => array(
                     'action' => 'create'
                 ),
                 'reuse_matched_params' => true,

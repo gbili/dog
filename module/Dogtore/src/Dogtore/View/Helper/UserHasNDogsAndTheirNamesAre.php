@@ -63,13 +63,28 @@ class UserHasNDogsAndTheirNamesAre extends \Zend\View\Helper\AbstractHelper
 
     protected function getDogNamesPhrase($dogs)
     {
-        $options = $this->optionsParam;
-        $boldDogNames = (boolean) ((isset($options['bold_dog_names']))? $options['bold_dog_names'] : true);
-
-        $view = $this->view;
-        $dogsCount = count($dogs);
-        $dogNames = array_map(function ($dog) use ($boldDogNames){
-            return (($boldDogNames)? '<strong class="dog-names-enum">' . $dog->getName() . '</strong>' : $dog->getName());
+        $view         = $this->view;
+        $options      = $this->optionsParam;
+        $boldDogNames = (boolean) (isset($options['bold_dog_names']))
+            ? $options['bold_dog_names'] 
+            : true;
+        $dogNamesAsProfileLinks = (boolean) (isset($options['dog_names_as_profile_links']))
+            ? $options['dog_names_as_profile_links'] 
+            : true;
+        $dogsCount    = count($dogs);
+        $dogNames     = array_map(function ($dog) use ($boldDogNames, $dogNamesAsProfileLinks, $view) {
+            $formattedDogName = ($boldDogNames)
+                ? '<strong class="dog-names-enum">' . $dog->getName() . '</strong>' 
+                : $dog->getName();
+            if ($dogNamesAsProfileLinks) {
+                $dogProfileLink = $view->url('dog_view_user_dog', array(
+                            'uniquename' => $dog->getUser()->getUniquename(),
+                            'dogname_underscored' => $view->string()->spaceToUnderscore($dog->getName()),
+                        ), true);
+                $dogNameAsLink = '<a href="' . $dogProfileLink. '" title="'.$view->translate('View Dog Profile').'">' . $formattedDogName . '</a>';
+                $formattedDogName = $dogNameAsLink;
+            }
+            return $formattedDogName;
         }, $dogs);
 
         $lastDog = array_pop($dogNames);

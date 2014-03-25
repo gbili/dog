@@ -23,12 +23,13 @@ return array(
 
         'controller_plugin' => array(
             'route_success' => array(
-                'route'                => 'blog_media_route',
-                'params'               => array(
+                'route'  => 'blog_media_route',
+                'params' => array(
                     'action' => 'index'
                 ),
                 'reuse_matched_params' => true,
             ),
+
             /**
              * Create medias with the uploaded files
              */

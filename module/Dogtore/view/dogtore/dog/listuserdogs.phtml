@@ -1,0 +1,42 @@
+<?php
+$this->headTitle('User Pack');
+?>
+
+<?php if (empty($dogs)) : ?>
+    <p><?= $this->translate('You have no dogs in your pack') ?></p>
+    <?php return ?>
+<?php endif ?>
+
+<?php $dogSample = current($dogs) ?>
+<?php $title = $this->patternTranslate(array(':username'), array($dogSample['user_uniquename']), ':username\'s Pack') ?>
+
+<header class="row">
+    <div class="col-xs-8 col-sm-4 col-md-4 col-4">
+        <h3><?= $this->escapeHtml($title) ?></h3>
+    </div>
+    <div class="col-xs-0 col-sm-4 col-md-4 col-4">
+    </div>
+    <div class="col-xs-4 col-sm-4 col-md-4 col-4">
+        <p><a class="btn btn-success pull-right" href="<?= $this->url('dogtore_dog_add_route', array(), true);?>"><?= $this->translate('Add Dog') ?></a></p>
+    </div>
+</header>
+
+<?php $masonryColumnWidth = 180 ?>
+<ul class="please_masonize_<?= $masonryColumnWidth ?>">
+<?php foreach($dogs as $dog) : ?>
+<li>
+    <div class="thumbnail<?= ' ' . (('f' === $dog['dog_gender'])? 'female': 'male') ?>">
+      <img class="img-rounded img-responsive" src="<?= $dog['media_src']?>" alt="<?= $dog['media_alt']?>"/>
+      <div class="caption">
+      <h5><?= $dog['dog_name'] ?></h5>
+        <p>
+            <a class="btn btn-primary btn-xs" role="button"href="<?= $this->url('dog_view_user_dog', array(
+                'uniquename' => $dog['user_uniquename'],
+                'dogname_underscored' => $this->string()->spaceToUnderscore($dog['dog_name']),
+            ), true); ?>"><?= $this->translate('View') ?></a>
+        </p>
+     </div><!-- end caption -->
+   </div><!-- end thumbnail -->
+</li>
+<?php endforeach ?>
+<?php require_once __DIR__ . '/../../../../Blog/view/partial/init_masonry.js.phtml' ?> 

@@ -30,6 +30,17 @@ class Lang
         return $langParam;
     }
 
+    public function setDefault($default)
+    {
+        $this->defaultLang = $default;
+        return $this;
+    }
+
+    public function getDefault()
+    {
+        return $this->defaultLang;
+    }
+
     public function getAllLangs()
     {
         return $this->getLangsAvailable();
@@ -49,17 +60,28 @@ class Lang
      */
     public function getDateTimeFormat()
     {
-        $config = $this->application->getServiceManager()->get('Config');
-        $lang = $this->getLang();
-        if (isset($config['lang']['date_time_formats'][$lang])) {
-            return $config['lang']['date_time_formats'][$lang];
+        $dateTimeFormats = $this->getDateTimeFormats();
+        if (isset($dateTimeFormats[$this->getLang()])) {
+            return $dateTimeFormats[$this->getLang()];
         }
-        return \DateTime::ISO8601;
+        return $dateTimeFormats[$this->getDefault()];
     }
 
-    public function getStandardDate($value)
+    /**
+     * Return the date time format for the current lang
+     */
+    public function getDateTimeFormats()
     {
-        $format = $this->getDateTimeFormat();
+        $config = $this->application->getServiceManager()->get('Config');
+        $lang = $this->getLang();
+        if (isset($config['lang']['date_time_formats'])) {
+            return $config['lang']['date_time_formats'];
+        }
+        return array($this->getDefault() => \DateTime::ISO8601);
+    }
+
+    protected function getNamedGroupsRegexFromDateFormat($dateFormat)
+    {
         $namedPatterns = array(
             'dd' => '(?P<dd>[0-9]{2})',
             'mm' => '(?P<mm>[0-9]{2})',
@@ -71,15 +93,46 @@ class Lang
             $patterns[] = "/$name/";
             $replacements[] = $replacement;
         }
-        preg_replace($patterns, $replacements, '#'. $format . '#');
-        $regexFormat = '#' . preg_replace($patterns, $replacements, $format) . '#';
+        $regexFormat = '#' . preg_replace($patterns, $replacements, $dateFormat) . '#';
+        return $regexFormat;
+    }
 
-        if (!(0 < preg_match_all($regexFormat, $value, $matches))) {
+    protected function extractDatePartsFromFormat($dateValue, $format)
+    {
+        $regexFormat = $this->getNamedGroupsRegexFromDateFormat($format);
+        if (!(0 < preg_match_all($regexFormat, $dateValue, $matches))) {
             return false;
         }
-        $day = current($matches['dd']);
-        $month = current($matches['mm']);
-        $year = current($matches['yy']);
+        return $matches;
+    }
+
+    protected function tryAllFormatsUntilDatePartsExtractionSucceedsOrFalse($dateValue, $skipCurrentLang=true)
+    {
+        $currentLang = $this->getLang();
+        $dateParts = false;
+        foreach ($this->getDateTimeFormats() as $lang => $format) {
+            if ($skipCurrentLang && $lang === $currentLang) continue;
+            $dateParts = $this->extractDatePartsFromFormat($dateValue, $format);
+            if ($dateParts) break;
+        }
+        return $dateParts;
+    }
+
+    public function getStandardDate($dateValue)
+    {
+        $format = $this->getDateTimeFormat();
+        $dateParts = $this->extractDatePartsFromFormat($dateValue, $format);
+        if (!$dateParts) {
+            $dateParts = $this->tryAllFormatsUntilDatePartsExtractionSucceedsOrFalse($dateValue, $skipCurrentLang=true);
+        }
+
+        if (!$dateParts) {
+            return false;
+        }
+
+        $day = current($dateParts['dd']);
+        $month = current($dateParts['mm']);
+        $year = current($dateParts['yy']);
 
         $isoDate = "$year-$month-$day";
         return $isoDate;

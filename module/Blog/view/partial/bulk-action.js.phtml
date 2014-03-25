@@ -16,6 +16,9 @@
     // Add the onclick event listener to the selectAllInput
     // checkbox
     var selectAllInput = document.getElementById('bulk-action-input-all');
+    if (!selectAllInput) {
+        return;
+    }
     if (selectAllInput.addEventListener) {
         selectAllInput.addEventListener('click', bulkSelectAll, false); 
     } else if (selectAllInput.attachEvent)  {

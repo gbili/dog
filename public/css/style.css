@@ -287,29 +287,48 @@ div.gbiliuploader-show-popup-button > a.btn {
 }
 
 /* Image library */
-#media_library ul {
+.brick-wall ul {
     padding-left: 0;
 }
 
-#media_library h5 {
+.brick-wall h4, 
+.brick-wall h5 {
     color: #E0E0E0;
 }
-#media_library li:hover h5 {
+.brick-wall li:hover h4,
+.brick-wall li:hover h5 {
     color: #A0A0A0;
 }
 
-#media_library a.glyphicon {
+.brick-wall .male h4,
+.brick-wall .male h5 {
+    color: #48BDFF;
+}
+.brick-wall li:hover .male h4,
+.brick-wall li:hover .male h5 {
+    color: #2995F0;
+}
+.brick-wall .female h4,
+.brick-wall .female h5 {
+    color: #FF9DE6;
+}
+.brick-wall li:hover .female h4,
+.brick-wall li:hover .female h5 {
+    color: #FF88D2;
+}
+
+.brick-wall a.glyphicon {
     color: #E0E0E0;
 }
 
-#media_library li:hover a.glyphicon {
+.brick-wall li:hover a.glyphicon {
     color: #A0A0A0;
 }
-#media_library li a.glyphicon:hover {
+.brick-wall li a.glyphicon:hover {
     color: #606060;
 }
 
-#media_library .caption p {
+.brick-wall .caption p {
     margin-bottom: 0;
     text-align: right;
 }

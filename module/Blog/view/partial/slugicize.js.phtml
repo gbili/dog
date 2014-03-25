@@ -77,7 +77,7 @@ function slugicize(dirtyString) {
    }
    $slugicizableForm.on('submit', function (e) {
        var $slugicizableInput = $('input[class~="slugicize"]');
-       var $slugInput = $('input[name*="slug"]');
+       var $slugInput = $('input[class~="slugicize_put_slug_here"]');
        slug = slugicize($slugicizableInput.val());
        $slugInput.val(slug);
    });

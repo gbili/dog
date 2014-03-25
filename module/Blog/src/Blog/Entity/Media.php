@@ -47,7 +47,15 @@ class Media implements \User\IsOwnedByInterface
     private $profiles;
 
     /**
-     * The media is linked to these dogs 
+     * Bidirectional - OWNING
+     * All medias
+     * @ORM\ManyToOne(targetEntity="\Dogtore\Entity\Dog", inversedBy="medias")
+     */
+    private $dog;
+
+    /**
+     * Bidirectional - INVERSE
+     * Profile media
      * @ORM\OneToMany(targetEntity="\Dogtore\Entity\Dog", mappedBy="media", cascade={"persist"})
      */
     private $dogs;
@@ -116,6 +124,16 @@ class Media implements \User\IsOwnedByInterface
     public function getUser()
     {
         return $this->user;
+    }
+
+    public function setDog(\Dogtore\Entity\Dog $dog=null)
+    {
+        $this->dog = $dog;
+    }
+
+    public function getDog()
+    {
+        return $this->dog;
     }
 
     public function getUri()

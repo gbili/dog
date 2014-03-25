@@ -20,9 +20,9 @@ class PostLabelsGenerator extends \Zend\View\Helper\AbstractHelper
     public function __invoke(array $post)
     {
         $dataToCssConvertiblePostKeys = array(
-            'parent_post_count'  => 'parent_lvl1_category_slug', //i=0
-            'child_post_count'   => 'child_lvl1_category_slug',  //i=1
-            'lvl1_category_name' => 'lvl1_category_slug',        //i=2
+            'parent_post_count'  => 'parent_post_category_slug', //i=0
+            'child_post_count'   => 'child_post_category_slug',  //i=1
+            'post_category_name' => 'post_category_slug',        //i=2
         );
 
         $labels = array();

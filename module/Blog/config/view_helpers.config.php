@@ -29,5 +29,11 @@ return array(
             $navHelper->setServiceLocator($sm);
             return $navHelper;
         },
+        'colors'        => function ($viewHelperPluginManager) {
+            $sm = $viewHelperPluginManager->getServiceLocator();
+            $helper = new View\Helper\Colors;
+            $helper->setColorFilter(new ColorFilter);
+            return $helper;
+        },
     ),
 );

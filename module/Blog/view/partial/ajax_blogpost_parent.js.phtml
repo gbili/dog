@@ -1,0 +1,52 @@
+<?php $this->scriptalicious()->addSrc('jQuery', '/js/jquery-ui-1.10.4.custom.min.js') ?>
+<?php $this->scriptalicious()->addSrc('jQueryAutocomplete', '/js/jquery.autocomplete.js') 
+                             ->addDependency('jQueryAutocomplete', 'jQuery') ?>
+
+<style type="text/css">
+.autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+.autocomplete-selected { background: #F0F0F0; }
+.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+</style>
+
+<?php ob_start() ?>
+<script type="text/javascript">
+(function () {
+    var $category = $('input[name="post[category]"]');
+    var $parentSlugInput =  $('#autocomplete_parent_slug');
+    var checkedCategoryId;
+
+    function getCheckedCategoryId() {
+        var key = 0;
+        var catsCount = $category.length;
+        while (key < catsCount) {
+            if($category[key].checked) {
+                return $category[key].value;
+            }
+            ++key;
+        }
+    }
+
+    $category.on('click', function (e) {
+        checkedCategoryId = getCheckedCategoryId();
+        console.log(checkedCategoryId);
+        $parentSlugInput.parent().parent().removeClass('hide');
+    });
+
+    $parentSlugInput.autocomplete({
+        serviceUrl: function () {
+            var route = '<?= $this->url('scs_scs_ajax_search_posts_relatable_to_categorized_post_as_parent_route', array(), true) ?>';
+            return route + checkedCategoryId + '/';
+        },
+        onSelect: function (suggestion) {
+            var $parentInput = $('input[name="post[parent]"]');
+            $parentInput.val(suggestion.post_id);
+        },
+        type: 'GET',
+        minChars: 4,
+   });
+})();
+</script>
+<?php $slugicize = ob_get_clean() ?>
+<?php $this->scriptalicious()->addInline('init_jquery_autocomplete', $slugicize)
+                             ->addDependency('init_jquery_autocomplete', 'jQueryAutocomplete') ?>

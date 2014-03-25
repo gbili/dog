@@ -99,7 +99,7 @@ implements \Zend\InputFilter\InputFilterProviderInterface
                         'options' => array(
                             'encoding' => 'UTF-8',
                             'min'      => 1,
-                            'max'      => 255,
+                            'max'      => 64,
                         ),
                     ),
                 ),

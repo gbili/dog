@@ -137,4 +137,6 @@ return array (
   'My Account' => 'Mon Compte',
   'Add Category' => '',
   '---' => '',
+  'You have one dog' => '',
+  '. Her name is: ' => '',
 );

@@ -6,20 +6,20 @@ class Dog extends \Gbili\Db\Req\AbstractReq
     public function loadKeyedFields()
     {
         return array(
-                'user_uniquename' => 'u.uniquename',
+            'user_uniquename' => 'u.uniquename',
+            'user_id' =>'d.user_id',
+            'dog_id' => 'd.id',
+            'dog_name' => 'd.name',
+            'dog_locale' => 'd.locale',
+            'dog_breed' => 'd.breed',
+            'dog_color' => 'd.color',
+            'dog_gender' => 'd.gender',
+            'dog_weightkg' => 'd.weightkg',
+            'dog_birthdate' => 'd.birthdate',
+            'dog_whythisdog' => 'd.whythisdog',
 
-                'user_id' => 'd.user_id',
-                'dog_name' => 'd.name',
-                'dog_locale' => 'd.locale', 
-                'dog_breed' => 'd.breed', 
-                'dog_color' => 'd.color', 
-                'dog_gender' => 'd.gender', 
-                'dog_weightkg' => 'd.weightkg', 
-                'dog_birthdate' => 'd.birthdate', 
-                'dog_whythisdog' => 'd.whythisdog',
-
-                'media_alt' => 'mm.alt',
-                'media_src' => 'concat(m.publicdir, "/", m.slug)',
+            'media_alt' => 'mm.alt',
+            'media_src' => 'concat(m.publicdir, "/", m.slug)',
         );
     }
 

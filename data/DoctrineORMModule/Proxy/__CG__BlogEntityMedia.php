@@ -64,10 +64,10 @@ class Media extends \Blog\Entity\Media implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'id', 'user', 'slug', 'publicdir', 'posts', 'profiles', 'dogs', 'metadatas', 'file', 'width', 'height', 'csspercent', 'date');
+            return array('__isInitialized__', 'id', 'user', 'slug', 'publicdir', 'posts', 'profiles', 'dog', 'dogs', 'metadatas', 'file', 'width', 'height', 'csspercent', 'date');
         }
 
-        return array('__isInitialized__', 'id', 'user', 'slug', 'publicdir', 'posts', 'profiles', 'dogs', 'metadatas', 'file', 'width', 'height', 'csspercent', 'date');
+        return array('__isInitialized__', 'id', 'user', 'slug', 'publicdir', 'posts', 'profiles', 'dog', 'dogs', 'metadatas', 'file', 'width', 'height', 'csspercent', 'date');
     }
 
     /**
@@ -230,6 +230,28 @@ class Media extends \Blog\Entity\Media implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getUser', array());
 
         return parent::getUser();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setDog(\Dogtore\Entity\Dog $dog = NULL)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setDog', array($dog));
+
+        return parent::setDog($dog);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDog()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getDog', array());
+
+        return parent::getDog();
     }
 
     /**

@@ -74,6 +74,9 @@ class Category extends \Zend\Form\Fieldset
         $this->add(array(
             'name' => 'slug',
             'type'  => 'Zend\Form\Element\Hidden',
+            'attributes' => array(
+                'class' => 'slugicize_put_slug_here',
+            ),
         ));
 
         $this->add(array(

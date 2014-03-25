@@ -38,7 +38,7 @@ class Profile implements ProfileInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="\Blog\Entity\Media", inversedBy="profiles")
-     * @ORM\JoinColumn(name="media_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="media_id", referencedColumnName="id")
      */
     private $media;
 

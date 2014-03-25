@@ -41,26 +41,26 @@
         </nav>
         <div class="container">
             <div class="row">
-                    <?php $sm=12;$md=12;$lg=12;?>
-                    <?php $groupedContainers = array('side_1', 'side_2', 'side_3') ?>
-                    <?php if ($this->conditionalNavigation()->isMatchedRouteContained($groupedContainers)) :?>
-                        <!-- Side nav -->
-                        <div class="col-sm-12 col-md-3 col-lg-2">
-                            <?= $this->renderNavigation($groupedContainers, 'partial/sidenav.phtml') ?>
-                        </div>
-                        <?php $sm=12;$md=9;$lg=9;?>
-                    <?php endif ?>
-                    <div class="col-sm-<?=$sm?> col-md-<?=$md?> col-lg-<?=$lg?>">
-                        <?= $this->renderNavigation(array('navigation' => 'default'), 'partial/breadcrumbs.phtml') ?>
-                        <div class="row">
-                            <div class="col-sm-1 col-md-2 col-lg-2"></div>
-                            <div class="col-sm-10 col-md-8 col-lg-8">
-                                <div id="messages">
-                                   <?= $this->notify()->renderAll() ?>
-                                </div>
+                <?php $sm=12;$md=12;$lg=12;?>
+                <?php $groupedContainers = array('side_1', 'side_2', 'side_3') ?>
+            <?php if ($this->conditionalNavigation()->isMatchedRouteContained($groupedContainers)) :?>
+                <!-- Side nav -->
+                <div id="sidenav" class="col-sm-12 col-md-3 col-lg-2">
+                    <?= $this->renderNavigation($groupedContainers, 'partial/sidenav.phtml') ?>
+                </div>
+                <?php $sm=12;$md=9;$lg=9;?>
+            <?php endif ?>
+                <div id="content" class="col-sm-<?=$sm?> col-md-<?=$md?> col-lg-<?=$lg?>">
+                    <?= $this->renderNavigation(array('navigation' => 'default'), 'partial/breadcrumbs.phtml') ?>
+                    <div class="row">
+                        <div class="col-sm-1 col-md-2 col-lg-2"></div>
+                        <div class="col-sm-10 col-md-8 col-lg-8">
+                            <div id="messages">
+                               <?= $this->notify()->renderAll() ?>
                             </div>
-                            <div class="col-sm-1 col-md-2 col-lg-2"></div>
                         </div>
+                        <div class="col-sm-1 col-md-2 col-lg-2"></div>
+                    </div>
                     <?= $this->content; ?>
                 </div> 
             </div><!-- end row -->

@@ -71,8 +71,6 @@ class PostController extends \Zend\Mvc\Controller\AbstractActionController
         $em->flush();
     }
 
-
-
     /**
      * Edit action
      *
@@ -81,8 +79,14 @@ class PostController extends \Zend\Mvc\Controller\AbstractActionController
     {
         $em           = $this->em();
         $blogPost     = $this->getEntityFromParamIdOrNew();
+
         $combinedForm = new \Blog\Form\PostEditor($this->getServiceLocator());
         $combinedForm->bind($blogPost);
+
+        if ($blogPost->hasParent()) {
+            $combinedForm->get('post')->get('parent')->setValue($blogPost->getParent()->getId());
+            $combinedForm->get('post_parent')->get('slug')->setValue($blogPost->getParent()->getSlug());
+        }
 
         if (!$this->request->isPost()) {
             return new \Zend\View\Model\ViewModel(array(
@@ -102,6 +106,8 @@ class PostController extends \Zend\Mvc\Controller\AbstractActionController
                 'entityId' => $blogPost->getId(),
             ));
         }
+
+        $this->throwIfPostParentChildRelationsIsNotCompliant($blogPost);
 
         $blogPostData = $blogPost->getData();
         $blogPostData->setDate(new \DateTime());
@@ -130,6 +136,22 @@ class PostController extends \Zend\Mvc\Controller\AbstractActionController
         $em->flush();
 
         return $this->redirect()->toRoute(null, array('controller' => 'blog_post_controller', 'action' => 'index', 'id' => null), true);
+    }
+
+    public function throwIfPostParentChildRelationsIsNotCompliant($post)
+    {
+        if (!$post->hasParent()) {
+            return;
+        }
+
+        $scs = $this->getServiceLocator()->get('scs');
+
+        if (!$scs->isAllowedParent(
+            $post->getParent()->getCategoryslug(), 
+            $post->getCategoryslug()
+        )) {
+            throw new \Exception('Cannot set parent with this category');
+        }
     }
 
     /**
@@ -213,6 +235,7 @@ class PostController extends \Zend\Mvc\Controller\AbstractActionController
     public function deleteEntity($post)
     {
         $em = $this->em();
+
         $postData = $post->getData();
         $postData->removePost($post);
 

@@ -35,6 +35,9 @@ class Proxy extends \DoctrineModule\Form\Element\Proxy
     protected $metadata;
 
     /**
+     * This will set the attribute value by calling
+     * the property getter on the valueOption represented
+     * object
      *
      * When passing: array(
      *      'attributes' => array(
@@ -47,6 +50,12 @@ class Proxy extends \DoctrineModule\Form\Element\Proxy
      */
     protected $attributes;
 
+    /**
+     * This will inject the the label_attribute
+     * into each option
+     */
+    protected $labelAttributes;
+
     public function setOptions($options)
     {
         parent::setOptions($options);
@@ -54,6 +63,21 @@ class Proxy extends \DoctrineModule\Form\Element\Proxy
         if (isset($options['attributes'])) {
             $this->setAttributes($options['attributes']);
         }
+        if (isset($options['value_option_label_attributes'])) {
+            $this->setLabelAttributes($options['value_option_label_attributes']);
+        }
+    }
+
+    protected function setLabelAttributes($labelAttributes)
+    {
+        $this->labelAttributes = $labelAttributes;
+        return $this;
+    }
+
+    protected function pushLabelAttributes($option)
+    {
+        $option['label_attributes'] = $this->labelAttributes;
+        return $option;
     }
 
     protected function setAttributes(array $attributes)
@@ -121,6 +145,9 @@ class Proxy extends \DoctrineModule\Form\Element\Proxy
 
                 if (null !== $this->attributes) {
                     $option = $this->pushAttributes($object, $option);
+                }
+                if (null !== $this->labelAttributes) {
+                    $option = $this->pushLabelAttributes($option);
                 }
 
                 $options[] = $option;

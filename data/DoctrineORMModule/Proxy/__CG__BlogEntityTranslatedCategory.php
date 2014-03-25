@@ -209,7 +209,7 @@ class TranslatedCategory extends \Blog\Entity\TranslatedCategory implements \Doc
     /**
      * {@inheritDoc}
      */
-    public function removeTranslation(\Blog\Entity\Post $translation)
+    public function removeTranslation(\Blog\Entity\Category $translation)
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeTranslation', array($translation));

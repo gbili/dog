@@ -1,20 +1,65 @@
 <?php 
-$title = 'Edit your dog\'s profile';
+$title = 'Add a dog to your pack';
 $this->headTitle($title);
 ?>
 <?php $this->notify(((isset($messages))? $messages : array())) ?>
-<div class="row">
+
+<header class="row">
     <div class="col-sm-0 col-md-2 col-lg-3"></div>
     <div class="col-sm-12 col-md-8 col-lg-6">
-        <h1><?= $this->escapeHtml($title) ?></h1>
+        <h3><?= $this->escapeHtml($this->translate($title)) ?></h3>
     </div>
     <div class="col-sm-0 col-md-2 col-lg-3"></div>
-</div>
+</header>
+<?php $this->formActionPrepare($form) ?>
+<?= $this->form()->openTag($form)?>
+<?php
+    $elements       = $this->elementsFlatArray($form);
+    $elementsNotRenderedExplicitely = array_diff_key($elements, array_flip(array('dog[name]', 'dog[birthdate]', 'dog[gender]', 'dog[breed]', 'dog[color]', 'dog[weightkg]', 'dog[profilemedia]',))); 
+?>
 <div class="row">
-    <div class="col-sm-0 col-md-2 col-lg-3"></div>
-    <div class="col-sm-12 col-md-8 col-lg-6">
-        <?php $this->formActionPrepare($form) ?>
-        <?= $this->renderForm($form) ?>
+    <div class="col-sm-6 col-md-6 col-lg-6">
+        <div class="row profilemedia">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <?= $this->renderElement($elements['dog[profilemedia]']) ?>
+            </div>
+        </div>
     </div>
-    <div class="col-sm-0 col-md-2 col-lg-3"></div>
+    <div class="col-sm-6 col-md-6 col-lg-6">
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <?= $this->renderElement($elements['dog[name]']) ?>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 col-md-7 col-lg-8">
+                <?= $this->renderElement($elements['dog[birthdate]']) ?>
+            </div>
+            <div class="col-sm-6 col-md-5 col-lg-4">
+                <?= $this->renderElement($elements['dog[gender]']) ?>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <?= $this->renderElement($elements['dog[breed]']) ?>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <?= $this->renderElement($elements['dog[color]']) ?>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <?= $this->renderElement($elements['dog[weightkg]']) ?>
+            </div>
+        </div>
+        <?php foreach ($elementsNotRenderedExplicitely as $element) : ?>
+            <?= $this->renderElement($element) ?>
+        <?php endforeach ?>
+    </div>
 </div>
+<?= $this->form()->closeTag() ?>
+
+<?= $this->uploader()?>
+
+<?php require_once realpath(__DIR__ . '/../../partial') . '/init_modernizr_colpick.js.phtml'?>
+<?php require_once realpath(__DIR__ . '/../../partial') . '/jquerydatepicker_modernizr.js.phtml'?>

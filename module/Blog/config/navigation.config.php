@@ -19,7 +19,7 @@ return array(
                 'post_create' => array(
                     'label' => 'New Post',
                     'route' => 'blog_post_route',
-                    'iconClass' => 'glyphicon glyphicon-pencil',
+                    'iconClass' => 'glyphicon glyphicon-plus',
                     'action' => 'create',
                 ),
             ),
@@ -45,7 +45,7 @@ return array(
             'action' => 'index',
             'pages' => array(
                 'media_upload' => array(
-                    'label' => 'Add New Media',
+                    'label' => 'Upload Media',
                     //contorller
                     'route' => 'blog_media_route',
                     'iconClass' => 'glyphicon glyphicon-upload',

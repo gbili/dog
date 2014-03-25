@@ -64,10 +64,10 @@ class Post extends \Blog\Entity\Post implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'id', 'slug', 'locale', 'translated', 'data', 'category', 'user', 'lft', 'lvl', 'rgt', 'root', 'parent', 'children');
+            return array('__isInitialized__', 'id', 'slug', 'uniqueslug', 'locale', 'translated', 'data', 'categoryslug', 'user', 'lft', 'lvl', 'rgt', 'root', 'parent', 'children');
         }
 
-        return array('__isInitialized__', 'id', 'slug', 'locale', 'translated', 'data', 'category', 'user', 'lft', 'lvl', 'rgt', 'root', 'parent', 'children');
+        return array('__isInitialized__', 'id', 'slug', 'uniqueslug', 'locale', 'translated', 'data', 'categoryslug', 'user', 'lft', 'lvl', 'rgt', 'root', 'parent', 'children');
     }
 
     /**
@@ -176,6 +176,17 @@ class Post extends \Blog\Entity\Post implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
+    public function hasId()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'hasId', array());
+
+        return parent::hasId();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getId()
     {
         if ($this->__isInitialized__ === false) {
@@ -224,6 +235,28 @@ class Post extends \Blog\Entity\Post implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
+    public function setUniqueslug($uniqueslug)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setUniqueslug', array($uniqueslug));
+
+        return parent::setUniqueslug($uniqueslug);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getUniqueslug()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getUniqueslug', array());
+
+        return parent::getUniqueslug();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function setData(\Blog\Entity\PostData $postData = NULL)
     {
 
@@ -257,23 +290,23 @@ class Post extends \Blog\Entity\Post implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function setCategory(\Blog\Entity\Category $category)
+    public function setCategoryslug($slug)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setCategory', array($category));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setCategoryslug', array($slug));
 
-        return parent::setCategory($category);
+        return parent::setCategoryslug($slug);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getCategory()
+    public function getCategoryslug()
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCategory', array());
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCategoryslug', array());
 
-        return parent::getCategory();
+        return parent::getCategoryslug();
     }
 
     /**
@@ -290,12 +323,34 @@ class Post extends \Blog\Entity\Post implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
+    public function hasParent()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'hasParent', array());
+
+        return parent::hasParent();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getParent()
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getParent', array());
 
         return parent::getParent();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function unsetParent()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'unsetParent', array());
+
+        return parent::unsetParent();
     }
 
     /**
@@ -329,6 +384,17 @@ class Post extends \Blog\Entity\Post implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getChildren', array());
 
         return parent::getChildren();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function hasChildren()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'hasChildren', array());
+
+        return parent::hasChildren();
     }
 
     /**
@@ -373,6 +439,17 @@ class Post extends \Blog\Entity\Post implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeChildren', array($children));
 
         return parent::removeChildren($children);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeAllChildren()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeAllChildren', array());
+
+        return parent::removeAllChildren();
     }
 
     /**
@@ -472,6 +549,17 @@ class Post extends \Blog\Entity\Post implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'reuseLocales', array($one, $other));
 
         return parent::reuseLocales($one, $other);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function untideDependencies()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'untideDependencies', array());
+
+        return parent::untideDependencies();
     }
 
 }

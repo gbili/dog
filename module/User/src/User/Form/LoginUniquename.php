@@ -1,7 +1,7 @@
 <?php
 namespace User\Form;
 
-class LoginUniquename extends \Zend\Form\Form 
+class Uniquename extends \Zend\Form\Form 
 {
     public function __construct($name = null)
     {
@@ -19,7 +19,7 @@ class LoginUniquename extends \Zend\Form\Form
             'name' => 'submit',
             'attributes' => array(
                 'type'  => 'submit',
-                'value' => 'Login',
+                'value' => 'TestUniquename',
                 'id'    => 'submitbutton',
                 'class' => 'btn btn-default', 
             ),

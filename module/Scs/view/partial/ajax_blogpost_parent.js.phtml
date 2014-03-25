@@ -1,0 +1,90 @@
+<?php $this->scriptalicious()->addSrc('jQuery', '/js/jquery-ui-1.10.4.custom.min.js') ?>
+<?php $this->scriptalicious()->addSrc('jQueryAutocomplete', '/js/jquery.autocomplete.js') 
+                             ->addDependency('jQueryAutocomplete', 'jQuery') ?>
+
+<style type="text/css">
+.autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+.autocomplete-selected { background: #F0F0F0; }
+.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+</style>
+
+<?php ob_start() ?>
+<script type="text/javascript">
+(function () {
+    var $category = $('input[name="post[categoryslug]"]');
+    var $parentInput = $('input[name="post[parent]"]');
+    var $parentSlugInput = $('#autocomplete_parent_slug');
+    var $parentSlugInputOuterContainer = $parentSlugInput.parent().parent();
+    var parentSlugInputLastValue =  $parentSlugInput[0].value;
+    var checkedCategorySlug = getCheckedCategorySlug();
+    var scsTranslatedToCategories = <?= json_encode($this->scs()->getTranslatedToCategories()) ?>;
+    var scsAllowedParents = <?= json_encode($this->scs()->getAllowedParents()) ?>;
+
+    function getCheckedCategorySlug() {
+        var key = 0;
+        var catsCount = $category.length;
+        while (key < catsCount) {
+            if($category[key].checked) {
+                return $category[key].value;
+            }
+            ++key;
+        }
+        return null;
+    }
+
+    if(parentSlugInputLastValue) {
+        $parentSlugInputOuterContainer.removeClass('hide');
+        $parentSlugInput.parent().parent().addClass('has-success');
+    }
+
+    // Show ajax search box
+    $category.on('click', function (e) {
+        //change of category slug
+        var previouslyCheckedCategorySlug = checkedCategorySlug;
+        checkedCategorySlug = getCheckedCategorySlug();
+        if (previouslyCheckedCategorySlug !== checkedCategorySlug) {
+            $parentInput.val('');
+            $parentSlugInput.val('');
+            $parentSlugInput[0].removeAttribute('disabled', '');
+            $parentSlugInput.parent().parent().removeClass('has-success');
+        }
+        // Restrict parenting
+        if (scsAllowedParents[checkedCategorySlug].length == 0) {
+            $parentSlugInputOuterContainer.addClass("hide");
+            return;
+        }
+        $parentSlugInputOuterContainer.removeClass('hide');
+    });
+
+    $parentSlugInput.autocomplete({
+        noCache: false,
+        serviceUrl: function () {
+            var route = '<?= $this->url('scs_scs_ajax_search_posts_relatable_to_categorized_post_as_parent_route', array(), true) ?>';
+            return route + checkedCategorySlug + '/';
+        },
+        onSearchStart: function (query) {
+            var doQuery = (parentSlugInputLastValue !== query.query);
+            if (!doQuery) {
+                $parentSlugInput.parent().parent().addClass('has-success');
+                return false;
+            }
+            return true;
+        },
+        onSelect: function (suggestion) {
+            $parentInput.val(suggestion.post_id);
+            parentSlugInputLastValue = suggestion.value;
+            // Disable parent slug input
+            $parentSlugInput.parent().parent().addClass('has-success');
+        },
+        onInvalidateSelection: function () {
+            $parentSlugInput.parent().parent().removeClass('has-success');
+        },
+        type: 'GET',
+        minChars: 4,
+   });
+})();
+</script>
+<?php $slugicize = ob_get_clean() ?>
+<?php $this->scriptalicious()->addInline('init_jquery_autocomplete_parent_scs', $slugicize)
+                             ->addDependency('init_jquery_autocomplete_parent_scs', 'jQueryAutocomplete') ?>

@@ -24,4 +24,5 @@ return array (
   'Files' => '',
   'Upload Files' => '',
   'Translations' => '',
+  'Upload Media' => '',
 );

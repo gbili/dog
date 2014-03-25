@@ -50,8 +50,9 @@ class ScsController extends \Zend\Mvc\Controller\AbstractActionController
         $method = (('children' === $relation)? 'getChildrenDoggies' : 'getParentDoggy');
         $posts = $this->$method($postSlug);
 
+        $messages = array();
         if (empty($posts)) {
-            $messages = array('warning' => $this->messages[self::MESSAGE_NO_RELATED_POSTS]);
+            $messages[] = array('warning' => $this->messages[self::MESSAGE_NO_RELATED_POSTS]);
         }
 
         $viewVars = array('form', 'posts', 'messages');
@@ -59,36 +60,37 @@ class ScsController extends \Zend\Mvc\Controller\AbstractActionController
         return new \Zend\View\Model\ViewModel(compact($viewVars));
     }
 
+    public function ajaxSearchPostsAllowedToBeRelatedToCategorizedPostAsChildrenAction()
+    {
+        if (!$this->request->isGet()) {
+            return; //only get requests
+        }
+        $httpQuery = $this->request->getQuery();
+        die(var_dump($httpQuery));
+    }
+
+    public function ajaxSearchPostsAllowedToBeRelatedToCategorizedPostAsParentAction()
+    {
+        if (!$this->request->isGet()) {
+            return; //only get requests
+        }
+        $httpQuery = $this->request->getQuery();
+        $categorySlug = $this->params()->fromRoute('category_slug');
+
+        $sm = $this->getServiceLocator();
+        $contains = $httpQuery['query'];
+        $allowedParentCategories = $sm->get('scs')->getAllowedParents($categorySlug);
+        $req = new \Scs\Req\Scs();
+        $allowedParentPosts = $req->getPostsByLocaleInCategoriesLikeQuery($this->lang(), $allowedParentCategories, $contains);
+        return new \Zend\View\Model\JsonModel(array(
+            'suggestions' => $allowedParentPosts,
+            'query' => $contains,
+        ));
+    }
+
     public function getSearchFormCopy()
     {
         return new \Scs\Form\Search('search-posts');
-    }
-
-    /**
-     *
-     * Ajax search
-     */
-    protected function ajaxsearchAction()
-    {
-        $request = $this->getRequest();
-        $response = $this->getResponse();
-
-        if (!$request->isPost()) {
-            return $response;
-        }
-
-        $postData = $request->getPost();
-        $searchTerm = $postData['search_term'];
-        
-        //Category not used currently
-        $category = $postData['category'];
-
-        $posts = $this->em()->getRepository('Blog\Entity\Post')->findByTitle($searchTerm);
-
-        $responseContent = ((empty($posts))? array('response' => false) : array('response' => true, 'posts' => $posts));
-        $response->setContent(\Zend\Json\Json::encode($responseContent));
-        
-        return $response;
     }
 
     /**

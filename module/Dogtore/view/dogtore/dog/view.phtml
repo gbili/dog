@@ -1,34 +1,58 @@
-<?php foreach ($dogs as $dog) : ?>
-<div class="row">
-    <div class="col-sm-4 col-md-4 col-4">
-        <?php $patterns = array(':dogname')?>
-        <?php $replacements = array($dog['dog_name'])?>
-        <h1><?= $this->patternTranslate($patterns, $replacements, "Woff!! I'm :dogname") ?></h1>
-    </div>
-    <div class="col-sm-4 col-md-4 col-4">
-    </div>
-    <div class="col-sm-4 col-md-4 col-4">
-    </div>
-</div>
+<?php $this->notify(((isset($messages))? $messages : array())) ?>
 <div class="row">
     <div class="col-sm-1 col-md-2 col-lg-2"></div>
-    <div class="col-sm-4 col-md-3 col-lg-3">
-        <img src="<?= $dog['media_src']?>" alt="<?= $dog['media_alt']?>"/>
-    </div>
-    <div class="col-sm-6 col-md-5 col-lg-5" style="background:red;">
-    <h3><?= $this->translate('Dog Info') ?></h3>
-        <ul>
-            <li><?= $this->translate('Weight Kg') ?>: <strong><?= $dog['dog_weightkg'] ?></strong></li>
-            <li><?= $this->translate('Gender') ?>: <strong><?= $this->translate((('f' === $dog['dog_gender'])? 'Female': 'Male')) ?></strong></li>
-            <li><?= $this->translate('Breed') ?>: <strong><?= $dog['dog_breed'] ?></strong></li>
-            <li><?= $this->translate('Color') ?>: <strong><?= $dog['dog_color'] ?></strong></li>
-            <li><?= $this->translate('Born in') ?>: <strong><?= $dog['dog_birthdate'] ?></strong></li>
-        </ul>
-        <?php $patterns = array(':user', ':dog') ?>
-        <?php $replacements = array($dog['user_uniquename'], $dog['dog_name']) ?>
-        <h3><?= $this->patternTranslate($patterns, $replacements, ":user chose :dog over any other dog because") ?></h3>
-        <p><?= $dog['dog_whythisdog'] ?></p>
+    <div class="col-sm-10 col-md-8 col-lg-8">
+        <header class="row">
+            <div class="col-sm-8 col-md-8 col-8">
+                <?php $patterns = array(':dogname')?>
+                <?php $replacements = array($dog['dog_name'])?>
+                <h3><?= $this->patternTranslate($patterns, $replacements, "Woff!! I'm :dogname") ?></h3>
+            </div>
+            <div class="col-sm-4 col-md-4 col-4">
+            </div>
+        </header>
+        <div class="row">
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-3">
+                <img class="img-responsive img-rounded" src="<?= $dog['media_src']?>" alt="<?= $dog['media_alt']?>"/>
+            </div>
+            <div class="col-xs-8 col-sm-8 col-md-8 col-lg-9">
+<?php $shadowColor = $this->colors()->brightenByPercent($dog['dog_color'], 20)->toString() ?>
+<?php $borderColor = $this->colors()->darkenByPercent($dog['dog_color'], 10)->toString() ?>
+<?php $textColor = $this->colors()->readableTextover($dog['dog_color'], $onAverageBrighten=true)->toString() ?>
+<div class="panel" style="border-color: #<?= $borderColor ?>;">
+                    <div class="panel-heading" style="color: #<?= $textColor ?>;background-image: linear-gradient(to bottom, #<?= $dog['dog_color'] ?> 0px, #<?= $shadowColor ?> 100%); backgroud-repeat: repeat-x;"><?= $this->translate('Info')?></div>
+                    <ul class="list-group">
+                        <li class="list-group-item"><?= $this->translate('Weight') ?>: <strong><?= $this->patternTranslate(array(':n'), array($dog['dog_weightkg']), ':n Kg') ?></strong></li>
+                        <li class="list-group-item"><?= $this->translate('Gender') ?>: <strong><?= $this->translate((('f' === $dog['dog_gender'])? 'Female': 'Male')) ?></strong></li>
+                        <li class="list-group-item"><?= $this->translate('Breed') ?>: <strong><?= $dog['dog_breed'] ?></strong></li>
+                        <li class="list-group-item"><?= $this->translate('Born in') ?>: <strong><?= $dog['dog_birthdate'] ?></strong></li>
+                    </ul>
+                    <?php $userProfileUrl       = $this->url('profile_publicly_available', array('uniquename' => $dog['user_uniquename'],), true); ?>
+                    <?php $userProfileLinkTitle =  $this->patternTranslate(array(':user'), array($dog['user_uniquename']), 'View :user\'s Profile'); ?>
+                    <?php $userProfileLink      = "<a href=\"$userProfileUrl\" title=\"{$userProfileLinkTitle}\">{$dog['user_uniquename']}</a>" ?>
+                    <?php $dogname              = "<strong>{$dog['dog_name']}</strong>"?>
+                    <?php $patterns = array(':owner', ':dog', ':user_sentence') ?>
+                    <?php $replacements = array($userProfileLink, $dogname, $dog['dog_whythisdog']) ?>
+                    <div class="panel-body"><p><?= $this->patternTranslate($patterns, $replacements, ":owner says: \"I chose :dog because :user_sentence.\"") ?></p></div>
+                </div>
+            </div>
+        </div>
+        <?php $masonryColumnWidth = 180 ?>
+        <div class="brick-wall row">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <ul class="please_masonize_<?= $masonryColumnWidth ?>">
+                <?php foreach($medias as $media) : ?>
+                    <li>
+                        <a href="<?= $this->url('blog_media_view', array('slug' => $media['media_slug']), true) ?>"><img class="img-responsive" src="<?= $this->escapeHtml($media['media_src']);?>"></a>
+                        <div class="caption">
+                             <h5><?= $this->escapeHtml($media['media_slug']);?></h5>
+                        </div><!-- end caption -->
+                   </li><!-- end thumbnail -->
+                <?php endforeach ?>
+                </ul><!--masonize -->
+            </div><!-- end col -->
+         </div><!-- end row -->
+        <?php require_once __DIR__ . '/../../../../Blog/view/partial/init_masonry.js.phtml' ?> 
     </div>
     <div class="col-sm-1 col-md-2 col-lg-2"></div>
 </div>
-<?php endforeach ?>

@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="posts")
  *  use repository for handy tree functions
  * @ORM\Entity(repositoryClass="Blog\Entity\Repository\NestedTreeFlat")
+ * @ORM\HasLifecycleCallbacks
  */
 class Post implements \User\IsOwnedByInterface
 {
@@ -50,10 +51,9 @@ class Post implements \User\IsOwnedByInterface
     private $data;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Category", inversedBy="posts")
-     * @ORM\JoinColumn(name="category_id", referencedColumnName="id")
+     * @ORM\Column(name="category_slug", type="string", length=64)
      */
-    private $category;
+    private $categoryslug;
 
     /**
      * @ORM\ManyToOne(targetEntity="\User\Entity\User", inversedBy="posts")
@@ -101,6 +101,11 @@ class Post implements \User\IsOwnedByInterface
     public function __construct()
     {
         $this->children = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    public function hasId()
+    {
+        return null !== $this->id;
     }
 
     public function getId()
@@ -158,15 +163,14 @@ class Post implements \User\IsOwnedByInterface
         return ((!empty($params))? $this->getData()->$method(current($params)) : $this->getData()->$method());
     }
 
-    public function setCategory(Category $category)
+    public function setCategoryslug($slug)
     {
-        $this->reuseLocales($this, $category);
-        $this->category = $category;
+        $this->categoryslug = $slug;
     }
 
-    public function getCategory()
+    public function getCategoryslug()
     {
-        return $this->category;
+        return $this->categoryslug;
     }
 
     public function setParent(Post $parent = null)
@@ -174,9 +178,23 @@ class Post implements \User\IsOwnedByInterface
         $this->parent = $parent;    
     }
 
+    public function hasParent()
+    {
+        return null !== $this->parent;
+    }
+
     public function getParent()
     {
         return $this->parent;   
+    }
+
+    public function unsetParent()
+    {
+        if (!$this->hasParent()) {
+            return;
+        }
+        $this->parent->getChildren()->removeElement($this);
+        $this->parent = null;
     }
 
     public function setRoot(Post $root = null)
@@ -192,6 +210,11 @@ class Post implements \User\IsOwnedByInterface
     public function getChildren()
     {
         return $this->children;
+    }
+
+    public function hasChildren()
+    {
+        return !$this->children->isEmpty();
     }
 
     public function addChild(Post $child)
@@ -217,6 +240,13 @@ class Post implements \User\IsOwnedByInterface
     public function removeChildren(\Doctrine\Common\Collections\Collection $children)
     {
         foreach ($children as $child) {
+            $this->removeChild($child);
+        }
+    }
+
+    public function removeAllChildren()
+    {
+        foreach ($this->children as $child) {
             $this->removeChild($child);
         }
     }
@@ -280,5 +310,14 @@ class Post implements \User\IsOwnedByInterface
         } else {
             $one->setLocale($other->getLocale());
         }
+    }
+
+    /**
+     * @ORM\PreRemove
+     */
+    public function untideDependencies()
+    {
+        $this->unsetParent();
+        $this->removeAllChildren();
     }
 }

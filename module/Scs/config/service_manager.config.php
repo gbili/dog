@@ -1,13 +1,12 @@
 <?php
-namespace Dogtore;
+namespace Scs;
+
 return array(
     'factories' => array(
-        __NAMESPACE__ . '\Service\Acl' => __NAMESPACE__ . '\Service\AclFactory',
-        __NAMESPACE__ . '\Service\AclGuard' => __NAMESPACE__ . '\Service\AclGuardFactory',
-    ),
-    'aliases' => array(
-        'acl_guard' => __NAMESPACE__ . '\Service\AclGuard',
-        'acl' => __NAMESPACE__ . '\Service\Acl',
+        'scs' => function ($sm) {
+            $service = new Service\Scs($sm);
+            return $service;
+        },
     ),
 );
 

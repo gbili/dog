@@ -14,7 +14,11 @@
 //Date Picker
 if (!Modernizr.inputtypes.date) {
     $(document).ready(function (){
-        $("#datepicker").datepicker({"dateFormat":"<?= $this->dateTimeFormat() ?>"});
+        $("#datepicker").datepicker({
+            dateFormat:"<?= $this->dateTimeFormat() ?>",
+            changeYear:true,
+            yearRange:"-25:+0"
+        });
     });
 }
 //End Color Picker

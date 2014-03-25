@@ -52,8 +52,11 @@ class FormElement extends \Zend\I18n\View\Helper\AbstractTranslatorHelper
 
         $controlsDivClass = $this->getElementOption($element, 'controls_div_class', '');
         $elementOptions   = $element->getOptions();
+
         if ($element instanceof \Zend\Form\Element\Select) {
             $helperMethod = 'renderSelectOptionalTranslation';
+        } else if ($element instanceof \DoctrineModule\Form\Element\ObjectRadio) {
+            $helperMethod = 'renderCustomizableOptionsRadio';
         } else {
             $helperMethod = $this->getElementOption($element, 'helper_method', 'formElement');
         }

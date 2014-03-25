@@ -5,7 +5,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="dogs")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Dogtore\Entity\Repository\Dog")
  */
 class Dog
 {
@@ -29,6 +29,8 @@ class Dog
     private $name;
 
     /**
+     * Bidirectional - OWNING
+     *
      * One dog has one user, One user has Many dogs
      * Owner
      *
@@ -77,6 +79,21 @@ class Dog
     private $birthdate;
 
     /**
+     * Bidirectional - INVERSE
+     *
+     * One dog has Many medias - One Media has One Dog
+     *             ^-----^                      ^---^
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="\Blog\Entity\Media", mappedBy="dog", cascade={"persist"})
+     */
+    private $medias;
+
+    /**
+     * Unidirectional - OWNING 
+     *
+     * One dog has One profilemedia - One porfilemedia has One Dog
+     *
      * @ORM\ManyToOne(targetEntity="\Blog\Entity\Media", inversedBy="dogs")
      * @ORM\JoinColumn(name="media_id", referencedColumnName="id")
      */
@@ -95,6 +112,7 @@ class Dog
      */
     public function __construct()
     {
+        $this->medias = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     public function getId()
@@ -197,6 +215,75 @@ class Dog
     public function hasMedia()
     {
         return $this->media instanceof \Blog\Entity\Media;
+    }
+
+    public function __call($method, $params)
+    {
+        $allowed = array('Media');
+        $allowedPlural = array('Medias');
+
+        $parts = preg_split('/(?=[A-Z])/', $method);
+        $uCFirstWhat = array_pop($parts);
+        $what = strtolower($uCFirstWhat);
+
+        $isSingle = in_array($uCFirstWhat, $allowed);
+        $isPlural = in_array($uCFirstWhat, $allowedPlural);
+
+        if (!$isSingle && !$isPlural) {
+            throw new \Exception('Not implemented');
+        }
+
+        array_push($parts, (($isSingle)? 'Thing':'Things'));
+        $genericMethod = implode('', $parts);
+
+        return call_user_func(array($this, $genericMethod), (($isSingle)? $what . 's' : $what), current($params));
+    }
+
+    public function getThing($what)
+    {
+        return $this->$what;
+    }
+
+    public function getThings($what)
+    {
+        return $this->$what;
+    }
+
+    public function hasthings($what)
+    {
+        return !$this->$what->isEmpty();
+    }
+
+    public function addThing($what, $thing)
+    {
+        $thing->setDog($this);
+        $this->$what->add($thing);
+    }
+
+    public function addThings($what, \Doctrine\Common\Collections\Collection $things)
+    {
+        foreach ($things as $thing) {
+            $this->addThing($what, $thing);
+        }
+    }
+
+    public function removeThing($what, $thing)
+    {
+        $this->$what->removeElement($thing);
+        $thing->setDog(null);
+    }
+
+    public function removeThings($what, \Doctrine\Common\Collections\Collection $things)
+    {
+        foreach ($things as $thing) {
+            $this->removeThing($what, $thing);
+        }
+    }
+
+    public function removeAllThings($what)
+    {
+        $this->removeThings($what, $this->getThings($what));
+        return $this;
     }
 
     /**

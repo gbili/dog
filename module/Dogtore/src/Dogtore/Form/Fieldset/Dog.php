@@ -97,9 +97,9 @@ implements \Zend\InputFilter\InputFilterProviderInterface
             'attributes' => array(
                 'class' => 'form-control',
                 'placeholder' => '10 or 25 etc.',
-                'min' => '1',
+                'min' => '0.1',
                 'max' => '150',
-                'step' => '1',
+                'step' => '0.1',
             )
         ));
 
@@ -112,7 +112,7 @@ implements \Zend\InputFilter\InputFilterProviderInterface
             'attributes' => array(
                 'class' => 'form-control',
                 'rows' => '8',
-                'placeholder' => 'Tell people why you chose your dog. Was it the breed? Was it because of a great story?',
+                'placeholder' => 'Continue this sentence: \'I chose my dog because ...\'',
             )
         ));
 
@@ -132,7 +132,6 @@ implements \Zend\InputFilter\InputFilterProviderInterface
                 'is_method' => true,
                 'target_class' => 'Blog\Entity\Media',
                 'object_manager' => $objectManager,
-                'is_method' => true,
                 'find_method' => array(
                     'name' => 'findBy',
                     'params' => array(
@@ -155,6 +154,20 @@ implements \Zend\InputFilter\InputFilterProviderInterface
                 'required' => false,
                 'filters'  => array(
                     array('name' => 'Int'),
+                ),
+            ),
+
+            'weightkg' => array(
+                'required' => true,
+                'validators'  => array(
+                    array('name' => 'Float'),
+                    array(
+                        'name' => 'Between',
+                        'options' => array(
+                            'min' => 0.1,
+                            'max' => 200,
+                        ),
+                    ),
                 ),
             ),
 
@@ -193,7 +206,7 @@ implements \Zend\InputFilter\InputFilterProviderInterface
                 ),
                 'validators' => array(
                     array(
-                        'name'    => 'Date',
+                        'name' => 'Date',
                     ),
                 ),
             ),
@@ -283,7 +296,7 @@ implements \Zend\InputFilter\InputFilterProviderInterface
                 ),
             ),
 
-            'media' => array(
+            'profilemedia' => array(
                 'required' => false,
             ),
         );

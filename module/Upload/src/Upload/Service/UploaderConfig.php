@@ -33,6 +33,8 @@ class UploaderConfig implements UploaderServiceConfigInterface, UploaderControll
 
     protected $controllerKey;
 
+    protected $controllerAction;
+
     public function __construct(array $config)
     {
         $this->config = $config;
@@ -63,6 +65,20 @@ class UploaderConfig implements UploaderServiceConfigInterface, UploaderControll
         return $this->controllerKey;
     }
 
+    public function setControllerAction($controllerAction)
+    {
+        $this->controllerAction = $controllerAction;
+        return $this;
+    }
+
+    public function getControllerAction()
+    {
+        if (null === $this->controllerAction) {
+            throw new \Exception('Controller action not set, trying to use service before event dispatch?');
+        }
+        return $this->controllerAction;
+    }
+
     public function configureService(\Upload\Service\Uploader $service)
     {
         $actionRouteParams = $this->getConfigValue('service', 'form_action_route_params', false);
@@ -85,7 +101,7 @@ class UploaderConfig implements UploaderServiceConfigInterface, UploaderControll
         $service->setFileInputName($this->getConfigValue('service', 'file_input_name', 'file_input'));
     }
 
-    public function getControllerSpecificConfig()
+    public function getSpecificConfig()
     {
         if (null !== $this->specificConfig) {
             return $this->specificConfig;
@@ -108,6 +124,20 @@ class UploaderConfig implements UploaderServiceConfigInterface, UploaderControll
                 throw new \Exception(sprintf($this->errorMessages[self::ERROR_MISSING_CONFIG_ALIAS], $configKey, $configAlias));
             }
             $this->aliasedConfig  = $config[$configAlias];
+        }
+
+        $controllerAction = $this->getControllerAction();
+        if (isset($specificConfig['action_override'][$controllerAction])) {
+            $actionConfig = $specificConfig['action_override'][$controllerAction];
+            foreach (array('controller_plugin', 'service', 'view_helper') as $what) {
+                if (!isset($actionConfig[$what])) continue;
+                if (!isset($specificConfig[$what])) {
+                    $specificConfig[$what] = array();
+                }
+                foreach ($actionConfig[$what] as $key => $value) {
+                    $specificConfig[$what][$key] = $value;
+                }
+            }
         }
 
         $this->specificConfig = $specificConfig;
@@ -135,7 +165,7 @@ class UploaderConfig implements UploaderServiceConfigInterface, UploaderControll
 
     protected function getConfigValue($for, $key, $default, $throw=false)
     {
-        $config = $this->getControllerSpecificConfig();
+        $config = $this->getSpecificConfig();
         if (isset($config[$for][$key])) {
             $value = $config[$for][$key];
         } else if (isset($this->aliasedConfig[$for][$key])) {

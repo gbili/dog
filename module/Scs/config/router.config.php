@@ -36,6 +36,40 @@ return array(
             'may_terminate' => true,
         ),
 
+        'scs_scs_ajax_search_posts_relatable_to_categorized_post_as_children_route' => array(
+            'type' => 'Zend\Mvc\Router\Http\Segment',
+            'options' => array(
+                'route'    => '/[:lang/]scs/asprtcpac/[:category_slug/]', //first letters
+                'constraints' => array(
+                    'lang' => $preConfig['regex_patterns']['lang'],
+                    'category_slug' => '(?:symptom)|(?:cause)|(?:solution)',
+                ),
+                'defaults' => array(
+                    'lang'          => 'en',
+                    'controller'    => 'scs_scs_controller',
+                    'action'        => 'ajaxSearchPostsAllowedToBeRelatedToCategorizedPostAsChildren',
+                ),
+            ),
+            'may_terminate' => true,
+        ),
+
+        'scs_scs_ajax_search_posts_relatable_to_categorized_post_as_parent_route' => array(
+            'type' => 'Zend\Mvc\Router\Http\Segment',
+            'options' => array(
+                'route'    => '/[:lang/]scs/asprtcpap/[:category_slug/]', //first letters
+                'constraints' => array(
+                    'lang' => $preConfig['regex_patterns']['lang'],
+                    'category_slug' => '(?:symptom)|(?:cause)|(?:solution)',
+                ),
+                'defaults' => array(
+                    'lang'          => 'en',
+                    'controller'    => 'scs_scs_controller',
+                    'action'        => 'ajaxSearchPostsAllowedToBeRelatedToCategorizedPostAsParent',
+                ),
+            ),
+            'may_terminate' => true,
+        ),
+
         /*'scs_scs_search_handy' => array(
             'type' => 'Zend\Mvc\Router\Http\Segment',
             'options' => array(

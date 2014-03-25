@@ -20,8 +20,39 @@ class DogController extends \Zend\Mvc\Controller\AbstractActionController
 
         $dogs = $this->getDogs($uniquename, $dogname);
 
+        if (empty($dogs)) {
+            throw new \Exception('No such dog');
+        }
+
+        $dog = current($dogs);
+
+        $medias = $this->getDogMedias($uniquename, $dogname);
+
         $viewVars = array(
-            'dogs'
+            'dog',
+            'medias'
+        );
+        return new \Zend\View\Model\ViewModel(compact($viewVars));
+    }
+
+    /**
+     * View logged in user's name dog 
+     * :dogname are enforced by route
+     */
+    public function viewmydogAction()
+    {
+        $dogname = $this->routeParamTransform('dogname_underscored')->underscoreToSpace();
+
+        $dogs = $this->repository()->findBy(array('user' => $this->identity(), 'name' => $dogname));
+
+        if (empty($dogs)) {
+            throw new \Exception('No such dog');
+        }
+
+        $dog = current($dogs);
+
+        $viewVars = array(
+            'dog'
         );
         return new \Zend\View\Model\ViewModel(compact($viewVars));
     }
@@ -34,13 +65,33 @@ class DogController extends \Zend\Mvc\Controller\AbstractActionController
         return $this->fileUploader();
     }
 
+    public function uploadmydogmediasAction()
+    {
+        return $this->fileUploader();
+    }
+
     /**
      * Edit uniquename user's dog with name
      * :uniquename and :dogname_underscored are enforced by route
      */
     public function editAction()
     {
-        return $this->editor();
+        return $this->editor($isEditAction=true);
+    }
+
+    /**
+     * Delete action
+     */
+    public function noncedeleteAction()
+    {
+        return $this->actionNonceDelete('dog_list_my_dogs');
+    }
+
+    public function deleteEntity($dog)
+    {
+        $em = $this->em();
+        $em->remove($dog);
+        $em->flush();
     }
 
     /**
@@ -49,7 +100,7 @@ class DogController extends \Zend\Mvc\Controller\AbstractActionController
      */
     public function addAction()
     {
-        return $this->editor();
+        return $this->editor($isEditAction=false);
     }
 
     /**
@@ -78,9 +129,11 @@ class DogController extends \Zend\Mvc\Controller\AbstractActionController
         $user       = $this->identity();
         $dogs       = $this->getDogs($user->getUniquename());
 
+        $messages = $this->messenger()->getMessages();
         $viewVars = array(
             'user', 
             'dogs',
+            'messages',
         );
 
         return new \Zend\View\Model\ViewModel(compact($viewVars));
@@ -92,27 +145,26 @@ class DogController extends \Zend\Mvc\Controller\AbstractActionController
      * if :dogname_underscored is not provided then it creates a new
      * dog to edit
      */
-    public function editor()
+    public function editor($isEditAction)
     {
+        $isAddAction = !$isEditAction;
+
         $dogname = $this->routeParamTransform('dogname_underscored')->underscoreToSpace();
         $user    = $this->identity();
         $em      = $this->em();
         $locale  = $this->locale();
 
-        if ($dogname) {
-            $dogname = preg_replace();
+        if ($isEditAction) {
             $dogs = $em->getRepository('Dogtore\Entity\Dog')->findBy(array('user' => $user, 'name' => $dogname));
-        }
-
-        if (empty($dogs)) {
-            if (false !== $dogname) {
-                $this->messenger()->addMessage('The requested dog does not exist', 'danger');
+            if (empty($dogs)) {
+                $messages = array('danger' => 'The requested dog does not exist');
                 return $this->getResponse()->setStatusCode(404);
             }
-            $dogs = array(new \Dogtore\Entity\Dog());
         }
 
-        $dog = current($dogs);
+        $dog = $isEditAction 
+            ? current($dogs) 
+            : new \Dogtore\Entity\Dog();
 
         $dogForm = new \Dogtore\Form\DogEditor($this->getServiceLocator());
         $dogForm->bind($dog);
@@ -133,6 +185,14 @@ class DogController extends \Zend\Mvc\Controller\AbstractActionController
                 'form' => $dogForm,
                 'firstRendering' => false,
                 'messages' => $this->messenger()->getMessages(),
+            ));
+        }
+
+        if ($isAddAction && $this->repository()->existsUserDogName($user, $dog->getName())) {
+            return new \Zend\View\Model\ViewModel(array(
+                'form' => $dogForm,
+                'firstRendering' => false,
+                'messages' => array('danger' => 'You already have a dog with this name. Please edit your existing dog\'s profile. Or change the name.'),
             ));
         }
 
@@ -164,5 +224,18 @@ class DogController extends \Zend\Mvc\Controller\AbstractActionController
         }
 
         return $req->getDogs(((empty($conditions))? [] : ['and' => $conditions]));
+    }
+
+    protected function getDogMedias($userUniquename, $dogname = null)
+    {
+        $req = new \Dogtore\Req\DogMedias();
+        $conditions = [];
+
+        $conditions[] = array('user_uniquename' => array('=' => $userUniquename));
+        if (null !== $dogname) {
+            $conditions[] = array('dog_name' => array('=' => $dogname));
+        }
+
+        return $req->getMedias(((empty($conditions))? [] : ['and' => $conditions]));
     }
 }

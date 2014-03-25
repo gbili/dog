@@ -44,7 +44,7 @@ class TranslatedCategory
         }
     }
 
-    public function removeTranslation(Post $translation)
+    public function removeTranslation(Category $translation)
     {
         $translation->setTranslated(null);
         $this->translations->removeElement($translation);
