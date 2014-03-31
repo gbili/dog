@@ -1,4 +1,7 @@
 <?php
+if (!isset($_SERVER['RDS_HOSTNAME'])) {
+    return array();
+}
 return array(
     'doctrine' => array(
         'connection' => array(
