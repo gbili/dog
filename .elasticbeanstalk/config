@@ -1,5 +1,5 @@
 [global]
 ApplicationName=dogtore
 DevToolsEndpoint=git.elasticbeanstalk.eu-west-1.amazonaws.com
-EnvironmentName=Default-Env
+EnvironmentName=dogtore
 Region=eu-west-1

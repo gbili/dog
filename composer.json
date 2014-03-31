@@ -16,14 +16,13 @@
     "require": {
         "php": ">=5.3.3",
         "zendframework/zendframework": "dev-master",
-        "doctrine/doctrine-module": "dev-master",
-        "doctrine/doctrine-orm-module": "dev-master",
+        "doctrine/doctrine-module": "0.*",
+        "doctrine/doctrine-orm-module": "0.*",
         "gedmo/doctrine-extensions": "dev-master",
         "gbili/gfw": "dev-master",
         "zf-commons/zfc-user": "dev-master",
         "zf-commons/zfc-user-doctrine-orm":"dev-master",
-        "zendframework/zend-developer-tools": "dev-master",
-        "bjyoungblood/bjy-authorize": "dev-master"
+        "aws/aws-sdk-php":"2.*"
     },
     "autoload": {
         "psr-0": {
