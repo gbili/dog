@@ -21,8 +21,7 @@
         "gedmo/doctrine-extensions": "dev-master",
         "gbili/gfw": "dev-master",
         "zf-commons/zfc-user": "dev-master",
-        "zf-commons/zfc-user-doctrine-orm":"dev-master",
-        "aws/aws-sdk-php":"2.*"
+        "zf-commons/zfc-user-doctrine-orm":"dev-master"
     },
     "autoload": {
         "psr-0": {
