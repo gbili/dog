@@ -7,7 +7,7 @@
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace Blog\View\Helper;
+namespace GbiliViewHelper\View\Helper;
 
 /**
  *
@@ -27,7 +27,7 @@ class ExpressivePregTransform extends \Zend\View\Helper\AbstractHelper
     public function getProxy()
     {
         if (null === $this->proxy) {
-            $this->proxy = new \Blog\Service\ExpressivePregTransform;
+            $this->proxy = new \GbiliViewHelper\Service\ExpressivePregTransform;
         }
         return $this->proxy;
     }

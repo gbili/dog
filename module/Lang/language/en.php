@@ -349,4 +349,5 @@ return array (
   'box-devis-7.jpg' => '',
   'box-ebeniste-8.jpg' => '',
   'CSS3-HTML5.jpg' => '',
+  'ebeniste-8.jpg' => '',
 );

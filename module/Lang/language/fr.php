@@ -156,4 +156,5 @@ return array (
   ':user_sentence' => '',
   ':owner says: "I chose :dog because :user_sentence."' => '',
   'has six dogs' => '',
+  'No posts match your search, care to write one? Someone will be thankful.' => '',
 );

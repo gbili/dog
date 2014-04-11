@@ -103,5 +103,4 @@ class Paginator extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
             'itemsPerPage' => $this->getItemsPerPage(),
         );
     }
-
 }

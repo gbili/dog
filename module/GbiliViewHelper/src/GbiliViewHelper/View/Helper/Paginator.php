@@ -6,7 +6,7 @@
  * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
-namespace Blog\View\Helper;
+namespace GbiliViewHelper\View\Helper;
 
 /**
  * View helper for translating messages.
@@ -36,7 +36,7 @@ class Paginator extends \Zend\View\Helper\AbstractHelper
      */
     public function __invoke($param = null)
     {
-        if ($param instanceof \Blog\Controller\Plugin\Paginator) {
+        if (is_object($param)) {
             $this->setPaginatorPlugin($param);
         }
         return $this;
@@ -67,7 +67,11 @@ class Paginator extends \Zend\View\Helper\AbstractHelper
         return $this->paginatorPlugin;
     }
 
-    public function setPaginatorPlugin(\Blog\Controller\Plugin\Paginator $paginator)
+    /**
+     *
+     * @param $paginator \Blog\Controller\Plugin\Paginator 
+     */
+    public function setPaginatorPlugin($paginator)
     {
         $this->paginatorPlugin = $paginator;
         return $this;

@@ -6,19 +6,26 @@
  * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
-namespace Blog\View\Helper;
+namespace GbiliViewHelper\View\Helper;
 
 /**
  * View helper for translating messages.
  */
-class NlToBr extends \Zend\View\Helper\AbstractHelper
+class RegisterScript extends \Zend\View\Helper\AbstractHelper
 {
+    protected $scriptalicious;
+
+    public function __construct()
+    {
+        $this->scriptalicious = new \Gbili\Stdlib\Scriptalicious;
+    }
+
     /**
      * Translate a message
      * @return string
      */
-    public function __invoke($description)
+    public function __invoke()
     {
-        return preg_replace("/\r\n|\r|\n/",'<br/>', $description);
+        return $this->scriptalicious;
     }
 }

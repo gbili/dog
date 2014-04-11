@@ -304,4 +304,5 @@ return array (
   'box-ebeniste-8.jpg' => '',
   'CSS3-HTML5.jpg' => '',
   'dock-avec-espaces-mac-os-x.jpg' => '',
+  'ebeniste-8.jpg' => '',
 );

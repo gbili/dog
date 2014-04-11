@@ -6,19 +6,14 @@
  * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
-namespace Blog\View\Helper;
+namespace GbiliViewHelper\View\Helper;
 
 /**
  * View helper for translating messages.
  */
-class RegisterScript extends \Zend\View\Helper\AbstractHelper
+class Colors extends \Zend\View\Helper\AbstractHelper
 {
-    protected $scriptalicious;
-
-    public function __construct()
-    {
-        $this->scriptalicious = new \Gbili\Stdlib\Scriptalicious;
-    }
+    protected $colorFilter;
 
     /**
      * Translate a message
@@ -26,6 +21,12 @@ class RegisterScript extends \Zend\View\Helper\AbstractHelper
      */
     public function __invoke()
     {
-        return $this->scriptalicious;
+        return $this->colorFilter;
+    }
+
+    public function setColorFilter(\GbiliViewHelper\ColorFilter $colorFilter)
+    {
+        $this->colorFilter = $colorFilter;
+        return $this;
     }
 }

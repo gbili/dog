@@ -15,6 +15,7 @@ return array(
         'Upload',
         'Scs',
         'GbiliAclGuard',
+        'GbiliViewHelper',
     ),
 
     // These are various options for the listeners attached to the ModuleManager

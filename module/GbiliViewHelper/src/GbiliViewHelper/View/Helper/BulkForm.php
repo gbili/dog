@@ -6,7 +6,7 @@
  * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
-namespace Blog\View\Helper;
+namespace GbiliViewHelper\View\Helper;
 
 /**
  * View helper for translating messages.
@@ -17,7 +17,7 @@ class BulkForm extends \Zend\View\Helper\AbstractHelper
      * Automatically fetched from the form view variable
      * if not previously set and if available
      *
-     * @var \Blog\Form\Bulk
+     * @var \GbiliViewHelper\Form\Bulk
      */
     protected $form;
 
@@ -36,7 +36,7 @@ class BulkForm extends \Zend\View\Helper\AbstractHelper
         return $this;
     }
 
-    public function setForm(\Blog\Form\Bulk $form)
+    public function setForm($form)
     {
         $this->form = $form;
         return $this;
