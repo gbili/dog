@@ -18,32 +18,32 @@ $this->notify(((isset($messages))? $messages : array()));
 
 <div class="brick-wall row">
     <div class="col-sm-12 col-md-12 col-lg-12">
-<ul class="please_masonize_<?= $masonryColumnWidth ?>">
-    <?php foreach($medias as $media) : ?>
-    <li>
-    <a href="<?= $this->url('blog_media_view', array('slug' => $media->getSlug()), true) ?>"><img class="img-responsive" src="<?= $this->escapeHtml($media->getFile()->getSrc());?>"></a>
-      <div class="caption">
-        <h5><?= $this->escapeHtml($media->getSlug());?></h5>
-        <p>
-            <a class="glyphicon glyphicon-link" role="button" title="<?= $this->translate('Link to') ?>" href="<?= $this->url(null, array(
-                'lang' => $this->lang(), 
-                'action' => 'link', 
-                'id' => $media->getId(),
-            )); ?>"></a>
-            <a class="glyphicon glyphicon-edit" role="button" title="<?= $this->translate('Edit') ?>"  href="<?= $this->url(null, array(
-                'lang' => $this->lang(), 
-                'action' => 'edit', 
-                'id' => $media->getId(),
-            )); ?>"></a>
-            <a class="glyphicon glyphicon-trash" role="button" title="<?= $this->translate('Delete') ?>" href="<?= $this->url($this->nonce()->getRouteName(), array(
-                'lang' => $this->lang(), 
-                'id' => $media->getId(),
-                'nonce' => $this->nonce()->getHash($media->getId()),
-            )); ?>" onclick="return confirm('<?= $this->translate('Are you sure?') ?>')"></a>
-        </p>
-     </div><!-- end caption -->
-   </li><!-- end thumbnail -->
-<?php endforeach ?>
+        <ul class="please_masonize_<?= $masonryColumnWidth ?>">
+            <?php foreach($medias as $media) : ?>
+                <li>
+                    <a href="<?= $this->url('blog_media_view', array('slug' => $media->getSlug()), true) ?>"><img class="img-responsive" src="<?= $this->escapeHtml($media->getFile()->getSrc());?>"></a>
+                    <div class="caption">
+                    <h5><?= $this->escapeHtml($media->getSlug());?></h5>
+                    <p>
+                        <a class="glyphicon glyphicon-link" role="button" title="<?= $this->translate('Link to') ?>" href="<?= $this->url(null, array(
+                            'lang' => $this->lang(), 
+                            'action' => 'link', 
+                            'id' => $media->getId(),
+                        )); ?>"></a>
+                        <a class="glyphicon glyphicon-edit" role="button" title="<?= $this->translate('Edit') ?>"  href="<?= $this->url(null, array(
+                            'lang' => $this->lang(), 
+                            'action' => 'edit', 
+                            'id' => $media->getId(),
+                        )); ?>"></a>
+                        <a class="glyphicon glyphicon-trash" role="button" title="<?= $this->translate('Delete') ?>" href="<?= $this->url($this->nonce()->getRouteName(), array(
+                            'lang' => $this->lang(), 
+                            'id' => $media->getId(),
+                            'nonce' => $this->nonce()->getHash($media->getId()),
+                        )); ?>" onclick="return confirm('<?= $this->translate('Are you sure?') ?>')"></a>
+                    </p>
+                 </div><!-- end caption -->
+               </li><!-- end thumbnail -->
+            <?php endforeach ?>
         </ul><!--masonize -->
     </div><!-- end col -->
  </div><!-- end row -->

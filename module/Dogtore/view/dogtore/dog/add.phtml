@@ -15,13 +15,13 @@ $this->headTitle($title);
 <?= $this->form()->openTag($form)?>
 <?php
     $elements       = $this->elementsFlatArray($form);
-    $elementsNotRenderedExplicitely = array_diff_key($elements, array_flip(array('dog[name]', 'dog[birthdate]', 'dog[gender]', 'dog[breed]', 'dog[color]', 'dog[weightkg]', 'dog[profilemedia]',))); 
+    $elementsNotRenderedExplicitely = array_diff_key($elements, array_flip(array('dog[name]', 'dog[birthdate]', 'dog[gender]', 'dog[breed]', 'dog[color]', 'dog[weightkg]', 'dog[media]',))); 
 ?>
 <div class="row">
     <div class="col-sm-6 col-md-6 col-lg-6">
         <div class="row profilemedia">
             <div class="col-sm-12 col-md-12 col-lg-12">
-                <?= $this->renderElement($elements['dog[profilemedia]']) ?>
+                <?= $this->renderElement($elements['dog[media]']) ?>
             </div>
         </div>
     </div>

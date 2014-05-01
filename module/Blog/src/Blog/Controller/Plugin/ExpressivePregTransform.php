@@ -27,7 +27,7 @@ class ExpressivePregTransform extends \Zend\Mvc\Controller\Plugin\AbstractPlugin
     public function getProxy()
     {
         if (null === $this->proxy) {
-            $this->proxy = new \Blog\Service\ExpressivePregTransform;
+            $this->proxy = new \GbiliViewHelper\Service\ExpressivePregTransform;
         }
         return $this->proxy;
     }

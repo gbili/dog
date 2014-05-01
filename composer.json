@@ -10,7 +10,10 @@
     "repositories": [
         {
             "type":"vcs",
-            "url":"https://github.com/gbili/gfw"
+            "url":"https://github.com/gbili/gfw",
+            "url":"https://github.com/gbili/GbiliViewHelper",
+            "url":"https://github.com/gbili/GbiliUploadModule",
+            "url":"https://github.com/gbili/GbiliLangModule"
         }
     ],
     "require": {
@@ -20,7 +23,10 @@
         "doctrine/doctrine-orm-module": "0.*",
         "gedmo/doctrine-extensions": "dev-master",
         "gbili/gfw": "dev-master",
-        "zf-commons/zfc-user": "dev-master",
+        "gbili/gbili-viewhelper": "dev-master",
+        "gbili/gbili-upload-module": "dev-master",
+        "gbili/gbili-lang-module": "dev-master",
+        "zf-commons/zfc-user": "1.*",
         "zf-commons/zfc-user-doctrine-orm":"dev-master"
     },
     "autoload": {

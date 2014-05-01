@@ -10,12 +10,12 @@ return array(
         'ZfcBase',
         'Blog',
         'User',
-        'Lang',
         'Req',
-        'Upload',
         'Scs',
         'GbiliAclGuard',
         'GbiliViewHelper',
+        'GbiliUploadModule',
+        'GbiliLangModule',
     ),
 
     // These are various options for the listeners attached to the ModuleManager

@@ -1,6 +1,6 @@
 <?php
 return array(
-    // The DefaultNavigationFactory we configured in (1) uses 'default' as the sitemap key
+    // The DefaultNavigationFactory we configured in (1) uses 'side_1' as the sitemap key
    'side_1' => array(
         // And finally, here is where we define our page hierarchy
         'dog_list_my_dogs' => array(

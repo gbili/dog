@@ -31,8 +31,8 @@ return array(
         },
         'colors'        => function ($viewHelperPluginManager) {
             $sm = $viewHelperPluginManager->getServiceLocator();
-            $helper = new View\Helper\Colors;
-            $helper->setColorFilter(new ColorFilter);
+            $helper = new \Gbili\Color\View\Helper\Colors;
+            $helper->setColorFilter(new \Gbili\Color\ColorFilter);
             return $helper;
         },
     ),

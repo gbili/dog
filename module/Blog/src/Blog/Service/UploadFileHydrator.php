@@ -1,7 +1,7 @@
 <?php
 namespace Blog\Service;
 
-class UploadFileHydrator implements \Upload\FileHydratorInterface
+class UploadFileHydrator implements \GbiliUploadModule\FileHydratorInterface
 {
     public function getHydratedFile(array $fileData)
     {
