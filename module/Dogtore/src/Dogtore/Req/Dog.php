@@ -7,7 +7,7 @@ class Dog extends \Gbili\Db\Req\AbstractReq
     {
         return array(
             'user_uniquename' => 'u.uniquename',
-            'user_id' =>'d.user_id',
+            'user_id' =>'u.id',
             'dog_id' => 'd.id',
             'dog_name' => 'd.name',
             'dog_locale' => 'd.locale',
@@ -28,7 +28,8 @@ class Dog extends \Gbili\Db\Req\AbstractReq
         return 'SELECT ' 
                 . $this->getFieldAsKeyString() 
             . ' FROM users u '
-                . ' RIGHT JOIN dogs AS d ON u.id = d.user_id '
+                . ' LEFT JOIN user_data AS ud ON u.data_id = ud.id '
+                . ' RIGHT JOIN dogs AS d ON ud.id = d.userdata_id '
                 . ' LEFT JOIN medias AS m ON d.media_id = m.id '
                 . ' LEFT JOIN media_metadatas AS mm ON m.id = mm.media_id ';
     }

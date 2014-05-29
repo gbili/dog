@@ -19,7 +19,7 @@ class UserHasNDogsAndTheirNamesAre extends \Zend\View\Helper\AbstractHelper
      * Translate a message
      * @return string
      */
-    public function __invoke(\User\Entity\User $user, $options = array())
+    public function __invoke(\GbiliUserModule\Entity\User $user, $options = array())
     {
         $this->optionsParam = $options;
 

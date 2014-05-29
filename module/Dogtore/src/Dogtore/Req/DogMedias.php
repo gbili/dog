@@ -20,7 +20,8 @@ class DogMedias extends \Gbili\Db\Req\AbstractReq
                 . $this->getFieldAsKeyString() 
             . ' FROM medias m '
                 . ' LEFT JOIN dogs AS d ON m.dog_id = d.id '
-                . ' LEFT JOIN users AS u ON d.user_id = u.id '
+                . ' LEFT JOIN user_data AS ud ON d.userdata_id = ud.id '
+                . ' LEFT JOIN users AS u ON ud.id = u.data_id '
                 . ' LEFT JOIN media_metadatas AS mm ON m.id = mm.media_id ';
     }
 

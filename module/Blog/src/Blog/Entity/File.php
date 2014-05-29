@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="files")
  */
-class File 
+class File implements \GbiliUserModule\Entity\FileInterface
 {
     /**
      * @ORM\Column(name="id", type="integer")
@@ -48,7 +48,7 @@ class File
 
     /**
      * The file is linked to these medias 
-     * @ORM\OneToMany(targetEntity="Media", mappedBy="file", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="\GbiliUserModule\Entity\MediaInterface", mappedBy="file", cascade={"persist"})
      */
     private $medias;
 
@@ -138,7 +138,7 @@ class File
         return $this->medias;
     }
 
-    public function addMedia(Media $media)
+    public function addMedia(\GbiliUserModule\Entity\MediaInterface $media)
     {
         $media->setFile($this);
         $this->medias->add($media);
@@ -160,7 +160,7 @@ class File
         return $medias;
     }
 
-    public function unlinkMedia(Media $media, $newFile=null)
+    public function unlinkMedia(\GbiliUserModule\Entity\MediaInterface $media, $newFile=null)
     {
         $this->medias->removeElement($media);
         $media->setFile($newFile);

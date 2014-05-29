@@ -9,7 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity(repositoryClass="Blog\Entity\Repository\Media")
  */
-class Media implements \User\IsOwnedByInterface
+class Media implements 
+    \GbiliUserModule\IsOwnedByInterface, 
+    \GbiliUserModule\Entity\MediaInterface
 {
     /**
      * @ORM\Column(name="id", type="integer")
@@ -19,10 +21,10 @@ class Media implements \User\IsOwnedByInterface
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\User\Entity\User", inversedBy="medias")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="\GbiliUserModule\Entity\UserDataInterface", inversedBy="medias", cascade={"persist"})
+     * @ORM\JoinColumn(name="userdata_id", referencedColumnName="id")
      */
-    private $user;
+    private $userdata;
 
     /**
      * @ORM\Column(name="slug", type="string", length=64)
@@ -42,7 +44,7 @@ class Media implements \User\IsOwnedByInterface
 
     /**
      * The media is linked to this profile 
-     * @ORM\OneToMany(targetEntity="\User\Entity\Profile", mappedBy="media", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="\GbiliUserModule\Entity\Profile", mappedBy="media", cascade={"persist"})
      */
     private $profiles;
 
@@ -116,14 +118,15 @@ class Media implements \User\IsOwnedByInterface
         return $this->slug;
     }
 
-    public function setUser(\User\Entity\User $user)
+    public function setUser(\GbiliUserModule\Entity\UserInterface $user)
     {
-        $this->user = $user;
+        $this->userdata = $user->getData();
+        return $this;
     }
 
     public function getUser()
     {
-        return $this->user;
+        return $this->userdata->getUser();
     }
 
     public function setDog(\Dogtore\Entity\Dog $dog=null)
@@ -353,7 +356,7 @@ class Media implements \User\IsOwnedByInterface
         return $this->publicdir;
     }
 
-    public function setFile(File $file)
+    public function setFile(\GbiliUserModule\Entity\FileInterface $file)
     {
         $this->file = $file;
     }
@@ -378,8 +381,8 @@ class Media implements \User\IsOwnedByInterface
         return $this->locale;
     }
 
-    public function isOwnedBy(\User\Entity\User $user)
+    public function isOwnedBy(\GbiliUserModule\Entity\UserInterface $user)
     {
-        return $this->getUser() === $user;
+        return $this->userdata->getUser() === $user;
     }
 }

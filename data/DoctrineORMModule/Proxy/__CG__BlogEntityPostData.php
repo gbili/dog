@@ -64,10 +64,10 @@ class PostData extends \Blog\Entity\PostData implements \Doctrine\ORM\Proxy\Prox
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'id', 'locale', 'translated', 'posts', 'title', 'media', 'content', 'date');
+            return array('__isInitialized__', '' . "\0" . 'Blog\\Entity\\PostData' . "\0" . 'id', '' . "\0" . 'Blog\\Entity\\PostData' . "\0" . 'locale', '' . "\0" . 'Blog\\Entity\\PostData' . "\0" . 'translated', '' . "\0" . 'Blog\\Entity\\PostData' . "\0" . 'posts', '' . "\0" . 'Blog\\Entity\\PostData' . "\0" . 'title', '' . "\0" . 'Blog\\Entity\\PostData' . "\0" . 'media', '' . "\0" . 'Blog\\Entity\\PostData' . "\0" . 'content', '' . "\0" . 'Blog\\Entity\\PostData' . "\0" . 'date');
         }
 
-        return array('__isInitialized__', 'id', 'locale', 'translated', 'posts', 'title', 'media', 'content', 'date');
+        return array('__isInitialized__', '' . "\0" . 'Blog\\Entity\\PostData' . "\0" . 'id', '' . "\0" . 'Blog\\Entity\\PostData' . "\0" . 'locale', '' . "\0" . 'Blog\\Entity\\PostData' . "\0" . 'translated', '' . "\0" . 'Blog\\Entity\\PostData' . "\0" . 'posts', '' . "\0" . 'Blog\\Entity\\PostData' . "\0" . 'title', '' . "\0" . 'Blog\\Entity\\PostData' . "\0" . 'media', '' . "\0" . 'Blog\\Entity\\PostData' . "\0" . 'content', '' . "\0" . 'Blog\\Entity\\PostData' . "\0" . 'date');
     }
 
     /**

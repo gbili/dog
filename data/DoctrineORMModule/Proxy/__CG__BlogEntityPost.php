@@ -202,7 +202,7 @@ class Post extends \Blog\Entity\Post implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function isOwnedBy(\User\Entity\User $user)
+    public function isOwnedBy(\GbiliUserModule\Entity\User $user)
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'isOwnedBy', array($user));
@@ -488,7 +488,7 @@ class Post extends \Blog\Entity\Post implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function setUser(\User\Entity\User $user)
+    public function setUser(\GbiliUserModule\Entity\User $user)
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setUser', array($user));

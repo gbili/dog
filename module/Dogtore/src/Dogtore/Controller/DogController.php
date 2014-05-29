@@ -43,7 +43,7 @@ class DogController extends \Zend\Mvc\Controller\AbstractActionController
     {
         $dogname = $this->routeParamTransform('dogname_underscored')->underscoreToSpace();
 
-        $dogs = $this->repository()->findBy(array('user' => $this->identity(), 'name' => $dogname));
+        $dogs = $this->repository()->findBy(array('userdata' => $this->identity()->getData(), 'name' => $dogname));
 
         if (empty($dogs)) {
             throw new \Exception('No such dog');
@@ -151,11 +151,12 @@ class DogController extends \Zend\Mvc\Controller\AbstractActionController
 
         $dogname = $this->routeParamTransform('dogname_underscored')->underscoreToSpace();
         $user    = $this->identity();
+        $userdata= $user->getData();
         $em      = $this->em();
         $locale  = $this->locale();
 
         if ($isEditAction) {
-            $dogs = $em->getRepository('Dogtore\Entity\Dog')->findBy(array('user' => $user, 'name' => $dogname));
+            $dogs = $em->getRepository('Dogtore\Entity\Dog')->findBy(array('userdata' => $userdata, 'name' => $dogname));
             if (empty($dogs)) {
                 $messages = array('danger' => 'The requested dog does not exist');
                 return $this->getResponse()->setStatusCode(404);
@@ -188,7 +189,7 @@ class DogController extends \Zend\Mvc\Controller\AbstractActionController
             ));
         }
 
-        if ($isAddAction && $this->repository()->existsUserDogName($user, $dog->getName())) {
+        if ($isAddAction && $this->repository()->existsUserDogName($userdata, $dog->getName())) {
             return new \Zend\View\Model\ViewModel(array(
                 'form' => $dogForm,
                 'firstRendering' => false,
@@ -197,7 +198,7 @@ class DogController extends \Zend\Mvc\Controller\AbstractActionController
         }
 
         $dog->setLocale($locale); //of course! Dogs speak some language...
-        $user->addDog($dog);
+        $userdata->addDog($dog);
         
         if (!$dog->hasMedia()) {
             //TODO fix this, make sure there is allways the default media.

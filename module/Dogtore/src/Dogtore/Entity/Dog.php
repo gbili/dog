@@ -34,10 +34,10 @@ class Dog
      * One dog has one user, One user has Many dogs
      * Owner
      *
-     * @ORM\ManyToOne(targetEntity="\User\Entity\User", inversedBy="dogs")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="\GbiliUserModule\Entity\UserDataInterface", inversedBy="dogs")
+     * @ORM\JoinColumn(name="userdata_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $user;
+    private $userdata;
 
     /**
      * @var string
@@ -131,20 +131,36 @@ class Dog
         return $this->name;
     }
 
-    public function setUser(\User\Entity\User $user)
+    public function setUser(\GbiliUserModule\Entity\UserInterface $user)
     {
-        $this->user = $user;
+        $this->setUserData($user->getData());
         return $this;
     }
 
     public function hasUser()
     {
-        return $this->user instanceof \User\Entity\User;
+        return $this->hasUserData();
     }
 
     public function getUser()
     {
-        return $this->user;
+        return $this->getUserData()->getUser();
+    }
+
+    public function setUserData(\GbiliUserModule\Entity\UserDataInterface $userdata)
+    {
+        $this->userdata = $userdata;
+        return $this;
+    }
+
+    public function hasUserData()
+    {
+        return $this->userdata !== null;
+    }
+
+    public function getUserData()
+    {
+        return $this->userdata;
     }
 
     public function setWhythisdog($whythisdog = null)

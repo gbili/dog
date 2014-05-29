@@ -64,10 +64,10 @@ class Media extends \Blog\Entity\Media implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'id', 'user', 'slug', 'publicdir', 'posts', 'profiles', 'dog', 'dogs', 'metadatas', 'file', 'width', 'height', 'csspercent', 'date');
+            return array('__isInitialized__', '' . "\0" . 'Blog\\Entity\\Media' . "\0" . 'id', '' . "\0" . 'Blog\\Entity\\Media' . "\0" . 'userdata', '' . "\0" . 'Blog\\Entity\\Media' . "\0" . 'slug', '' . "\0" . 'Blog\\Entity\\Media' . "\0" . 'publicdir', '' . "\0" . 'Blog\\Entity\\Media' . "\0" . 'posts', '' . "\0" . 'Blog\\Entity\\Media' . "\0" . 'profiles', '' . "\0" . 'Blog\\Entity\\Media' . "\0" . 'dog', '' . "\0" . 'Blog\\Entity\\Media' . "\0" . 'dogs', '' . "\0" . 'Blog\\Entity\\Media' . "\0" . 'metadatas', '' . "\0" . 'Blog\\Entity\\Media' . "\0" . 'file', '' . "\0" . 'Blog\\Entity\\Media' . "\0" . 'width', '' . "\0" . 'Blog\\Entity\\Media' . "\0" . 'height', '' . "\0" . 'Blog\\Entity\\Media' . "\0" . 'csspercent', '' . "\0" . 'Blog\\Entity\\Media' . "\0" . 'date');
         }
 
-        return array('__isInitialized__', 'id', 'user', 'slug', 'publicdir', 'posts', 'profiles', 'dog', 'dogs', 'metadatas', 'file', 'width', 'height', 'csspercent', 'date');
+        return array('__isInitialized__', '' . "\0" . 'Blog\\Entity\\Media' . "\0" . 'id', '' . "\0" . 'Blog\\Entity\\Media' . "\0" . 'userdata', '' . "\0" . 'Blog\\Entity\\Media' . "\0" . 'slug', '' . "\0" . 'Blog\\Entity\\Media' . "\0" . 'publicdir', '' . "\0" . 'Blog\\Entity\\Media' . "\0" . 'posts', '' . "\0" . 'Blog\\Entity\\Media' . "\0" . 'profiles', '' . "\0" . 'Blog\\Entity\\Media' . "\0" . 'dog', '' . "\0" . 'Blog\\Entity\\Media' . "\0" . 'dogs', '' . "\0" . 'Blog\\Entity\\Media' . "\0" . 'metadatas', '' . "\0" . 'Blog\\Entity\\Media' . "\0" . 'file', '' . "\0" . 'Blog\\Entity\\Media' . "\0" . 'width', '' . "\0" . 'Blog\\Entity\\Media' . "\0" . 'height', '' . "\0" . 'Blog\\Entity\\Media' . "\0" . 'csspercent', '' . "\0" . 'Blog\\Entity\\Media' . "\0" . 'date');
     }
 
     /**
@@ -213,7 +213,7 @@ class Media extends \Blog\Entity\Media implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function setUser(\User\Entity\User $user)
+    public function setUser(\GbiliUserModule\Entity\UserInterface $user)
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setUser', array($user));
@@ -587,7 +587,7 @@ class Media extends \Blog\Entity\Media implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function setFile(\Blog\Entity\File $file)
+    public function setFile(\GbiliUserModule\Entity\FileInterface $file)
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setFile', array($file));
@@ -642,7 +642,7 @@ class Media extends \Blog\Entity\Media implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function isOwnedBy(\User\Entity\User $user)
+    public function isOwnedBy(\GbiliUserModule\Entity\UserInterface $user)
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'isOwnedBy', array($user));

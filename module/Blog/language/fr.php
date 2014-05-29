@@ -101,4 +101,5 @@ return array (
   'Translations' => '',
   'Write Post' => '',
   'Uniqueslug' => '',
+  'Back to media library' => '',
 );

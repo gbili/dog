@@ -28,7 +28,7 @@ class PostController extends \Zend\Mvc\Controller\AbstractActionController
         }
         $paginator = $this->paginator();
         $this->posts = $this->repository()->findBy(
-            array('user' => $this->identity()->getId()),
+            array('userdata' => $this->identity()->getData()),
             array('slug' => 'ASC'),
             $paginator->getItemsPerPage(),
             $paginator->getPageFirstItem()

@@ -64,10 +64,10 @@ class File extends \Blog\Entity\File implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'id', 'name', 'basename', 'dirpath', 'type', 'size', 'medias', 'date');
+            return array('__isInitialized__', '' . "\0" . 'Blog\\Entity\\File' . "\0" . 'id', '' . "\0" . 'Blog\\Entity\\File' . "\0" . 'name', '' . "\0" . 'Blog\\Entity\\File' . "\0" . 'basename', '' . "\0" . 'Blog\\Entity\\File' . "\0" . 'dirpath', '' . "\0" . 'Blog\\Entity\\File' . "\0" . 'type', '' . "\0" . 'Blog\\Entity\\File' . "\0" . 'size', '' . "\0" . 'Blog\\Entity\\File' . "\0" . 'medias', '' . "\0" . 'Blog\\Entity\\File' . "\0" . 'date');
         }
 
-        return array('__isInitialized__', 'id', 'name', 'basename', 'dirpath', 'type', 'size', 'medias', 'date');
+        return array('__isInitialized__', '' . "\0" . 'Blog\\Entity\\File' . "\0" . 'id', '' . "\0" . 'Blog\\Entity\\File' . "\0" . 'name', '' . "\0" . 'Blog\\Entity\\File' . "\0" . 'basename', '' . "\0" . 'Blog\\Entity\\File' . "\0" . 'dirpath', '' . "\0" . 'Blog\\Entity\\File' . "\0" . 'type', '' . "\0" . 'Blog\\Entity\\File' . "\0" . 'size', '' . "\0" . 'Blog\\Entity\\File' . "\0" . 'medias', '' . "\0" . 'Blog\\Entity\\File' . "\0" . 'date');
     }
 
     /**
@@ -334,7 +334,7 @@ class File extends \Blog\Entity\File implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function addMedia(\Blog\Entity\Media $media)
+    public function addMedia(\GbiliUserModule\Entity\MediaInterface $media)
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'addMedia', array($media));
@@ -367,7 +367,7 @@ class File extends \Blog\Entity\File implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function unlinkMedia(\Blog\Entity\Media $media, $newFile = NULL)
+    public function unlinkMedia(\GbiliUserModule\Entity\MediaInterface $media, $newFile = NULL)
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'unlinkMedia', array($media, $newFile));

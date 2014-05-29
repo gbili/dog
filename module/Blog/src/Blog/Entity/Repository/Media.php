@@ -7,7 +7,7 @@ class Media extends \Doctrine\ORM\EntityRepository
     {
         if ($entity instanceof \Dogtore\Entity\Dog) {
             $slug = 'default-thumbnail.jpg';
-        } else if ($entity instanceof \User\Entity\Profile) {
+        } else if ($entity instanceof \GbiliUserModule\Entity\Profile) {
             $slug = 'profile-thumbnail.jpg';
         } else if ($entity instanceof \Blog\Entity\Post) {
             $slug = 'default-thumbnail.jpg';

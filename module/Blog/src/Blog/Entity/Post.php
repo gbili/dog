@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Blog\Entity\Repository\NestedTreeFlat")
  * @ORM\HasLifecycleCallbacks
  */
-class Post implements \User\IsOwnedByInterface
+class Post implements \GbiliUserModule\IsOwnedByInterface
 {
     /**
      * @ORM\Column(name="id", type="integer")
@@ -51,15 +51,21 @@ class Post implements \User\IsOwnedByInterface
     private $data;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="posts")
+     * @ORM\JoinColumn(name="category_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    private $category;
+
+    /**
      * @ORM\Column(name="category_slug", type="string", length=64)
      */
     private $categoryslug;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\User\Entity\User", inversedBy="posts")
+     * @ORM\ManyToOne(targetEntity="\GbiliUserModule\Entity\UserDataInterface", inversedBy="posts")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
-    private $user;
+    private $userdata;
 
     /**
      * @Gedmo\TreeLeft
@@ -113,9 +119,9 @@ class Post implements \User\IsOwnedByInterface
         return $this->id;
     }
 
-    public function isOwnedBy(\User\Entity\User $user)
+    public function isOwnedBy(\GbiliUserModule\Entity\UserInterface $user)
     {
-        return $this->user === $user;
+        return $this->userdata->getUser() === $user;
     }
 
     public function setSlug($slug)
@@ -171,6 +177,17 @@ class Post implements \User\IsOwnedByInterface
     public function getCategoryslug()
     {
         return $this->categoryslug;
+    }
+
+    public function setCategory($category)
+    {
+        $this->category = $category;
+        return $this;
+    }
+
+    public function getCategory()
+    {
+        return $this->category;
     }
 
     public function setParent(Post $parent = null)
@@ -269,14 +286,15 @@ class Post implements \User\IsOwnedByInterface
         return null !== $this->translated;
     }
 
-    public function setUser(\User\Entity\User $user)
+    public function setUser(\GbiliUserModule\Entity\User $user)
     {
-        $this->user = $user;
+        $this->userdata = $user->getData();
+        return $this;
     }
 
     public function getUser()
     {
-        return $this->user;
+        return $this->userdata->getUser();
     }
 
     public function setLocale($locale)

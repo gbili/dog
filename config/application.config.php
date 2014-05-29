@@ -2,16 +2,16 @@
 return array(
     // This should be an array of module namespaces used in the application.
     'modules' => array(
- //       'ZendDeveloperTools',
+        'ZendDeveloperTools',
         'DoctrineModule',
         'DoctrineORMModule',
         'Application',
         'Dogtore',
         'ZfcBase',
         'Blog',
-        'User',
-        'Req',
         'Scs',
+        'GbiliUserModule',
+        'GbiliReqModule',
         'GbiliAclGuard',
         'GbiliViewHelper',
         'GbiliUploadModule',

@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Blog\Entity\Repository\NestedTreeFlat")
  */
 class Category
-    implements \User\IsOwnedByInterface
+    implements \GbiliUserModule\IsOwnedByInterface
 {
     /**
      * @var integer
@@ -25,10 +25,10 @@ class Category
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\User\Entity\User", inversedBy="categories")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="\GbiliUserModule\Entity\UserDataInterface", inversedBy="categories")
+     * @ORM\JoinColumn(name="userdata_id", referencedColumnName="id")
      */
-    private $user;
+    private $userdata;
 
     /**
      * @ORM\Column(name="locale", type="string", length=64)
@@ -135,24 +135,24 @@ class Category
         $this->children = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-    public function setUser(\User\Entity\User $user)
+    public function setUser(\GbiliUserModule\Entity\User $user)
     {
-        $this->user = $user;
+        $this->userdata = $user->getData();
     }
 
     public function getUser()
     {
-        return $this->user;
+        return $this->userdata->getUser();
     }
 
     public function hasUser()
     {
-        return null !== $this->user;
+        return null !== $this->userdata;
     }
 
-    public function isOwnedBy(\User\Entity\User $user)
+    public function isOwnedBy(\GbiliUserModule\Entity\UserInterface $user)
     {
-        return $this->user === $user;
+        return $this->userdata->getUser() === $user;
     }
 
     /**

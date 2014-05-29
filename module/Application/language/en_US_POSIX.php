@@ -18,4 +18,13 @@ return array (
   'Upload Files' => '',
   'Translations' => '',
   'Medias' => '',
+  'Dogtore Understand your Dog' => '',
+  'Language' => '',
+  'de' => '',
+  'es' => '',
+  'fr' => '',
+  'it' => '',
+  'My Account' => '',
+  'en' => '',
+  'Upload Media' => '',
 );

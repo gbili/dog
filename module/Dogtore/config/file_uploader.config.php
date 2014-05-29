@@ -27,7 +27,7 @@ return array(
             'viewmydog' => array( //tell uploader to set the form route to different than controller
                 'view_helper' => array(
                     //overrides the on success, to add medias to wall
-                    'include_js_script'          => realpath(__DIR__ . '/../../Upload/view/partial') . '/ajax_media_upload.js.phtml', 
+                    'include_js_script_from_basename' => 'ajax_media_upload.js.phtml', 
                 ),
                 'service' => array(
                     'form_action_route_params' => array(

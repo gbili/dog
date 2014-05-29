@@ -19,7 +19,7 @@ class MediaController extends \Zend\Mvc\Controller\AbstractActionController
     {
         $em = $this->em();
         $criteria = array(
-            'user' => $this->identity(),
+            'userdata' => $this->identity()->getData(),
         );
 
         if (null !== $id) {
